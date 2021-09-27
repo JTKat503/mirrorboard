@@ -43,7 +43,6 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/shape_stroke_blue"
         android:fontFamily="@font/rubik_medium"
-        android:hint="@string/hint_people_name"
         android:imeOptions="actionDone"
         android:importantForAutofill="no"
         android:includeFontPadding="false"
@@ -60,9 +59,9 @@
         android:layout_height="250dp"
         android:layout_below="@id/editProfile_newNickname"
         android:layout_marginTop="15dp"
-        app:shapeAppearanceOverlay="@style/RoundedSquare"
         android:clickable="true"
-        android:focusable="true" />
+        android:focusable="true"
+        app:shapeAppearanceOverlay="@style/RoundedSquare" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/editProfile_takePicture_button"

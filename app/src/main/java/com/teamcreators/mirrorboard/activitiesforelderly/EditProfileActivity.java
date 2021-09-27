@@ -86,6 +86,12 @@ public class EditProfileActivity extends AppCompatActivity {
                 .error(R.drawable.blank_profile)
                 .into(avatar);
 
+        // pre-setting the hint of user's name
+        String oldName = preferenceManager.getString(Constants.KEY_NAME);
+        if (oldName != null && !oldName.isEmpty()) {
+            newName.setHint(oldName);
+        }
+
         // an alternative method for startActivityForResult() & onActivityResult()
         chooseImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override

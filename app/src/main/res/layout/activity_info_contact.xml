@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activitiesforelderly.InfoContactActivity"
+    android:background="@color/colorPrimary"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="25dp">
+
+    <RelativeLayout
+        android:id="@+id/contactInfo_topRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:gravity="center_horizontal">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/contactInfo_profileImage"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_alignParentBottom="true"
+            app:shapeAppearanceOverlay="@style/RoundedSquare" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/contactInfo_contactName"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/contactInfo_topRelativeLayout"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textColor="@color/colorTextDark"
+        android:textSize="30sp" />
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/contactInfo_call_layout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="85dp"-->
+<!--        android:layout_below="@+id/contactInfo_contactName"-->
+<!--        android:layout_marginTop="15dp"-->
+<!--        android:orientation="horizontal">-->
+<!--        <com.google.android.material.button.MaterialButton-->
+<!--            android:id="@+id/contactInfo_audioCall_button"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1"-->
+<!--            android:backgroundTint="@color/colorBlue"-->
+<!--            android:fontFamily="@font/rubik_medium"-->
+<!--            android:includeFontPadding="false"-->
+<!--            android:padding="8dp"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            app:cornerRadius="12dp"-->
+<!--            app:icon="@drawable/ic_round_call_48"-->
+<!--            app:iconGravity="textStart"-->
+<!--            app:iconTint="@color/colorTextLight" />-->
+
+<!--        <com.google.android.material.button.MaterialButton-->
+<!--            android:id="@+id/contactInfo_videoCall_button"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1"-->
+<!--            android:backgroundTint="@color/colorBlue"-->
+<!--            android:fontFamily="@font/rubik_medium"-->
+<!--            android:includeFontPadding="false"-->
+<!--            android:padding="8dp"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            app:cornerRadius="12dp"-->
+<!--            app:icon="@drawable/ic_round_videocam_48"-->
+<!--            app:iconGravity="textStart"-->
+<!--            app:iconTint="@color/colorTextLight" />-->
+<!--    </LinearLayout>-->
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/contactInfo_makeCall_button"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_below="@+id/contactInfo_contactName"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@color/colorBlue"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/make_call"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="30sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_call_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/contactInfo_editNickname_button"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_below="@+id/contactInfo_makeCall_button"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorGrey"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/edit_nickname"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="30sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_edit_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/contactInfo_removeContact_button"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_below="@+id/contactInfo_editNickname_button"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorAccent"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/remove_contact"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="26sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_cross_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/contactInfo_goBack_button"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorGrey"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/go_back"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="30sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_arrow_left_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight" />
+
+</RelativeLayout>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activitiesmutual.CreateProfileActivity"
+    android:background="@color/colorPrimary"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="25dp">
+
+    <TextView
+        android:id="@+id/createProfile_textView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/rubik_medium"
+        android:gravity="center"
+        android:text="@string/create_your_profile"
+        android:textColor="@color/colorTextDark"
+        android:textSize="35sp" />
+
+
+    <TextView
+        android:id="@+id/createProfile_nickname_textView"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_below="@id/createProfile_textView"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/rubik_medium"
+        android:gravity="center"
+        android:text="@string/nickname"
+        android:textColor="@color/colorTextDark"
+        android:textSize="25sp" />
+
+    <EditText
+        android:id="@+id/createProfile_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_below="@id/createProfile_nickname_textView"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape_stroke_blue"
+        android:fontFamily="@font/rubik_medium"
+        android:hint="@string/hint_people_name"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        android:includeFontPadding="false"
+        android:inputType="textPersonName"
+        android:padding="15dp"
+        android:textColor="@color/colorTextDark"
+        android:textColorHint="@color/colorHintText"
+        android:textSize="30sp"
+        tools:ignore="TextFields" />
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/createProfile_profileImage"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_below="@id/createProfile_nickname"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/blank_profile"
+        app:shapeAppearanceOverlay="@style/RoundedSquare" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/createProfile_takePicture_button"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_below="@+id/createProfile_profileImage"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@color/colorBlue"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/take_picture"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="30sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_camera_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight" />
+
+    <LinearLayout
+        android:id="@+id/createProfile_bottomLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_alignParentBottom="true">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/createProfile_back_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/colorGrey"
+            android:padding="8dp"
+            app:cornerRadius="12dp"
+            android:text="@string/back"
+            android:textSize="27sp"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextLight"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/rubik_medium"
+            android:textAlignment="textStart"
+            app:icon="@drawable/ic_round_arrow_left_48"
+            app:iconTint="@color/colorTextLight"
+            app:iconGravity="start"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/createProfile_create_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:backgroundTint="@color/colorBlue"
+            android:padding="8dp"
+            app:cornerRadius="12dp"
+            android:text="@string/create"
+            android:textSize="27sp"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextLight"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/rubik_medium"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+</RelativeLayout>

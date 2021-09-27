@@ -1,0 +1,62 @@
+<resources>
+    <string name="app_name">MirrorBoard</string>
+    <string name="family_and_friends"><![CDATA[Family & Friends]]></string>
+    <string name="new_contact">New Contact</string>
+    <string name="new_requests">New Requests</string>
+    <string name="edit_my_profile">Edit My Profile</string>
+    <string name="start_an_activity">Start an Activity</string>
+    <string name="my_hobbies">My Hobbies</string>
+    <string name="new_hobby">New Hobby</string>
+    <string name="family">Family</string>
+    <string name="hobbies">Hobbies</string>
+    <string name="make_call">Make Call</string>
+    <string name="edit_nickname">Edit Nickname</string>
+    <string name="remove_contact">Remove Contact</string>
+    <string name="go_back">Go Back</string>
+    <string name="find_match">Find Match</string>
+    <string name="add_contact">Add Contact</string>
+    <string name="remove_request">Remove Request</string>
+    <string name="next_request">Next Request</string>
+    <string name="find_a_call">Find a Call</string>
+    <string name="remove_hobby">Remove Hobby</string>
+    <string name="log_in">Log In</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="password">Password</string>
+
+    <string name="password_hint">• • • • • • • • •</string>
+    <string name="new_account">New Account</string>
+    <string name="exit_app">Exit App</string>
+    <string name="create_an_account">Create an Account</string>
+    <string name="elderly">Elderly</string>
+    <string name="re_enter_password">Re-enter Password</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="create_your_profile">Create your Profile</string>
+    <string name="nickname">Nickname</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="create">Create</string>
+    <string name="add_a_contact">Add a Contact</string>
+    <string name="hint_phone_number">0456789123</string>
+    <string name="hint_people_name">Eliza Lawrence</string>
+    <string name="send_request">Send Request</string>
+    <string name="edit_your_profile">Edit your Profile</string>
+    <string name="change_nickname">Change Nickname</string>
+    <string name="keep_changes">Keep Changes</string>
+    <string name="add_a_hobby">Add a Hobby</string>
+    <string name="more_hobbies">More Hobbies</string>
+    <string name="incoming_call">Incoming Call</string>
+    <string name="answer_call">Answer Call</string>
+    <string name="reject_call">Reject Call</string>
+    <string name="dialing">Dialing…</string>
+    <string name="cancel">Cancel</string>
+
+    <!--strings below should be deleted when 'activity_call_activity' is deprecated-->
+    <string name="hang_up">Hang Up</string>
+    <string name="place_on_hold">Place on Hold</string>
+    <string name="hold">Hold</string>
+    <string name="friend">Friend</string>
+    <!--strings above should be deleted when 'activity_call_activity' is deprecated-->
+
+    <string name="logout">Log Out</string>
+    <string name="contacts">Contacts</string>
+</resources>

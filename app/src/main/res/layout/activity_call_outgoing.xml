@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activitiesmutual.CallOutgoingActivity"
+    android:background="@color/colorPrimary"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="25dp">
+
+    <ImageView
+        android:id="@+id/outgoingCall_imageCallingType"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/colorTextDark" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/rubik_medium"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/dialing"
+        android:textColor="@color/colorTextDark"
+        android:textSize="30sp"
+        app:layout_constraintTop_toBottomOf="@id/outgoingCall_imageCallingType" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/outgoingCall_profileImage"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            app:shapeAppearanceOverlay="@style/RoundedSquare" />
+
+        <TextView
+            android:id="@+id/outgoingCall_userName_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/rubik_medium"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:textColor="@color/colorTextDark"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/outgoingCall_phoneNum_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/rubik_medium"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:textColor="@color/colorTextDark"
+            android:textSize="30sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/outgoingCall_hangup_layout"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/shape_reject_call_button"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@string/cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextLight"
+            android:textSize="30sp"
+            android:fontFamily="@font/rubik_medium"
+            app:drawableStartCompat="@drawable/ic_round_cross_48"
+            app:drawableTint="@color/colorTextLight"
+            android:drawablePadding="5dp"/>
+
+    </LinearLayout>
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="70dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/outgoingCall_hangup_layout"-->
+<!--        android:layout_marginBottom="15dp"-->
+<!--        android:background="@drawable/shape_on_hold_button"-->
+<!--        android:gravity="center">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/outgoingCall_hold_textView"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:gravity="center"-->
+<!--            android:includeFontPadding="false"-->
+<!--            android:text="@string/place_on_hold"-->
+<!--            android:textAllCaps="false"-->
+<!--            android:textColor="@color/selector_text_color"-->
+<!--            android:textSize="30sp"-->
+<!--            android:fontFamily="@font/rubik_medium"-->
+<!--            app:drawableStartCompat="@drawable/ic_round_on_hold_48"-->
+<!--            app:drawableTint="@color/selector_text_color"-->
+<!--            android:drawablePadding="5dp"-->
+<!--            android:paddingEnd="35dp"-->
+<!--            android:paddingStart="35dp"/>-->
+
+<!--    </LinearLayout>-->
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

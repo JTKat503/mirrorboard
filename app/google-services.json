@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "778449923764",
+    "project_id": "mirror-board-v5",
+    "storage_bucket": "mirror-board-v5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778449923764:android:e24d9619fd2d40cc08b1e1",
+        "android_client_info": {
+          "package_name": "com.teamcreators.mirrorboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "778449923764-qvfnkr8b6g5hp5nuqoch02e8btu2h7s4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrXQbYjrI1IccLz92DQedxxrif0ASFn_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "778449923764-qvfnkr8b6g5hp5nuqoch02e8btu2h7s4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

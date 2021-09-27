@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activitiesmutual.LoginActivity"
+    android:background="@color/colorPrimary"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="25dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/login_textView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/rubik_medium"
+            android:gravity="center"
+            android:text="@string/log_in"
+            android:textColor="@color/colorTextDark"
+            android:textSize="35sp" />
+
+        <TextView
+            android:id="@+id/login_phoneNum_textView"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_below="@id/login_textView"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/rubik_medium"
+            android:gravity="center"
+            android:text="@string/phone_number"
+            android:textColor="@color/colorTextDark"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/login_phoneNum"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_below="@id/login_phoneNum_textView"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_stroke_blue"
+            android:fontFamily="@font/rubik_medium"
+            android:hint="@string/hint_phone_number"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:includeFontPadding="false"
+            android:inputType="phone"
+            android:padding="15dp"
+            android:textColor="@color/colorTextDark"
+            android:textColorHint="@color/colorHintText"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/login_password_textView"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_below="@id/login_phoneNum"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/rubik_medium"
+            android:gravity="center"
+            android:text="@string/password"
+            android:textColor="@color/colorTextDark"
+            android:textSize="25sp" />
+
+<!--        <EditText-->
+<!--            android:id="@+id/login_password"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="70dp"-->
+<!--            android:layout_below="@id/login_password_textView"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:background="@drawable/shape_stroke_blue"-->
+<!--            android:fontFamily="@font/rubik_medium"-->
+<!--            android:hint="@string/password_hint"-->
+<!--            android:imeOptions="actionDone"-->
+<!--            android:importantForAutofill="no"-->
+<!--            android:includeFontPadding="false"-->
+<!--            android:inputType="textPassword"-->
+<!--            android:padding="15dp"-->
+<!--            android:textColor="@color/colorTextDark"-->
+<!--            android:textColorHint="@color/colorHintText"-->
+<!--            android:textSize="30sp" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/login_password_layout"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_below="@id/login_password_textView"
+            android:layout_marginTop="10dp"
+            app:endIconMode="password_toggle"
+            android:hint="@string/password_hint"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/login_password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_stroke_blue"
+                android:fontFamily="@font/rubik_medium"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="no"
+                android:includeFontPadding="false"
+                android:inputType="textPassword"
+                android:padding="15dp"
+                android:textColor="@color/colorTextDark"
+                android:textColorHint="@color/colorHintText"
+                android:textSize="30sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/login_logIn_button"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_below="@+id/login_password_layout"
+            android:layout_marginTop="15dp"
+            android:backgroundTint="@color/colorBlue"
+            android:fontFamily="@font/rubik_medium"
+            android:includeFontPadding="false"
+            android:padding="8dp"
+            android:text="@string/log_in"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextLight"
+            android:textSize="30sp"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_round_arrow_right_48"
+            app:iconGravity="start"
+            app:iconTint="@color/colorTextLight" />
+
+        <ProgressBar
+            android:id="@+id/login_progressbar"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_below="@+id/login_password_layout"
+            android:layout_marginTop="15dp"
+            android:visibility="invisible"/>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/login_newAccount_button"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_below="@+id/login_logIn_button"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/colorGrey"
+            android:fontFamily="@font/rubik_medium"
+            android:includeFontPadding="false"
+            android:padding="8dp"
+            android:text="@string/new_account"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextLight"
+            android:textSize="30sp"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_round_plus_48"
+            app:iconGravity="start"
+            app:iconTint="@color/colorTextLight" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/login_exit_button"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_below="@+id/login_newAccount_button"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/colorAccent"
+            android:fontFamily="@font/rubik_medium"
+            android:includeFontPadding="false"
+            android:padding="8dp"
+            android:text="@string/exit_app"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextLight"
+            android:textSize="30sp"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_round_exit_48"
+            app:iconGravity="start"
+            app:iconTint="@color/colorTextLight" />
+
+    </RelativeLayout>
+
+</ScrollView>

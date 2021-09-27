@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activitiesforfamily.MainActivityFamily"
+    android:background="@color/colorPrimary"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="25dp">
+
+    <TextView
+        android:id="@+id/mainFamily_textView"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/rubik_medium"
+        android:gravity="center_vertical"
+        android:text="@string/contacts"
+        android:textColor="@color/colorTextDark"
+        android:textSize="35sp" />
+
+    <ImageView
+        android:id="@+id/mainFamily_setting_imageView"
+        android:layout_width="30dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/ic_round_settings_48"
+        app:tint="@color/colorTextDark" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mainFamily_addContact_button"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_below="@+id/mainFamily_textView"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@color/colorBlue"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/new_contact"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="30sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_plus_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mainFamily_newRequests_button"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_below="@+id/mainFamily_addContact_button"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorGrey"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/new_requests"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="30sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_mail_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight" />
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/mainFamily_swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@+id/mainFamily_newRequests_button"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mainFamily_contacts_RecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/mainFamily_errorMessage_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mainFamily_newRequests_button"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/mainFamily_loadUsers_progressBar"
+        android:layout_width="@dimen/_25sdp"
+        android:layout_height="@dimen/_25sdp"
+        android:layout_below="@id/mainFamily_newRequests_button"
+        android:layout_marginTop="10dp"
+        android:visibility="gone" />
+
+</RelativeLayout>

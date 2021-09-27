@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activitiesforelderly.MatchHobbyActivity"
+    android:background="@color/colorPrimary"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="25dp">
+
+    <RelativeLayout
+        android:id="@+id/matchHobby_topRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:gravity="center_horizontal"
+        android:layout_alignParentTop="true">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/matchHobby_profileImage"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/blank_hobby_image"
+            app:shapeAppearanceOverlay="@style/RoundedSquare" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/matchHobby_hobbyName"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/matchHobby_topRelativeLayout"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Hobby"
+        android:textColor="@color/colorTextDark"
+        android:textSize="30sp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/matchHobby_findCall_button"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_below="@+id/matchHobby_hobbyName"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@color/colorBlue"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/find_a_call"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="30sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_call_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/matchHobby_removeHobby_button"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_below="@+id/matchHobby_findCall_button"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorAccent"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/remove_hobby"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="30sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_cross_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/matchHobby_goBack_button"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorGrey"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/go_back"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="30sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_arrow_left_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight" />
+
+</RelativeLayout>

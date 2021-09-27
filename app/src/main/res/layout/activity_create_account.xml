@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activitiesmutual.CreateAccountActivity"
+    android:background="@color/colorPrimary"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="25dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/createAccount_textView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/rubik_medium"
+            android:gravity="center"
+            android:text="@string/create_an_account"
+            android:textColor="@color/colorTextDark"
+            android:textSize="35sp" />
+
+        <RadioGroup
+            android:id="@+id/createAccount_radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_below="@+id/createAccount_textView"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/createAccount_elderly_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginEnd="15dp"
+                android:button="@null"
+                android:background="@drawable/radio_button_selector"
+                android:text="@string/elderly"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:textColor="@color/colorTextLight"
+                android:textSize="30sp"/>
+
+            <RadioButton
+                android:id="@+id/createAccount_family_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:button="@null"
+                android:background="@drawable/radio_button_selector"
+                android:text="@string/family"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:textColor="@color/colorTextLight"
+                android:textSize="30sp"/>
+
+        </RadioGroup>
+
+
+        <TextView
+            android:id="@+id/createAccount_phoneNum_textView"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_below="@id/createAccount_radioGroup"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/rubik_medium"
+            android:gravity="center"
+            android:text="@string/phone_number"
+            android:textColor="@color/colorTextDark"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/createAccount_phoneNum"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_below="@id/createAccount_phoneNum_textView"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_stroke_blue"
+            android:fontFamily="@font/rubik_medium"
+            android:hint="@string/hint_phone_number"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:includeFontPadding="false"
+            android:inputType="phone"
+            android:padding="15dp"
+            android:textColor="@color/colorTextDark"
+            android:textColorHint="@color/colorHintText"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/createAccount_password_textView"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_below="@id/createAccount_phoneNum"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/rubik_medium"
+            android:gravity="center"
+            android:text="@string/password"
+            android:textColor="@color/colorTextDark"
+            android:textSize="25sp" />
+
+<!--        <EditText-->
+<!--            android:id="@+id/createAccount_password"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="70dp"-->
+<!--            android:layout_below="@id/createAccount_password_textView"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:background="@drawable/shape_stroke_blue"-->
+<!--            android:fontFamily="@font/rubik_medium"-->
+<!--            android:hint="@string/password_hint"-->
+<!--            android:imeOptions="actionNext"-->
+<!--            android:importantForAutofill="no"-->
+<!--            android:includeFontPadding="false"-->
+<!--            android:inputType="textPassword"-->
+<!--            android:padding="15dp"-->
+<!--            android:textColor="@color/colorTextDark"-->
+<!--            android:textColorHint="@color/colorHintText"-->
+<!--            android:textSize="30sp" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/createAccount_password_layout"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_below="@id/createAccount_password_textView"
+            android:layout_marginTop="10dp"
+            app:endIconMode="password_toggle"
+            android:hint="@string/password_hint"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/createAccount_password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_stroke_blue"
+                android:fontFamily="@font/rubik_medium"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:includeFontPadding="false"
+                android:inputType="textPassword"
+                android:padding="15dp"
+                android:textColor="@color/colorTextDark"
+                android:textColorHint="@color/colorHintText"
+                android:textSize="30sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/createAccount_reenterPassword_textView"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_below="@id/createAccount_password_layout"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/rubik_medium"
+            android:gravity="center"
+            android:text="@string/re_enter_password"
+            android:textColor="@color/colorTextDark"
+            android:textSize="25sp" />
+
+<!--        <EditText-->
+<!--            android:id="@+id/createAccount_reenteredPassword"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="70dp"-->
+<!--            android:layout_below="@id/createAccount_reenterPassword_textView"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:background="@drawable/shape_stroke_blue"-->
+<!--            android:fontFamily="@font/rubik_medium"-->
+<!--            android:hint="@string/password_hint"-->
+<!--            android:imeOptions="actionDone"-->
+<!--            android:importantForAutofill="no"-->
+<!--            android:includeFontPadding="false"-->
+<!--            android:inputType="textPassword"-->
+<!--            android:padding="15dp"-->
+<!--            android:textColor="@color/colorTextDark"-->
+<!--            android:textColorHint="@color/colorHintText"-->
+<!--            android:textSize="30sp" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/createAccount_reenteredPassword_layout"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_below="@id/createAccount_reenterPassword_textView"
+            android:layout_marginTop="10dp"
+            app:endIconMode="password_toggle"
+            android:hint="@string/password_hint"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/createAccount_reenteredPassword"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_stroke_blue"
+                android:fontFamily="@font/rubik_medium"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="no"
+                android:includeFontPadding="false"
+                android:inputType="textPassword"
+                android:padding="15dp"
+                android:textColor="@color/colorTextDark"
+                android:textColorHint="@color/colorHintText"
+                android:textSize="30sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/createAccount_bottomLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_below="@id/createAccount_reenteredPassword_layout"
+            android:layout_marginTop="90dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/createAccount_back_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginEnd="10dp"
+                android:backgroundTint="@color/colorGrey"
+                android:padding="8dp"
+                app:cornerRadius="12dp"
+                android:text="@string/back"
+                android:textSize="27sp"
+                android:textAllCaps="false"
+                android:textColor="@color/colorTextLight"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/rubik_medium"
+                android:textAlignment="textStart"
+                app:icon="@drawable/ic_round_arrow_left_48"
+                app:iconTint="@color/colorTextLight"
+                app:iconGravity="start"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/createAccount_next_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:backgroundTint="@color/colorBlue"
+                android:padding="8dp"
+                app:cornerRadius="12dp"
+                android:text="@string/next"
+                android:textSize="27sp"
+                android:textAllCaps="false"
+                android:textColor="@color/colorTextLight"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/rubik_medium"
+                android:textAlignment="textStart"
+                app:icon="@drawable/ic_round_arrow_right_48"
+                app:iconTint="@color/colorTextLight"
+                app:iconGravity="start"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</ScrollView>

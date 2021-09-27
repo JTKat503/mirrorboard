@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activitiesforelderly.EditProfileActivity"
+    android:background="@color/colorPrimary"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="25dp">
+
+    <TextView
+        android:id="@+id/editProfile_textView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/rubik_medium"
+        android:gravity="center"
+        android:text="@string/edit_your_profile"
+        android:textColor="@color/colorTextDark"
+        android:textSize="35sp" />
+
+
+    <TextView
+        android:id="@+id/editProfile_changeNickname_textView"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_below="@id/editProfile_textView"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/rubik_medium"
+        android:gravity="center"
+        android:text="@string/change_nickname"
+        android:textColor="@color/colorTextDark"
+        android:textSize="25sp" />
+
+    <EditText
+        android:id="@+id/editProfile_newNickname"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_below="@id/editProfile_changeNickname_textView"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape_stroke_blue"
+        android:fontFamily="@font/rubik_medium"
+        android:hint="@string/hint_people_name"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        android:includeFontPadding="false"
+        android:inputType="textPersonName"
+        android:padding="15dp"
+        android:textColor="@color/colorTextDark"
+        android:textColorHint="@color/colorHintText"
+        android:textSize="30sp"
+        tools:ignore="TextFields" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/editProfile_profileImage"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_below="@id/editProfile_newNickname"
+        android:layout_marginTop="15dp"
+        app:shapeAppearanceOverlay="@style/RoundedSquare"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/editProfile_takePicture_button"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/editProfile_newNickname"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="107dp"
+        android:layout_toRightOf="@id/editProfile_profileImage"
+        android:backgroundTint="@color/colorBlue"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        android:paddingStart="19dp"
+        app:cornerRadius="@dimen/_25sdp"
+        app:icon="@drawable/ic_round_camera_48"
+        app:iconGravity="textStart"
+        app:iconTint="@color/colorTextLight"
+        tools:ignore="RtlHardcoded,RtlSymmetry" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/editProfile_keepChanges_button"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_above="@id/editProfile_bottomLinearLayout"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorBlue"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/keep_changes"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="30sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_tick_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight" />
+
+<!--    <com.google.android.material.button.MaterialButton-->
+<!--        android:id="@+id/editProfile_goBack_button"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="85dp"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:backgroundTint="@color/colorGrey"-->
+<!--        android:fontFamily="@font/rubik_medium"-->
+<!--        android:includeFontPadding="false"-->
+<!--        android:padding="8dp"-->
+<!--        android:text="@string/go_back"-->
+<!--        android:textAlignment="textStart"-->
+<!--        android:textAllCaps="false"-->
+<!--        android:textColor="@color/colorTextLight"-->
+<!--        android:textSize="30sp"-->
+<!--        app:cornerRadius="12dp"-->
+<!--        app:icon="@drawable/ic_round_arrow_left_48"-->
+<!--        app:iconGravity="start"-->
+<!--        app:iconTint="@color/colorTextLight" />-->
+
+    <LinearLayout
+        android:id="@+id/editProfile_bottomLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_alignParentBottom="true">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/editProfile_goBack_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="15dp"
+            android:backgroundTint="@color/colorGrey"
+            android:fontFamily="@font/rubik_medium"
+            android:includeFontPadding="false"
+            android:padding="8dp"
+            android:text="@string/back"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextLight"
+            android:textSize="27sp"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_round_arrow_left_48"
+            app:iconGravity="start"
+            app:iconTint="@color/colorTextLight"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/editProfile_signOut_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorAccent"
+            android:fontFamily="@font/rubik_medium"
+            android:includeFontPadding="false"
+            android:padding="8dp"
+            android:text="@string/logout"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextLight"
+            android:textSize="27sp"
+            app:cornerRadius="12dp"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.teamcreators.mirrorboard" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:allowBackup="true"
+        android:fullBackupContent="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MirrorBoard"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m" >
+        <activity
+            android:name=".activitiesforfamily.InfoRequestActivityFamily"
+            android:exported="true" />
+        <activity
+            android:name=".activitiesforfamily.AddContactActivityFamily"
+            android:exported="true" />
+        <activity
+            android:name=".activitiesforfamily.MainActivityFamily"
+            android:exported="true" />
+        <activity
+            android:name=".activitiesforelderly.StartActivityActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activitiesforelderly.MatchHobbyActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activitiesmutual.LoginActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activitiesforelderly.InfoRequestActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activitiesforelderly.InfoContactActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activitiesforelderly.EditProfileActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activitiesmutual.CreateProfileActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activitiesmutual.CreateAccountActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activitiesmutual.CallOutgoingActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activitiesmutual.CallIncomingActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activitiesforelderly.AddHobbyActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activitiesforelderly.AddContactActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activitiesforelderly.MainActivityElderly"
+            android:exported="true" />
+
+        <service
+            android:name=".firebase.MessagingService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name="com.canhub.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+
+    </application>
+
+</manifest>

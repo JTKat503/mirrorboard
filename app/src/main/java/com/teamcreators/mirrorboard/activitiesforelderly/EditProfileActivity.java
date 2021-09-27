@@ -110,7 +110,7 @@ public class EditProfileActivity extends AppCompatActivity {
                         avatar.setImageURI(newAvatarUri);
                     }
                     else {
-                        Log.e("CIL", Objects.requireNonNull(result.getError()).getMessage());
+                        Toast.makeText(getApplicationContext(), "Image cropper failed to start", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -126,7 +126,7 @@ public class EditProfileActivity extends AppCompatActivity {
                             public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
                                 Intent intent = new Intent(Intent.ACTION_PICK);
                                 intent.setType("image/*");
-                                chooseImageLauncher.launch(Intent.createChooser(intent, "Select Image File"));
+                                chooseImageLauncher.launch(Intent.createChooser(intent, "Select Image"));
                             }
 
                             @Override
@@ -172,7 +172,7 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String newNickName = newName.getText().toString();
                 if (newNickName.trim().isEmpty() && newAvatarUri == null) {
-                    Toast.makeText(getApplicationContext(), "No new information to save", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "No new changes to save", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (!newNickName.trim().isEmpty() && !(newAvatarUri == null)) {
@@ -235,7 +235,7 @@ public class EditProfileActivity extends AppCompatActivity {
      * Log the user out of the app
      */
     private void signOut() {
-        Snackbar.make(findViewById(android.R.id.content), "Signing Out...", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(findViewById(android.R.id.content), "Logging Out...", Snackbar.LENGTH_SHORT).show();
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         DocumentReference documentReference = database
                 .collection(Constants.KEY_COLLECTION_USERS)
@@ -257,7 +257,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(EditProfileActivity.this,
-                                "Unable to sign out: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                "Unable to log out: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -271,7 +271,7 @@ public class EditProfileActivity extends AppCompatActivity {
      */
     private void uploadImageToFirebaseStorage(String newName) {
         final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setTitle("Uploading Image...");
+        dialog.setTitle("Uploading image...");
         dialog.show();
 
         final String randomKey = UUID.randomUUID().toString();
@@ -301,7 +301,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         dialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "Failed to Upload", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Failed to upload", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

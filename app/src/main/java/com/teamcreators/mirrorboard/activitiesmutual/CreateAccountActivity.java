@@ -4,12 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.teamcreators.mirrorboard.R;
+import com.teamcreators.mirrorboard.utilities.Constants;
 
 /**
  *
@@ -50,6 +52,8 @@ public class CreateAccountActivity extends AppCompatActivity {
                 Toast.makeText(CreateAccountActivity.this, "Please choose Elderly or Family", Toast.LENGTH_SHORT).show();
             } else if (phone.isEmpty()) {
                 Toast.makeText(CreateAccountActivity.this, "Please enter your phone number", Toast.LENGTH_SHORT).show();
+            } else if (phone.length() < Constants.MIN_PHONE_NUM_LENGTH || !Patterns.PHONE.matcher(phone).matches()) {
+                Toast.makeText(CreateAccountActivity.this, "Please enter an valid phone number", Toast.LENGTH_SHORT).show();
             } else if (PW.isEmpty()) {
                 Toast.makeText(CreateAccountActivity.this, "Please enter your password", Toast.LENGTH_SHORT).show();
             } else if (RPW.isEmpty()) {

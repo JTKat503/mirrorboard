@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activitiesforelderly.MainActivityElderly"
+    android:animateLayoutChanges="true"
     android:background="@color/colorPrimary"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
@@ -143,5 +144,16 @@
             app:iconGravity="start"/>
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/main_conference_imageView"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_round_conference_48"
+        android:visibility="gone"
+        android:layout_above="@id/main_bottomLinearLayout"
+        android:layout_centerInParent="true"
+        app:tint="@color/colorBlue" />
 
 </RelativeLayout>

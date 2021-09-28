@@ -125,11 +125,22 @@ public class InfoContactActivity extends AppCompatActivity implements UsersListe
 
     @Override
     public void initiateAudioMeeting(User user) {
-
+//        if (user.token == null || user.token.trim().isEmpty()) {
+//            Toast.makeText(
+//                    this,
+//                    user.name + " is not available",
+//                    Toast.LENGTH_SHORT
+//            ).show();
+//        } else {
+//            Intent intent = new Intent(getApplicationContext(), CallOutgoingActivity.class);
+//            intent.putExtra("user", user);
+//            intent.putExtra("type", "audio");
+//            startActivity(intent);
+//        }
     }
 
     @Override
-    public void checkContactInformation(User user) {
+    public void displayContactInformation(User user) {
 
     }
 

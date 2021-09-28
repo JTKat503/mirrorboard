@@ -9,21 +9,22 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ProgressBar;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
 import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.activitiesmutual.CallOutgoingActivity;
-import com.teamcreators.mirrorboard.adapters.UsersAdapterElderly;
+import com.teamcreators.mirrorboard.adapters.UsersAdapter;
 import com.teamcreators.mirrorboard.listeners.UsersListener;
 import com.teamcreators.mirrorboard.models.User;
 import com.teamcreators.mirrorboard.utilities.Constants;
@@ -32,14 +33,18 @@ import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ */
 public class MainActivityElderly extends AppCompatActivity implements UsersListener {
 
     private PreferenceManager preferenceManager;
-    private MaterialButton newContact, newRequests, exit, hobbies;
+    private Button newContact, newRequests, exit, hobbies;
     private List<User> contacts;
-    private UsersAdapterElderly contactsAdapter;
+    private UsersAdapter contactsAdapter;
     private TextView textErrorMessage;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ImageView conference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +52,21 @@ public class MainActivityElderly extends AppCompatActivity implements UsersListe
         setContentView(R.layout.activity_main_elderly);
 
         preferenceManager = new PreferenceManager(getApplicationContext());
+        conference = findViewById(R.id.main_conference_imageView);
         newContact = findViewById(R.id.main_addContact_button);
         newRequests = findViewById(R.id.main_newRequests_button);
         hobbies = findViewById(R.id.main_hobbies_button);
         exit = findViewById(R.id.main_exit_button);
+
+        // building and loading contacts list
+        RecyclerView contactsRecyclerView = findViewById(R.id.main_contacts_RecyclerView);
+        textErrorMessage = findViewById(R.id.main_errorMessage_textView);
+        contacts = new ArrayList<>();
+        contactsAdapter = new UsersAdapter(contacts, this);
+        contactsRecyclerView.setAdapter(contactsAdapter);
+        swipeRefreshLayout = findViewById(R.id.main_swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this::getContacts);
+        getContacts();
 
         // gains token from Messaging server then send it to database
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
@@ -98,16 +114,6 @@ public class MainActivityElderly extends AppCompatActivity implements UsersListe
                 System.exit(0);
             }
         });
-
-        // building and loading contacts list
-        RecyclerView contactsRecyclerView = findViewById(R.id.main_contacts_RecyclerView);
-        textErrorMessage = findViewById(R.id.main_errorMessage_textView);
-        contacts = new ArrayList<>();
-        contactsAdapter = new UsersAdapterElderly(contacts, this);
-        contactsRecyclerView.setAdapter(contactsAdapter);
-        swipeRefreshLayout = findViewById(R.id.main_swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(this::getContacts);
-        getContacts();
     }
 
     private void getContacts() {
@@ -148,6 +154,11 @@ public class MainActivityElderly extends AppCompatActivity implements UsersListe
                 });
     }
 
+    /**
+     * Once the login is successful, the personal FCM token
+     * used for communication is sent to the database for storage
+     * @param token the personal FCM token used for communication
+     */
     private void sendFCMTokenToDatabase(String token) {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         DocumentReference documentReference = database
@@ -159,36 +170,52 @@ public class MainActivityElderly extends AppCompatActivity implements UsersListe
                                 "Unable to send token: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * No need to implement method
+     */
     @Override
-    public void initiateVideoMeeting(User user) {
-//        if (user.token == null || user.token.trim().isEmpty()) {
-//            Toast.makeText(
-//                    this,
-//                    user.name + " is not available",
-//                    Toast.LENGTH_SHORT
-//            ).show();
-//        } else {
-//            Intent intent = new Intent(getApplicationContext(), CallOutgoingActivity.class);
-//            intent.putExtra("user", user);
-//            intent.putExtra("type", "video");
-//            startActivity(intent);
-//        }
-    }
+    public void initiateVideoMeeting(User user) {}
 
+    /**
+     * No need to implement method
+     */
     @Override
-    public void initiateAudioMeeting(User user) {
+    public void initiateAudioMeeting(User user) {}
 
-    }
-
+    /**
+     * Implementation of UsersAdapter interface method. Jump to the InfoContactActivity
+     * and display the personal information of the selected user
+     * @param user the contact selected by clicking, whose information is to be displayed
+     */
     @Override
-    public void checkContactInformation(User user) {
+    public void displayContactInformation(User user) {
         Intent intent = new Intent(getApplicationContext(), InfoContactActivity.class);
         intent.putExtra("user", user);
         startActivity(intent);
     }
 
+    /**
+     * Implementation of UsersAdapter interface method. If multiple contacts are selected,
+     * start CallOutgoingActivity, and pass the selected contacts to the next activity.
+     * @param isMultipleUsersSelected boolean:  true -> multiple contacts are selected
+     *                                         false -> no contact is selected
+     */
     @Override
     public void onMultipleUsersAction(Boolean isMultipleUsersSelected) {
-
+        if (isMultipleUsersSelected) {
+            conference.setVisibility(View.VISIBLE);
+            conference.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getApplicationContext(), CallOutgoingActivity.class);
+                    intent.putExtra("selectedUsers", new Gson().toJson(contactsAdapter.getSelectedUsers()));
+                    intent.putExtra("type", "video");
+                    intent.putExtra("isMultiple", true);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            conference.setVisibility(View.GONE);
+        }
     }
 }

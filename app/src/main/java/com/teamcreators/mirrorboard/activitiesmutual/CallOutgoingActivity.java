@@ -20,6 +20,8 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.models.User;
 import com.teamcreators.mirrorboard.network.ApiClient;
@@ -32,7 +34,9 @@ import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import retrofit2.Call;
@@ -43,8 +47,12 @@ public class CallOutgoingActivity extends AppCompatActivity {
 
     private PreferenceManager preferenceManager;
     private String inviterToken = null;
-    String meetingRoomID = null;
-    String callingType = null;
+    private String meetingRoomID = null;
+    private String callingType = null;
+    private TextView contactName, contactPhoneNum;
+    private ImageView contactAvatar;
+    private int rejectionCount = 0;
+    private int totalReceivers = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +60,9 @@ public class CallOutgoingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_call_outgoing);
 
         ImageView imageCallingType = findViewById(R.id.outgoingCall_imageCallingType);
-        ImageView contactAvatar = findViewById(R.id.outgoingCall_profileImage);
-        TextView contactName = findViewById(R.id.outgoingCall_userName_textView);
-        TextView contactPhoneNum = findViewById(R.id.outgoingCall_phoneNum_textView);
+        contactAvatar = findViewById(R.id.outgoingCall_profileImage);
+        contactName = findViewById(R.id.outgoingCall_userName_textView);
+        contactPhoneNum = findViewById(R.id.outgoingCall_phoneNum_textView);
         LinearLayout hangUp = findViewById(R.id.outgoingCall_hangup_layout);
 
         preferenceManager = new PreferenceManager(getApplicationContext());
@@ -78,45 +86,72 @@ public class CallOutgoingActivity extends AppCompatActivity {
             contactPhoneNum.setText(user.phone);
         }
 
-        // gains token of logged-in user from server
+        // gains token of logged-in user from server, then initiate a call invitation
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
                 if (task.isSuccessful() && task.getResult() != null) {
                     inviterToken = task.getResult();
-                    // start call invitation
-                    if (callingType != null && user != null) {
-                        initiateMeeting(callingType, user.token);
+                    if (callingType != null) {
+                        // Initiate a multi-party call invitation
+                        if (getIntent().getBooleanExtra("isMultiple", false)) {
+                            Type type = new TypeToken<ArrayList<User>>() {}.getType();
+                            ArrayList<User> receivers = new Gson().fromJson(getIntent().getStringExtra("selectedUsers"), type);
+                            if (receivers != null) {
+                                totalReceivers = receivers.size();
+                            }
+                            initiateMeeting(callingType, null, receivers);
+                        } else {
+                            // Initiate a single call invitation
+                            if (user != null) {
+                                totalReceivers = 1;
+                                initiateMeeting(callingType, user.token, null);
+                            }
+                        }
                     }
                 }
             }
         });
 
-//        // presses hold button, changes text color to blue, re-press, changes color to white
-//        hold.findViewById(R.id.outgoingCall_hold_textView);
-//        hold.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                hold.setSelected(!hold.isSelected());
-//            }
-//        });
-
         // hangup button
         hangUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (user != null) {
-                    cancelInvitation(user.token);
+                if (getIntent().getBooleanExtra("isMultiple", false)) {
+                    Type type = new TypeToken<ArrayList<User>>() {}.getType();
+                    ArrayList<User> receivers = new Gson().fromJson(getIntent().getStringExtra("selectedUsers"), type);
+                    cancelInvitation(null, receivers);
+                } else {
+                    if (user != null) {
+                        cancelInvitation(user.token, null);
+                    }
                 }
             }
         });
     }
 
-    // 构建邀请通话的数据,然后发送给对方
-    private void initiateMeeting(String meetingType, String receiverToken) {
+    /**
+     * Construct the data of the invitation, and then send it to the other party.
+     * @param meetingType types of call invitations
+     * @param receiverToken the token of recipient who received the invitation
+     * @param receivers invited contacts
+     */
+    private void initiateMeeting(String meetingType, String receiverToken, ArrayList<User> receivers) {
         try {
             JSONArray tokens = new JSONArray();
-            tokens.put(receiverToken);
+            if (receiverToken != null) {
+                tokens.put(receiverToken);
+            }
+            if (receivers != null && receivers.size() > 0) {
+                StringBuilder contactNames = new StringBuilder();
+                for (int i = 0; i < receivers.size(); i++) {
+                    tokens.put(receivers.get(i).token);
+                    contactNames.append(receivers.get(i).name).append("\n");
+                }
+                contactAvatar.setVisibility(View.GONE);
+                contactPhoneNum.setVisibility(View.GONE);
+                contactName.setText(contactNames.toString());
+            }
             JSONObject body = new JSONObject();
             JSONObject data = new JSONObject();
             // construct invitation content
@@ -148,7 +183,7 @@ public class CallOutgoingActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<String> call,@NonNull Response<String> response) {
                 if (response.isSuccessful()) {
                     // if type.equals(Constants.REMOTE_MSG_INVITATION), invitation successfully sent
-                    // if type.equals(Constants.REMOTE_MSG_INVITATION_RESPONSE), invitation canceled by sender
+                    // if type.equals(Constants.REMOTE_MSG_INVITATION_RESPONSE), invitation accepted/rejected by sender
                     if (type.equals(Constants.REMOTE_MSG_INVITATION_RESPONSE)) {
                         finish();
                     }
@@ -166,11 +201,22 @@ public class CallOutgoingActivity extends AppCompatActivity {
         });
     }
 
-    // implementing the facility to cancel call invitation from sender side
-    private void cancelInvitation(String receiverToken) {
+    /**
+     * Implement the facility to cancel call invitations from sender side, and inform the recipients.
+     * @param receiverToken the token of recipient who received the invitation
+     * @param receivers invited contacts
+     */
+    private void cancelInvitation(String receiverToken, ArrayList<User> receivers) {
         try {
             JSONArray tokens = new JSONArray();
-            tokens.put(receiverToken);
+            if (receiverToken != null) {
+                tokens.put(receiverToken);
+            }
+            if (receivers != null && receivers.size() > 0) {
+                for (User user : receivers) {
+                    tokens.put(user.token);
+                }
+            }
             JSONObject body = new JSONObject();
             JSONObject data = new JSONObject();
             data.put(Constants.REMOTE_MSG_TYPE, Constants.REMOTE_MSG_INVITATION_RESPONSE);
@@ -208,8 +254,11 @@ public class CallOutgoingActivity extends AppCompatActivity {
                         finish();
                     }
                 } else if (type.equals(Constants.REMOTE_MSG_INVITATION_REJECTED)) {
-                    // call invitation rejected by the other party
-                    finish();
+                    // call invitation rejected by one of the other parties
+                    rejectionCount += 1;
+                    if (rejectionCount == totalReceivers) {
+                        finish();
+                    }
                 }
             }
         }

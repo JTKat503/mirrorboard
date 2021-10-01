@@ -277,7 +277,6 @@ public class CreateProfileActivity extends AppCompatActivity {
                         preferenceManager.putString(Constants.KEY_MODE, mode);
                         preferenceManager.putString(Constants.KEY_PHONE, phone);
                         preferenceManager.putString(Constants.KEY_NAME, nickName.getText().toString());
-//                        preferenceManager.putString(Constants.KEY_PASSWORD, password);
                         preferenceManager.putString(Constants.KEY_AVATAR_URI, uri.toString());
                         preferenceManager.putStringSet(Constants.KEY_HOBBIES, new HashSet<>());
                         startUserMode();

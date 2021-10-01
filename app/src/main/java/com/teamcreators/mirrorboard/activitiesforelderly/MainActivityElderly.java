@@ -8,6 +8,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,8 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -66,10 +70,10 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         contacts = new ArrayList<>();
         contactsAdapter = new UsersAdapter(contacts, this);
         contactsRecyclerView.setAdapter(contactsAdapter);
-        getContacts();
+        getContactsIDs();
 
         // refreshing contacts list
-        swipeRefreshLayout.setOnRefreshListener(this::getContacts);
+        swipeRefreshLayout.setOnRefreshListener(this::getContactsIDs);
 
         // gains token from Messaging server then send it to database
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
@@ -120,46 +124,78 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
     }
 
     /**
-     * Get all this user's contacts information from the database
-     * and load the contacts list
+     * Get the IDs of all contacts of this user
+     * IDs are stored in a list in the form of String
      */
-    private void getContacts() {
-        swipeRefreshLayout.setRefreshing(true);
+    private void getContactsIDs() {
+        String myID = preferenceManager.getString(Constants.KEY_USER_ID);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USERS)
+                .document(myID)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        swipeRefreshLayout.setRefreshing(false);
-                        String myUserID = preferenceManager.getString(Constants.KEY_USER_ID);
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            contacts.clear();
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                // display the contacts except the currently logged-in uer
-                                if (myUserID.equals(documentSnapshot.getId())) {
-                                    continue;
-                                }
-                                User contact = new User();
-                                contact.name = documentSnapshot.getString(Constants.KEY_NAME);
-                                contact.phone = documentSnapshot.getString(Constants.KEY_PHONE);
-                                contact.avatarUri = documentSnapshot.getString(Constants.KEY_AVATAR_URI);
-                                contact.token = documentSnapshot.getString(Constants.KEY_FCM_TOKEN);
-                                contacts.add(contact);
-                            }
-                            if (contacts.size() > 0) {
-                                contactsAdapter.notifyDataSetChanged();
-                                textErrorMessage.setVisibility(View.GONE);
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                List<String> myFriendsIDs = (List<String>) document.get(Constants.KEY_FRIENDS);
+                                getContacts(myFriendsIDs);
                             } else {
-                                textErrorMessage.setText(String.format("%s", "No contacts available"));
-                                textErrorMessage.setVisibility(View.VISIBLE);
+                                Toast.makeText(getApplicationContext(),
+                                        "Failed to get contacts list", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            textErrorMessage.setText(String.format("%s", "No contacts available"));
-                            textErrorMessage.setVisibility(View.VISIBLE);
+                            Toast.makeText(getApplicationContext(), "Get failed with " +
+                                    task.getException(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    /**
+     * Get all this user's contacts information from the database
+     * and load the contacts list
+     */
+    private void getContacts(List<String> contactsIDs) {
+        swipeRefreshLayout.setRefreshing(true);
+        if (contactsIDs == null || contactsIDs.isEmpty()) {
+            swipeRefreshLayout.setRefreshing(false);
+            textErrorMessage.setText(String.format("%s", "No contacts"));
+            textErrorMessage.setVisibility(View.VISIBLE);
+        } else {
+            contacts.clear();
+            FirebaseFirestore database = FirebaseFirestore.getInstance();
+            database.collection(Constants.KEY_COLLECTION_USERS)
+                    .whereIn(Constants.KEY_PHONE, contactsIDs)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            swipeRefreshLayout.setRefreshing(false);
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    User contact = new User();
+                                    contact.name = document.getString(Constants.KEY_NAME);
+                                    contact.phone = document.getString(Constants.KEY_PHONE);
+                                    contact.token = document.getString(Constants.KEY_FCM_TOKEN);
+                                    contact.avatarUri = document.getString(Constants.KEY_AVATAR_URI);
+                                    contacts.add(contact);
+                                }
+                                if (contacts.size() > 0) {
+                                contactsAdapter.notifyDataSetChanged();
+                                textErrorMessage.setVisibility(View.GONE);
+                                } else {
+                                textErrorMessage.setText(String.format("%s", "No contacts"));
+                                textErrorMessage.setVisibility(View.VISIBLE);
+                                }
+                            } else {
+                                textErrorMessage.setText(String.format("%s", "No contacts"));
+                                textErrorMessage.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
+        }
     }
 
     /**

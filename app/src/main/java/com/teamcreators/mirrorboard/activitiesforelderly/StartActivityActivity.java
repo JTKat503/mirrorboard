@@ -111,11 +111,11 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
                 hobbiesAdapter.notifyDataSetChanged();
                 textErrorMessage.setVisibility(View.GONE);
             } else {
-                textErrorMessage.setText(String.format("%s", "No hobbies added"));
+                textErrorMessage.setText(String.format("%s", "No hobbies"));
                 textErrorMessage.setVisibility(View.VISIBLE);
             }
         } else {
-            textErrorMessage.setText(String.format("%s", "No hobbies added"));
+            textErrorMessage.setText(String.format("%s", "No hobbies"));
             textErrorMessage.setVisibility(View.VISIBLE);
         }
     }

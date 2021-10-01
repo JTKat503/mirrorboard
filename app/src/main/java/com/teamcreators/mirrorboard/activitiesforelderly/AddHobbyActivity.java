@@ -153,9 +153,9 @@ public class AddHobbyActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FirebaseFirestore database = FirebaseFirestore.getInstance();
-                String userID = preferenceManager.getString(Constants.KEY_USER_ID);
+                String myID = preferenceManager.getString(Constants.KEY_USER_ID);
                 database.collection(Constants.KEY_COLLECTION_USERS)
-                        .document(userID)
+                        .document(myID)
                         .update(Constants.KEY_HOBBIES, new ArrayList<>(hobbies))
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override

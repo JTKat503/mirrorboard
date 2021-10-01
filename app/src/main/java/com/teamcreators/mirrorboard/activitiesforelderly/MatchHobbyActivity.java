@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.activitiesmutual.CallOutgoingActivity;
@@ -25,14 +26,14 @@ import com.teamcreators.mirrorboard.models.User;
 import com.teamcreators.mirrorboard.utilities.Constants;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class MatchHobbyActivity extends AppCompatActivity {
 
     private Hobby hobby;
     private DocumentSnapshot matchedStranger = null;
+    private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class MatchHobbyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_match_hobby);
 
         hobby = (Hobby) getIntent().getSerializableExtra("hobby");
+        preferenceManager = new PreferenceManager(getApplicationContext());
 
         Button matchFriend = findViewById(R.id.matchHobby_findCall_button);
         Button removeHobby = findViewById(R.id.matchHobby_removeHobby_button);
@@ -62,7 +64,7 @@ public class MatchHobbyActivity extends AppCompatActivity {
         matchFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getMyContacts();
+                getContactsIDs();
                 if (matchedStranger != null) {
                     User recipient = new User();
                     recipient.name = matchedStranger.getString(Constants.KEY_NAME);
@@ -71,6 +73,7 @@ public class MatchHobbyActivity extends AppCompatActivity {
                     recipient.avatarUri = matchedStranger.getString(Constants.KEY_AVATAR_URI);
                     initiateVideoCall(recipient);
                 }
+                matchedStranger = null;
             }
         });
 
@@ -107,32 +110,45 @@ public class MatchHobbyActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void randomlyGetMatchedStranger(List<String> myFriends) {
+    private void randomlyGetMatchedStranger(List<String> myFriendsIDs) {
+        matchedStranger = null;
+        String myID = preferenceManager.getString(Constants.KEY_USER_ID);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        // 联合查询语句有问题，不可运行
         database.collection(Constants.KEY_COLLECTION_USERS)
                 .whereArrayContains(Constants.KEY_HOBBIES, hobby.name)
-                .whereNotIn(Constants.KEY_PHONE, myFriends)
-                .whereNotIn(Constants.KEY_FCM_TOKEN, Arrays.asList("", null))
-
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful() && task.getResult() != null && task.getResult().getDocuments().size() > 0) {
-                            int randomNum = new Random().nextInt(task.getResult().getDocuments().size());
-                            matchedStranger = task.getResult().getDocuments().get(randomNum);
+                        if (task.isSuccessful()) {
+                            ArrayList<QueryDocumentSnapshot> strangers = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (!myFriendsIDs.contains(document.getId())
+                                        && !document.getId().equals(myID)
+                                        && document.getString(Constants.KEY_FCM_TOKEN) != null) {
+                                    strangers.add(document);
+                                }
+                            }
+                            if (strangers.size() > 0) {
+                                int randomIndex = (int) (Math.random() * strangers.size());
+                                matchedStranger = strangers.get(randomIndex);
+                            } else {
+                                Toast.makeText(getApplicationContext(),
+                                        "Failed to find a friend", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             Toast.makeText(getApplicationContext(),
                                     "Failed to find a friend", Toast.LENGTH_SHORT).show();
-                            finish();
                         }
                     }
                 });
     }
 
-    private void getMyContacts() {
-        PreferenceManager preferenceManager = new PreferenceManager(getApplicationContext());
+    /**
+     * Get the IDs of all contacts of this user
+     * IDs are stored in a list in the form of String
+     */
+    private void getContactsIDs() {
         String myID = preferenceManager.getString(Constants.KEY_USER_ID);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USERS)
@@ -141,20 +157,18 @@ public class MatchHobbyActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful() && task.getResult() != null) {
+                        if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
-                                List<String> myFriends = (List<String>) document.get(Constants.KEY_FRIENDS);
-                                randomlyGetMatchedStranger(myFriends);
+                                List<String> myFriendsIDs = (List<String>) document.get(Constants.KEY_FRIENDS);
+                                randomlyGetMatchedStranger(myFriendsIDs);
                             } else {
                                 Toast.makeText(getApplicationContext(),
-                                        "Failed to get friends list", Toast.LENGTH_SHORT).show();
-                                finish();
+                                        "Failed to get contacts list", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Toast.makeText(getApplicationContext(), "Get failed with " +
                                     task.getException(), Toast.LENGTH_SHORT).show();
-                            finish();
                         }
                     }
                 });

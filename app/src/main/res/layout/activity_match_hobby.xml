@@ -19,11 +19,10 @@
         android:layout_alignParentTop="true">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/matchHobby_profileImage"
+            android:id="@+id/matchHobby_hobbyIcon"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_alignParentBottom="true"
-            android:src="@drawable/blank_hobby_image"
             app:shapeAppearanceOverlay="@style/RoundedSquare" />
     </RelativeLayout>
 
@@ -34,7 +33,6 @@
         android:layout_below="@id/matchHobby_topRelativeLayout"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="Hobby"
         android:textColor="@color/colorTextDark"
         android:textSize="30sp" />
 

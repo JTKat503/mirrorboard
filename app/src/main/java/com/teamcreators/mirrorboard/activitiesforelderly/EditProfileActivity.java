@@ -13,8 +13,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -25,7 +25,6 @@ import com.canhub.cropper.CropImageContractOptions;
 import com.canhub.cropper.CropImageOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
@@ -49,7 +48,6 @@ import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -57,7 +55,7 @@ import java.util.UUID;
  */
 public class EditProfileActivity extends AppCompatActivity {
 
-    private MaterialButton takePicture, keepChanges, goBack, signOut;
+    private Button takePicture, keepChanges, goBack, signOut;
     private EditText newName;
     private ImageView avatar;
     private Uri newAvatarUri;

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.teamcreators.mirrorboard.R;
-import com.teamcreators.mirrorboard.listeners.UsersListener;
+import com.teamcreators.mirrorboard.listeners.ItemsListener;
 import com.teamcreators.mirrorboard.models.User;
 
 import java.util.ArrayList;
@@ -25,10 +25,11 @@ import java.util.List;
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHolder> {
 
     private List<User> users;
-    private UsersListener usersListener;
+    private ItemsListener usersListener;
     private List<User> selectedUsers;
 
-    public UsersAdapter(List<User> users, UsersListener usersListener) {
+    // constructor for UsersAdapter
+    public UsersAdapter(List<User> users, ItemsListener usersListener) {
         this.users = users;
         this.usersListener = usersListener;
         selectedUsers = new ArrayList<>();
@@ -65,26 +66,21 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
     }
 
     /**
-     *
+     * ViewHolder for setting user data
      */
     class UserViewHolder extends RecyclerView.ViewHolder {
         TextView textUserName;
         ImageView imageUserAvatar;
         ConstraintLayout userContainer;
         ImageView imageSelected;
-//        Button makeVideoCall;
-//        ImageView imageAudioCall;
 
-        // constructor
+        // constructor for UserViewHolder
         UserViewHolder(@NonNull View itemView) {
             super(itemView);
             textUserName = itemView.findViewById(R.id.userContainer_userName);
             imageUserAvatar = itemView.findViewById(R.id.userContainer_imageAvatar);
             userContainer = itemView.findViewById(R.id.userContainer);
             imageSelected = itemView.findViewById(R.id.userContainer_imageSelected);
-//            makeVideoCall = itemView.findViewById(R.id.contactInfo_makeCall_button);
-//            imageVideoCall = itemView.findViewById(R.id.userContainer_more_imageView);
-//            imageAudioCall = itemView.findViewById()
         }
 
         /**
@@ -98,31 +94,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
                     .fitCenter()
                     .error(R.drawable.blank_profile)
                     .into(imageUserAvatar);
-//            userContainer.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Intent intent = new Intent(context, InfoContactActivity.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString("name", user.name);
-//                    bundle.putString("avatarUri", user.avatarUri);
-//                    intent.putExtras(bundle);
-//                    context.startActivity(intent);
-//                }
-//            });
-
-//            imageVideoCall.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    usersListener.initiateVideoMeeting(user);
-//                }
-//            });
-
-//            imageAudioCall.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    usersListener.initiateAudioMeeting(user);
-//                }
-//            });
 
             /*
             In multi-selected state:
@@ -151,13 +122,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
                     }
                 }
             });
-
-//            makeVideoCall.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    usersListener.initiateVideoMeeting(user);
-//                }
-//            });
 
             // Long press the user to add the user to the multi-party call invitation list
             // Enter multiple selection state

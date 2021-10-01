@@ -87,10 +87,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/main_newRequests_button"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="50dp"
         android:fontFamily="@font/rubik_medium"
         android:includeFontPadding="false"
-        android:textColor="@color/colorTextLight"
+        android:textColor="@color/colorTextDark"
         android:textSize="20sp"
         android:gravity="center"
         android:visibility="gone" />

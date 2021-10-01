@@ -46,7 +46,10 @@ import com.teamcreators.mirrorboard.activitiesforfamily.MainActivityFamily;
 import com.teamcreators.mirrorboard.utilities.Constants;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -99,7 +102,7 @@ public class CreateProfileActivity extends AppCompatActivity {
                         avatar.setImageURI(avatarUri);
                     }
                     else {
-                        Log.e("CIL", Objects.requireNonNull(result.getError()).getMessage());
+                        Toast.makeText(getApplicationContext(), "Failed to start cropper", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -258,6 +261,8 @@ public class CreateProfileActivity extends AppCompatActivity {
                 user.put(Constants.KEY_PASSWORD, password);
                 user.put(Constants.KEY_NAME, nickName.getText().toString());
                 user.put(Constants.KEY_AVATAR_URI, uri.toString());
+                user.put(Constants.KEY_HOBBIES, new ArrayList<>());
+                user.put(Constants.KEY_FRIENDS, new ArrayList<>());
 
                 FirebaseFirestore database = FirebaseFirestore.getInstance();
                 final String subPath = phone;
@@ -274,6 +279,7 @@ public class CreateProfileActivity extends AppCompatActivity {
                         preferenceManager.putString(Constants.KEY_NAME, nickName.getText().toString());
 //                        preferenceManager.putString(Constants.KEY_PASSWORD, password);
                         preferenceManager.putString(Constants.KEY_AVATAR_URI, uri.toString());
+                        preferenceManager.putStringSet(Constants.KEY_HOBBIES, new HashSet<>());
                         startUserMode();
                         finish();
                     }

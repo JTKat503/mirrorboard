@@ -22,23 +22,264 @@
         android:textColor="@color/colorTextDark"
         android:textSize="35sp" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/addHobby_swipeRefreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_above="@+id/addHobby_goBack_button"
-        android:layout_below="@+id/addHobby_textView"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp">
+<!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--        android:id="@+id/addHobby_swipeRefreshLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_above="@+id/addHobby_goBack_button"-->
+<!--        android:layout_below="@+id/addHobby_textView"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:layout_marginBottom="10dp">-->
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/addHobby_hobbies_RecyclerView"
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/addHobby_hobbies_RecyclerView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:clipToPadding="false"-->
+<!--            android:orientation="vertical"-->
+<!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />-->
+<!--    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/addHobby_bottomLinearLayout"
+        android:layout_below="@id/addHobby_textView"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
+        android:scrollbars="none">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/addHobby_cooking_layout"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/shape_stroke_black"
+                android:padding="5dp" >
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/hobby_icon_cooking"
+                    app:shapeAppearanceOverlay="@style/RoundedSquare" />
+                <CheckBox
+                    android:id="@+id/addHobby_cooking_checkbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/ic_round_plus_48"
+                    android:drawableTint="@color/colorTextDark"
+                    android:text="@string/cooking"
+                    android:textSize="27sp"
+                    android:fontFamily="@font/rubik_medium"
+                    android:includeFontPadding="false"
+                    android:paddingStart="10dp"
+                    tools:ignore="RtlSymmetry" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/addHobby_exercise_layout"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/shape_stroke_black"
+                android:layout_below="@id/addHobby_cooking_layout"
+                android:layout_marginTop="15dp"
+                android:padding="5dp" >
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/hobby_icon_exercise"
+                    app:shapeAppearanceOverlay="@style/RoundedSquare" />
+                <CheckBox
+                    android:id="@+id/addHobby_exercise_checkbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/ic_round_plus_48"
+                    android:drawableTint="@color/colorTextDark"
+                    android:text="@string/exercise"
+                    android:textSize="27sp"
+                    android:fontFamily="@font/rubik_medium"
+                    android:includeFontPadding="false"
+                    android:paddingStart="10dp"
+                    tools:ignore="RtlSymmetry" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/addHobby_fishing_layout"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_below="@id/addHobby_exercise_layout"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/shape_stroke_black"
+                android:padding="5dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/hobby_icon_fishing"
+                    app:shapeAppearanceOverlay="@style/RoundedSquare" />
+
+                <CheckBox
+                    android:id="@+id/addHobby_fishing_checkbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/ic_round_plus_48"
+                    android:drawableTint="@color/colorTextDark"
+                    android:fontFamily="@font/rubik_medium"
+                    android:includeFontPadding="false"
+                    android:paddingStart="10dp"
+                    android:text="@string/fishing"
+                    android:textSize="27sp"
+                    tools:ignore="RtlSymmetry" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/addHobby_gardening_layout"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/shape_stroke_black"
+                android:layout_below="@id/addHobby_fishing_layout"
+                android:layout_marginTop="15dp"
+                android:padding="5dp" >
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/hobby_icon_gardening"
+                    app:shapeAppearanceOverlay="@style/RoundedSquare" />
+                <CheckBox
+                    android:id="@+id/addHobby_gardening_checkbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/ic_round_plus_48"
+                    android:drawableTint="@color/colorTextDark"
+                    android:text="@string/gardening"
+                    android:textSize="27sp"
+                    android:fontFamily="@font/rubik_medium"
+                    android:includeFontPadding="false"
+                    android:paddingStart="10dp"
+                    tools:ignore="RtlSymmetry" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/addHobby_knitting_layout"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/shape_stroke_black"
+                android:layout_below="@id/addHobby_gardening_layout"
+                android:layout_marginTop="15dp"
+                android:padding="5dp" >
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/hobby_icon_knitting"
+                    app:shapeAppearanceOverlay="@style/RoundedSquare" />
+                <CheckBox
+                    android:id="@+id/addHobby_knitting_checkbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/ic_round_plus_48"
+                    android:drawableTint="@color/colorTextDark"
+                    android:text="@string/knitting"
+                    android:textSize="27sp"
+                    android:fontFamily="@font/rubik_medium"
+                    android:includeFontPadding="false"
+                    android:paddingStart="10dp"
+                    tools:ignore="RtlSymmetry" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/addHobby_music_layout"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/shape_stroke_black"
+                android:layout_below="@id/addHobby_knitting_layout"
+                android:layout_marginTop="15dp"
+                android:padding="5dp" >
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/hobby_icon_music"
+                    app:shapeAppearanceOverlay="@style/RoundedSquare" />
+                <CheckBox
+                    android:id="@+id/addHobby_music_checkbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/ic_round_plus_48"
+                    android:drawableTint="@color/colorTextDark"
+                    android:text="@string/music"
+                    android:textSize="27sp"
+                    android:fontFamily="@font/rubik_medium"
+                    android:includeFontPadding="false"
+                    android:paddingStart="10dp"
+                    tools:ignore="RtlSymmetry" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/addHobby_pets_layout"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/shape_stroke_black"
+                android:layout_below="@id/addHobby_music_layout"
+                android:layout_marginTop="15dp"
+                android:padding="5dp" >
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/hobby_icon_pets"
+                    app:shapeAppearanceOverlay="@style/RoundedSquare" />
+                <CheckBox
+                    android:id="@+id/addHobby_pets_checkbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/ic_round_plus_48"
+                    android:drawableTint="@color/colorTextDark"
+                    android:text="@string/pets"
+                    android:textSize="27sp"
+                    android:fontFamily="@font/rubik_medium"
+                    android:includeFontPadding="false"
+                    android:paddingStart="10dp"
+                    tools:ignore="RtlSymmetry" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/addHobby_tv_layout"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/shape_stroke_black"
+                android:layout_below="@id/addHobby_pets_layout"
+                android:layout_marginTop="15dp"
+                android:padding="5dp" >
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/hobby_icon_tv"
+                    app:shapeAppearanceOverlay="@style/RoundedSquare" />
+                <CheckBox
+                    android:id="@+id/addHobby_tv_checkbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/ic_round_plus_48"
+                    android:drawableTint="@color/colorTextDark"
+                    android:text="@string/films_tv"
+                    android:textSize="27sp"
+                    android:fontFamily="@font/rubik_medium"
+                    android:includeFontPadding="false"
+                    android:paddingStart="10dp"
+                    tools:ignore="RtlSymmetry" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
 
     <!--    <com.google.android.material.button.MaterialButton-->
     <!--        android:id="@+id/addHobby_moreHobbies_button"-->
@@ -59,24 +300,69 @@
     <!--        app:iconGravity="start"-->
     <!--        app:iconTint="@color/colorTextLight" />-->
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/addHobby_goBack_button"
+<!--    <com.google.android.material.button.MaterialButton-->
+<!--        android:id="@+id/addHobby_goBack_button"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="85dp"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginTop="15dp"-->
+<!--        android:backgroundTint="@color/colorGrey"-->
+<!--        android:fontFamily="@font/rubik_medium"-->
+<!--        android:includeFontPadding="false"-->
+<!--        android:padding="8dp"-->
+<!--        android:text="@string/go_back"-->
+<!--        android:textAlignment="textStart"-->
+<!--        android:textAllCaps="false"-->
+<!--        android:textColor="@color/colorTextLight"-->
+<!--        android:textSize="30sp"-->
+<!--        app:cornerRadius="12dp"-->
+<!--        app:icon="@drawable/ic_round_arrow_left_48"-->
+<!--        app:iconGravity="start"-->
+<!--        app:iconTint="@color/colorTextLight" />-->
+
+    <LinearLayout
+        android:id="@+id/addHobby_bottomLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="15dp"
-        android:backgroundTint="@color/colorGrey"
-        android:fontFamily="@font/rubik_medium"
-        android:includeFontPadding="false"
-        android:padding="8dp"
-        android:text="@string/go_back"
-        android:textAlignment="textStart"
-        android:textAllCaps="false"
-        android:textColor="@color/colorTextLight"
-        android:textSize="30sp"
-        app:cornerRadius="12dp"
-        app:icon="@drawable/ic_round_arrow_left_48"
-        app:iconGravity="start"
-        app:iconTint="@color/colorTextLight" />
+        android:layout_alignParentBottom="true">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/addHobby_back_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/colorGrey"
+            android:padding="8dp"
+            app:cornerRadius="12dp"
+            android:text="@string/back"
+            android:textSize="27sp"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextLight"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/rubik_medium"
+            android:textAlignment="textStart"
+            app:icon="@drawable/ic_round_arrow_left_48"
+            app:iconTint="@color/colorTextLight"
+            app:iconGravity="start"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/addHobby_done_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:backgroundTint="@color/colorBlue"
+            android:padding="8dp"
+            app:cornerRadius="12dp"
+            android:text="@string/done"
+            android:textSize="27sp"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextLight"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/rubik_medium"
+            android:gravity="center" />
+
+    </LinearLayout>
 
 </RelativeLayout>

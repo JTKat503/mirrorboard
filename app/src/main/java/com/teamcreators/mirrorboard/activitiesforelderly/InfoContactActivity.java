@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,15 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.button.MaterialButton;
 import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.activitiesmutual.CallOutgoingActivity;
-import com.teamcreators.mirrorboard.listeners.UsersListener;
+import com.teamcreators.mirrorboard.listeners.ItemsListener;
+import com.teamcreators.mirrorboard.models.Hobby;
 import com.teamcreators.mirrorboard.models.User;
 
-public class InfoContactActivity extends AppCompatActivity implements UsersListener {
+public class InfoContactActivity extends AppCompatActivity {
 
-    private Button makeVideoCall, editFriendsNickname, removeContact, goBack;
     private User user;
 
     @Override
@@ -32,13 +32,16 @@ public class InfoContactActivity extends AppCompatActivity implements UsersListe
 
         user = (User) getIntent().getSerializableExtra("user");
 
-        makeVideoCall = findViewById(R.id.contactInfo_makeCall_button);
-        editFriendsNickname = findViewById(R.id.contactInfo_editNickname_button);
-        removeContact = findViewById(R.id.contactInfo_removeContact_button);
-        goBack = findViewById(R.id.contactInfo_goBack_button);
+        Button makeVideoCall = findViewById(R.id.contactInfo_makeCall_button);
+        Button editFriendsNickname = findViewById(R.id.contactInfo_editNickname_button);
+        Button removeContact = findViewById(R.id.contactInfo_removeContact_button);
+        Button goBack = findViewById(R.id.contactInfo_goBack_button);
 
         TextView contactName = findViewById(R.id.contactInfo_contactName);
         contactName.setText(user.name);
+        contactName.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        contactName.setMarqueeRepeatLimit(1);
+        contactName.setSelected(true);
 
         ImageView contactAvatar = findViewById(R.id.contactInfo_profileImage);
         Glide.with(this)
@@ -51,18 +54,7 @@ public class InfoContactActivity extends AppCompatActivity implements UsersListe
         makeVideoCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (user.token == null || user.token.trim().isEmpty()) {
-                    Toast.makeText(
-                            getApplicationContext(),
-                            user.name + " is not available",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                } else {
-                    Intent intent = new Intent(getApplicationContext(), CallOutgoingActivity.class);
-                    intent.putExtra("user", user);
-                    intent.putExtra("type", "video");
-                    startActivity(intent);
-                }
+                initiateVideoCall(user);
             }
         });
 
@@ -79,7 +71,8 @@ public class InfoContactActivity extends AppCompatActivity implements UsersListe
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(InfoContactActivity.this);
-                builder.setMessage("Are you sure you want to delete this contact?")
+                builder.setTitle("Delete Contact")
+                        .setMessage("Are you sure you want to delete this contact?")
                         .setNegativeButton(android.R.string.no, null)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
@@ -90,8 +83,6 @@ public class InfoContactActivity extends AppCompatActivity implements UsersListe
                                 finish();
                             }
                         }).show();
-
-
             }
         });
 
@@ -103,12 +94,14 @@ public class InfoContactActivity extends AppCompatActivity implements UsersListe
                 finish();
             }
         });
-
-
     }
 
-    @Override
-    public void initiateVideoMeeting(User user) {
+    /**
+     * Initialize the information of the recipient of the video call and
+     * start the video call, if can not find the recipient, display hint
+     * @param user recipient of the video call
+     */
+    private void initiateVideoCall(User user) {
         if (user.token == null || user.token.trim().isEmpty()) {
             Toast.makeText(
                     this,
@@ -123,8 +116,12 @@ public class InfoContactActivity extends AppCompatActivity implements UsersListe
         }
     }
 
-    @Override
-    public void initiateAudioMeeting(User user) {
+//    /**
+//     * Initialize the information of the recipient of the audio call and
+//     * start the audio call, if can not find the recipient, display hint
+//     * @param user recipient of the video call
+//     */
+//    public void initiateAudioCall(User user) {
 //        if (user.token == null || user.token.trim().isEmpty()) {
 //            Toast.makeText(
 //                    this,
@@ -137,15 +134,5 @@ public class InfoContactActivity extends AppCompatActivity implements UsersListe
 //            intent.putExtra("type", "audio");
 //            startActivity(intent);
 //        }
-    }
-
-    @Override
-    public void displayContactInformation(User user) {
-
-    }
-
-    @Override
-    public void onMultipleUsersAction(Boolean isMultipleUsersSelected) {
-
-    }
+//    }
 }

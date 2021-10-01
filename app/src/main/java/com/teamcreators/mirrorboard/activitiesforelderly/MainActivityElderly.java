@@ -25,7 +25,8 @@ import com.google.gson.Gson;
 import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.activitiesmutual.CallOutgoingActivity;
 import com.teamcreators.mirrorboard.adapters.UsersAdapter;
-import com.teamcreators.mirrorboard.listeners.UsersListener;
+import com.teamcreators.mirrorboard.listeners.ItemsListener;
+import com.teamcreators.mirrorboard.models.Hobby;
 import com.teamcreators.mirrorboard.models.User;
 import com.teamcreators.mirrorboard.utilities.Constants;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
@@ -36,10 +37,10 @@ import java.util.List;
 /**
  *
  */
-public class MainActivityElderly extends AppCompatActivity implements UsersListener {
+public class MainActivityElderly extends AppCompatActivity implements ItemsListener {
 
     private PreferenceManager preferenceManager;
-    private Button newContact, newRequests, exit, hobbies;
+    private Button newRequests;
     private List<User> contacts;
     private UsersAdapter contactsAdapter;
     private TextView textErrorMessage;
@@ -52,21 +53,23 @@ public class MainActivityElderly extends AppCompatActivity implements UsersListe
         setContentView(R.layout.activity_main_elderly);
 
         preferenceManager = new PreferenceManager(getApplicationContext());
+        textErrorMessage = findViewById(R.id.main_errorMessage_textView);
         conference = findViewById(R.id.main_conference_imageView);
-        newContact = findViewById(R.id.main_addContact_button);
         newRequests = findViewById(R.id.main_newRequests_button);
-        hobbies = findViewById(R.id.main_hobbies_button);
-        exit = findViewById(R.id.main_exit_button);
+        swipeRefreshLayout = findViewById(R.id.main_swipeRefreshLayout);
+        Button newContact = findViewById(R.id.main_addContact_button);
+        Button hobbies = findViewById(R.id.main_hobbies_button);
+        Button exit = findViewById(R.id.main_exit_button);
 
         // building and loading contacts list
         RecyclerView contactsRecyclerView = findViewById(R.id.main_contacts_RecyclerView);
-        textErrorMessage = findViewById(R.id.main_errorMessage_textView);
         contacts = new ArrayList<>();
         contactsAdapter = new UsersAdapter(contacts, this);
         contactsRecyclerView.setAdapter(contactsAdapter);
-        swipeRefreshLayout = findViewById(R.id.main_swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(this::getContacts);
         getContacts();
+
+        // refreshing contacts list
+        swipeRefreshLayout.setOnRefreshListener(this::getContacts);
 
         // gains token from Messaging server then send it to database
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
@@ -116,6 +119,10 @@ public class MainActivityElderly extends AppCompatActivity implements UsersListe
         });
     }
 
+    /**
+     * Get all this user's contacts information from the database
+     * and load the contacts list
+     */
     private void getContacts() {
         swipeRefreshLayout.setRefreshing(true);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -142,6 +149,7 @@ public class MainActivityElderly extends AppCompatActivity implements UsersListe
                             }
                             if (contacts.size() > 0) {
                                 contactsAdapter.notifyDataSetChanged();
+                                textErrorMessage.setVisibility(View.GONE);
                             } else {
                                 textErrorMessage.setText(String.format("%s", "No contacts available"));
                                 textErrorMessage.setVisibility(View.VISIBLE);
@@ -171,20 +179,8 @@ public class MainActivityElderly extends AppCompatActivity implements UsersListe
     }
 
     /**
-     * No need to implement method
-     */
-    @Override
-    public void initiateVideoMeeting(User user) {}
-
-    /**
-     * No need to implement method
-     */
-    @Override
-    public void initiateAudioMeeting(User user) {}
-
-    /**
-     * Implementation of UsersAdapter interface method. Jump to the InfoContactActivity
-     * and display the personal information of the selected user
+     * Implementation of ItemsAdapter interface method.
+     * Jump to the InfoContactActivity and display the personal information of the selected user
      * @param user the contact selected by clicking, whose information is to be displayed
      */
     @Override
@@ -195,8 +191,15 @@ public class MainActivityElderly extends AppCompatActivity implements UsersListe
     }
 
     /**
-     * Implementation of UsersAdapter interface method. If multiple contacts are selected,
-     * start CallOutgoingActivity, and pass the selected contacts to the next activity.
+     * No need to implement method
+     */
+    @Override
+    public void displayHobbyInformation(Hobby hobby) {}
+
+    /**
+     * Implementation of ItemsAdapter interface method.
+     * If multiple contacts are selected, start CallOutgoingActivity,
+     * and pass the selected contacts to the next activity.
      * @param isMultipleUsersSelected boolean:  true -> multiple contacts are selected
      *                                         false -> no contact is selected
      */

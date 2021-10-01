@@ -3,6 +3,10 @@ package com.teamcreators.mirrorboard.utilities;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+
 public class PreferenceManager {
 
     private SharedPreferences sharedPreferences;
@@ -29,6 +33,23 @@ public class PreferenceManager {
 
     public String getString(String key) {
         return sharedPreferences.getString(key, null);
+    }
+
+    public void putStringSet(String key, HashSet<String> value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String set = value.toString().replaceAll("\\[|]|\\s", "");
+        editor.putString(key, set);
+        editor.apply();
+    }
+
+    public HashSet<String> getStringSet(String key) {
+        String set = sharedPreferences.getString(key, null);
+        if (set.equals("")) {
+            return new HashSet<>();
+        }
+        String[] setParts = set.split(",");
+        List<String> listParts = Arrays.asList(setParts);
+        return new HashSet<>(listParts);
     }
 
     public void clearPreferences() {

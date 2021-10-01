@@ -38,7 +38,7 @@ import retrofit2.Response;
 public class CallIncomingActivity extends AppCompatActivity {
 
     private String callingType = null;
-    MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

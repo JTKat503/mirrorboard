@@ -7,13 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -23,13 +23,18 @@ import com.teamcreators.mirrorboard.activitiesforfamily.MainActivityFamily;
 import com.teamcreators.mirrorboard.utilities.Constants;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+
 /**
  *
  */
 public class LoginActivity extends AppCompatActivity {
 
     private EditText inputPhoneNum, inputPassword;
-    private MaterialButton buttonLogIn;
+    private Button buttonLogIn;
     private ProgressBar loginProgressBar;
     private PreferenceManager preferenceManager;
 
@@ -106,6 +111,8 @@ public class LoginActivity extends AppCompatActivity {
                             preferenceManager.putString(Constants.KEY_NAME, documentSnapshot.getString(Constants.KEY_NAME));
                             preferenceManager.putString(Constants.KEY_PHONE, documentSnapshot.getString(Constants.KEY_PHONE));
                             preferenceManager.putString(Constants.KEY_AVATAR_URI, documentSnapshot.getString(Constants.KEY_AVATAR_URI));
+                            List<String> hobbies = (List<String>) documentSnapshot.get(Constants.KEY_HOBBIES);
+                            preferenceManager.putStringSet(Constants.KEY_HOBBIES, new HashSet<>(hobbies));
                             startUserMode(mode);
                             finish();
                         } else {

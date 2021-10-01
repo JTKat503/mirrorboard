@@ -92,6 +92,19 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <TextView
+        android:id="@+id/startActivity_errorMessage_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/startActivity_addHobby_button"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:textColor="@color/colorTextDark"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/startActivity_bottomLinearLayout"
         android:layout_width="match_parent"

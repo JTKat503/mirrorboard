@@ -15,6 +15,7 @@ public class Constants {
     public static final String KEY_HOBBIES = "hobbies";
 
     public static final String KEY_PREFERENCE_NAME = "mirrorBoardPreference";
+    public static final String KEY_NUM_OF_REQUESTS = "numberOfRequests";
     public static final String KEY_IS_SIGNED_IN = "isSignedIn";
     public static final String KEY_MODE = "mode";
     public static final String MODE_ELDERLY = "Elderly";

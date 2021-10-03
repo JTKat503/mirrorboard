@@ -96,7 +96,7 @@
         android:textAlignment="textStart"
         android:textAllCaps="false"
         android:textColor="@color/colorTextLight"
-        android:textSize="30sp"
+        android:textSize="28sp"
         app:cornerRadius="12dp"
         app:icon="@drawable/ic_round_mail_48"
         app:iconGravity="start"

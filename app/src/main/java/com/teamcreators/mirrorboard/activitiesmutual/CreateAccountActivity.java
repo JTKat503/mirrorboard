@@ -61,7 +61,6 @@ public class CreateAccountActivity extends AppCompatActivity {
             } else if (!PW.equals(RPW)) {
                 Toast.makeText(CreateAccountActivity.this, "Passwords must be same", Toast.LENGTH_SHORT).show();
             } else {
-                // 跳转到 create profile 界面， 需要传递参数
                 String mode = selectedMode.getText().toString().trim();
                 Intent intent = new Intent(CreateAccountActivity.this, CreateProfileActivity.class);
                 Bundle bundle = new Bundle();

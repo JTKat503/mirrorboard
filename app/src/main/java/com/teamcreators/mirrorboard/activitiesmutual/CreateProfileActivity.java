@@ -67,7 +67,6 @@ public class CreateProfileActivity extends AppCompatActivity {
     ActivityResultLauncher<Intent> chooseImageLauncher;
     ActivityResultLauncher<CropImageContractOptions> cropImageLauncher;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -263,11 +262,12 @@ public class CreateProfileActivity extends AppCompatActivity {
                 user.put(Constants.KEY_AVATAR_URI, uri.toString());
                 user.put(Constants.KEY_HOBBIES, new ArrayList<>());
                 user.put(Constants.KEY_FRIENDS, new ArrayList<>());
+                user.put(Constants.KEY_NUM_OF_REQUESTS, 0);
 
                 FirebaseFirestore database = FirebaseFirestore.getInstance();
-                final String subPath = phone;
+                final String userID = phone;
                 database.collection(Constants.KEY_COLLECTION_USERS)
-                        .document(subPath)
+                        .document(userID)
                         .set(user)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -288,29 +288,6 @@ public class CreateProfileActivity extends AppCompatActivity {
                         Toast.makeText(CreateProfileActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-
-//                database.collection(Constants.KEY_COLLECTION_USERS)
-//                        .add(user)
-//                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                            @Override
-//                            public void onSuccess(DocumentReference documentReference) {
-//                                preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
-//                                preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());
-//                                preferenceManager.putString(Constants.KEY_PHONE, phone);
-//                                preferenceManager.putString(Constants.KEY_NAME, nickName.getText().toString());
-//                                preferenceManager.putString(Constants.KEY_PASSWORD, PW);
-//                                preferenceManager.putString(Constants.KEY_AVATAR_URI, uri.toString());
-//                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                                startActivity(intent);
-//                            }
-//                        })
-//                        .addOnFailureListener(new OnFailureListener() {
-//                            @Override
-//                            public void onFailure(@NonNull Exception e) {
-//                                Toast.makeText(CreateProfileActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                            }
-//                        });
             }
         });
     }
@@ -328,5 +305,4 @@ public class CreateProfileActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
-
 }

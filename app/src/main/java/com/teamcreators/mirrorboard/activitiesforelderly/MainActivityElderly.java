@@ -8,7 +8,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,8 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -50,6 +47,10 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
     private TextView textErrorMessage;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ImageView conference;
+    // ** @author below added by Xuannan */
+    private TextView RequestsNumber;
+    private static final String TAG = "MainActivityElderly";
+    // ** @author  above added by Xuannan */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,9 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
 
         // refreshing contacts list
         swipeRefreshLayout.setOnRefreshListener(this::getContactsIDs);
+        // show the real time of the number of requests
+        // ** @author next line added by Xuannan */
+        numberOfRequestsRealtime();
 
         // gains token from Messaging server then send it to database
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
@@ -158,13 +162,13 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      * and load the contacts list
      */
     private void getContacts(List<String> contactsIDs) {
+        contacts.clear();
         swipeRefreshLayout.setRefreshing(true);
         if (contactsIDs == null || contactsIDs.isEmpty()) {
             swipeRefreshLayout.setRefreshing(false);
             textErrorMessage.setText(String.format("%s", "No contacts"));
             textErrorMessage.setVisibility(View.VISIBLE);
         } else {
-            contacts.clear();
             FirebaseFirestore database = FirebaseFirestore.getInstance();
             database.collection(Constants.KEY_COLLECTION_USERS)
                     .whereIn(Constants.KEY_PHONE, contactsIDs)
@@ -255,6 +259,54 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
             });
         } else {
             conference.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * the function for getting the realtime updates for number of requests
+     * It will show on the main page with a red dot and a number
+     *
+     * @author  added by Xuannan
+     */
+    public void numberOfRequestsRealtime(){
+        // get the TextView of the red dot
+        RequestsNumber = findViewById(R.id.main_numOfRequests_textView);
+        // get the Fire
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .addSnapshotListener((snapshot, e) -> {
+                    if (e != null) {
+                        Toast.makeText(MainActivityElderly.this, "Listen failed.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (snapshot != null && snapshot.exists()) {
+                            long numberOfRequests = (long) snapshot.get(Constants.KEY_NUM_OF_REQUESTS);
+
+                            if (numberOfRequests == 0) {
+                                RequestsNumber.setVisibility(View.GONE);
+                            } else {
+                                RequestsNumber.setVisibility(View.VISIBLE);
+                                RequestsNumber.setText(NumberToString(numberOfRequests));
+                            }
+                        } else {
+                            Toast.makeText(MainActivityElderly.this, "Cannot get data.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    /**
+     * change the number to string
+     * @param numberOfRequests the number will be changed
+     * @return string of number
+     *
+     * @author  added by Xuannan
+     */
+    private String NumberToString(long numberOfRequests) {
+        if (numberOfRequests <= 99) {
+            return String.valueOf(numberOfRequests);
+        } else {
+            return "99+";
         }
     }
 }

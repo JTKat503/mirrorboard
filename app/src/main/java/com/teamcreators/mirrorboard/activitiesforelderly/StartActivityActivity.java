@@ -1,5 +1,6 @@
 package com.teamcreators.mirrorboard.activitiesforelderly;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -9,7 +10,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.adapters.HobbiesAdapter;
 import com.teamcreators.mirrorboard.listeners.ItemsListener;
@@ -96,11 +102,31 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
      * and load the hobbies list
      */
     private void getHobbies() {
+        hobbies.clear();
         swipeRefreshLayout.setRefreshing(true);
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        String myID = preferenceManager.getString(Constants.KEY_USER_ID);
+        database.collection(Constants.KEY_COLLECTION_USERS)
+                .document(myID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        swipeRefreshLayout.setRefreshing(false);
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                List<String> myHobbiesNames = (List<String>) document.get(Constants.KEY_HOBBIES);
+                                HashSet<String> myHobbiesSet = new HashSet<>(myHobbiesNames);
+                                preferenceManager.putStringSet(Constants.KEY_HOBBIES, myHobbiesSet);
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Sync failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
         HashSet<String> myHobbies = preferenceManager.getStringSet(Constants.KEY_HOBBIES);
-        swipeRefreshLayout.setRefreshing(false);
-        if (myHobbies != null) {
-            hobbies.clear();
+        if (!myHobbies.isEmpty()) {
             for (String hobbyName : myHobbies) {
                 Hobby hobby = new Hobby();
                 hobby.name = hobbyName;

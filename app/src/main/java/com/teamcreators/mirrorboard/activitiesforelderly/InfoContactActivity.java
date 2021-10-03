@@ -1,5 +1,6 @@
 package com.teamcreators.mirrorboard.activitiesforelderly;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,11 +16,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.activitiesmutual.CallOutgoingActivity;
 import com.teamcreators.mirrorboard.listeners.ItemsListener;
 import com.teamcreators.mirrorboard.models.Hobby;
 import com.teamcreators.mirrorboard.models.User;
+import com.teamcreators.mirrorboard.utilities.Constants;
+import com.teamcreators.mirrorboard.utilities.PreferenceManager;
+
+import java.util.List;
 
 public class InfoContactActivity extends AppCompatActivity {
 
@@ -31,7 +40,6 @@ public class InfoContactActivity extends AppCompatActivity {
         setContentView(R.layout.activity_info_contact);
 
         user = (User) getIntent().getSerializableExtra("user");
-
         Button makeVideoCall = findViewById(R.id.contactInfo_makeCall_button);
         Button editFriendsNickname = findViewById(R.id.contactInfo_editNickname_button);
         Button removeContact = findViewById(R.id.contactInfo_removeContact_button);
@@ -77,8 +85,31 @@ public class InfoContactActivity extends AppCompatActivity {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                // ** @author  below added by Donghong */
                                 // delete contact, go back to main page
-                                // to do - delete contact operation
+                                PreferenceManager preferenceManager = new PreferenceManager(getApplicationContext());
+                                String userID = preferenceManager.getString(Constants.KEY_USER_ID);
+                                FirebaseFirestore database = FirebaseFirestore.getInstance();
+                                database.collection(Constants.KEY_COLLECTION_USERS)
+                                        .document(userID)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful() && task.getResult() != null) {
+                                                    DocumentSnapshot document = task.getResult();
+                                                    if (document.exists()) {
+                                                        List<String> friends = (List<String>) document.get(Constants.KEY_FRIENDS);
+                                                        friends.remove(user.phone);
+                                                        database.collection(Constants.KEY_COLLECTION_USERS)
+                                                                .document(userID)
+                                                                .update(Constants.KEY_FRIENDS, friends);
+
+                                                    }
+                                                }
+                                            }
+                                        });
+                                // ** @author  above added by Donghong */
                                 onBackPressed();
                                 finish();
                             }

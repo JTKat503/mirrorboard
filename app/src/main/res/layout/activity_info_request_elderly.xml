@@ -27,12 +27,24 @@
     </RelativeLayout>
 
     <TextView
+        android:id="@+id/No_request"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="100dp"
+        android:gravity="center"
+        android:textColor="@color/colorTextDark"
+        android:textSize="30sp"
+        android:visibility="invisible"/>
+
+    <TextView
         android:id="@+id/requestInfo_contactName"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@id/requestInfo_topRelativeLayout"
         android:layout_marginTop="10dp"
         android:gravity="center"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
         android:textColor="@color/colorTextDark"
         android:textSize="30sp" />
 
@@ -50,7 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="85dp"
         android:layout_below="@+id/requestInfo_contactNumber"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:backgroundTint="@color/colorBlue"
         android:fontFamily="@font/rubik_medium"
         android:includeFontPadding="false"

@@ -96,4 +96,12 @@
         app:iconGravity="start"
         app:iconTint="@color/colorTextLight" />
 
+    <ProgressBar
+        android:id="@+id/matchHobby_progressbar"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_below="@+id/matchHobby_hobbyName"
+        android:layout_marginTop="15dp"
+        android:visibility="invisible"/>
+
 </RelativeLayout>

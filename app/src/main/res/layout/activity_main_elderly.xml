@@ -162,13 +162,12 @@
         android:layout_height="@dimen/_32sdp"
         android:layout_below="@id/main_addContact_button"
         android:layout_marginTop="5dp"
-        android:elevation="@dimen/_10sdp"
-        android:gravity="center"
         android:background="@drawable/shape_circle_background"
+        android:elevation="@dimen/_10sdp"
+        android:fontFamily="@font/rubik_medium"
+        android:gravity="center"
         android:textColor="@color/colorTextLight"
         android:textSize="@dimen/_20sdp"
-        android:fontFamily="@font/rubik_medium"
-        android:text="99"/>
-<!--    android:visibility="gone"-->
+        android:visibility="gone"/>
 
 </RelativeLayout>

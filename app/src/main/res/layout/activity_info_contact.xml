@@ -33,8 +33,8 @@
         android:layout_below="@id/contactInfo_topRelativeLayout"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:singleLine="true"
         android:scrollHorizontally="true"
+        android:singleLine="true"
         android:textColor="@color/colorTextDark"
         android:textSize="30sp" />
 

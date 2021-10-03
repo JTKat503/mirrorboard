@@ -34,7 +34,6 @@ public class AddHobbyActivity extends AppCompatActivity {
 
         preferenceManager = new PreferenceManager(getApplicationContext());
         hobbies = preferenceManager.getStringSet(Constants.KEY_HOBBIES);
-
         cooking = findViewById(R.id.addHobby_cooking_checkbox);
         exercise = findViewById(R.id.addHobby_exercise_checkbox);
         fishing = findViewById(R.id.addHobby_fishing_checkbox);
@@ -173,8 +172,6 @@ public class AddHobbyActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
     }
 
     /**

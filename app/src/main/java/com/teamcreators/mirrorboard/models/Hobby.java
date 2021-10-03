@@ -6,5 +6,5 @@ import java.io.Serializable;
 
 public class Hobby implements Serializable {
     public String name;
-    public int drawable;
+    public int drawable; // file path of hobby's icon
 }

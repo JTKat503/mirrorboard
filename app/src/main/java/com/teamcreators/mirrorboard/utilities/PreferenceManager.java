@@ -43,7 +43,7 @@ public class PreferenceManager {
     }
 
     public HashSet<String> getStringSet(String key) {
-        String set = sharedPreferences.getString(key, null);
+        String set = sharedPreferences.getString(key, "");
         if (set.equals("")) {
             return new HashSet<>();
         }

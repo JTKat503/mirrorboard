@@ -1,12 +1,15 @@
 package com.teamcreators.mirrorboard.activitiesforelderly;
 
-
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -36,32 +39,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * A class that displays the main interface of the APP,
+ * including a contact list, adding new contacts and viewing requests functions
  *
+ * @author Jianwei Li & Xuannan Huang
  */
 public class MainActivityElderly extends AppCompatActivity implements ItemsListener {
 
     private PreferenceManager preferenceManager;
-    private Button newRequests;
     private List<User> contacts;
     private UsersAdapter contactsAdapter;
-    private TextView textErrorMessage;
+    private TextView textErrorMessage, requestsNumber;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ImageView conference;
-    // ** @author below added by Xuannan */
-    private TextView RequestsNumber;
-    private static final String TAG = "MainActivityElderly";
-    // ** @author  above added by Xuannan */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_elderly);
 
+        // check if internet connection is available
+        if (!isNetworkAvailable()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityElderly.this);
+            builder.setTitle("No Internet Connection")
+                    .setMessage("Please reconnect and try again.")
+                    .setPositiveButton(android.R.string.yes, null).show();
+        }
+
         preferenceManager = new PreferenceManager(getApplicationContext());
         textErrorMessage = findViewById(R.id.main_errorMessage_textView);
         conference = findViewById(R.id.main_conference_imageView);
-        newRequests = findViewById(R.id.main_newRequests_button);
         swipeRefreshLayout = findViewById(R.id.main_swipeRefreshLayout);
+        Button newRequests = findViewById(R.id.main_newRequests_button);
         Button newContact = findViewById(R.id.main_addContact_button);
         Button hobbies = findViewById(R.id.main_hobbies_button);
         Button exit = findViewById(R.id.main_exit_button);
@@ -76,8 +85,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         // refreshing contacts list
         swipeRefreshLayout.setOnRefreshListener(this::getContactsIDs);
         // show the real time of the number of requests
-        // ** @author next line added by Xuannan */
-        numberOfRequestsRealtime();
+        numberOfRequestsRealtime(); // ** @author this line added by Xuannan Huang*/
 
         // gains token from Messaging server then send it to database
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
@@ -130,6 +138,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
     /**
      * Get the IDs of all contacts of this user
      * IDs are stored in a list in the form of String
+     * @author Jianwei Li
      */
     private void getContactsIDs() {
         String myID = preferenceManager.getString(Constants.KEY_USER_ID);
@@ -160,6 +169,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
     /**
      * Get all this user's contacts information from the database
      * and load the contacts list
+     * @author Jianwei Li
      */
     private void getContacts(List<String> contactsIDs) {
         contacts.clear();
@@ -211,6 +221,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      * Once the login is successful, the personal FCM token
      * used for communication is sent to the database for storage
      * @param token the personal FCM token used for communication
+     * @author Jianwei Li
      */
     private void sendFCMTokenToDatabase(String token) {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -227,6 +238,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      * Implementation of ItemsAdapter interface method.
      * Jump to the InfoContactActivity and display the personal information of the selected user
      * @param user the contact selected by clicking, whose information is to be displayed
+     * @author Jianwei Li
      */
     @Override
     public void displayContactInformation(User user) {
@@ -247,6 +259,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      * and pass the selected contacts to the next activity.
      * @param isMultipleUsersSelected boolean:  true -> multiple contacts are selected
      *                                         false -> no contact is selected
+     * @author Jianwei Li
      */
     @Override
     public void onMultipleUsersAction(Boolean isMultipleUsersSelected) {
@@ -270,13 +283,12 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
     /**
      * the function for getting the realtime updates for number of requests
      * It will show on the main page with a red dot and a number
-     *
-     * @author  added by Xuannan
+     * @author Xuannan Huang
      */
     public void numberOfRequestsRealtime(){
         // get the TextView of the red dot
-        RequestsNumber = findViewById(R.id.main_numOfRequests_textView);
-        // get the Fire
+        requestsNumber = findViewById(R.id.main_numOfRequests_textView);
+        // get the Firestore database
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
@@ -288,10 +300,10 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
                             long numberOfRequests = (long) snapshot.get(Constants.KEY_NUM_OF_REQUESTS);
 
                             if (numberOfRequests == 0) {
-                                RequestsNumber.setVisibility(View.GONE);
+                                requestsNumber.setVisibility(View.GONE);
                             } else {
-                                RequestsNumber.setVisibility(View.VISIBLE);
-                                RequestsNumber.setText(NumberToString(numberOfRequests));
+                                requestsNumber.setVisibility(View.VISIBLE);
+                                requestsNumber.setText(NumberToString(numberOfRequests));
                             }
                         } else {
                             Toast.makeText(MainActivityElderly.this, "Cannot get data.", Toast.LENGTH_SHORT).show();
@@ -304,8 +316,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      * change the number to string
      * @param numberOfRequests the number will be changed
      * @return string of number
-     *
-     * @author  added by Xuannan
+     * @author Xuannan Huang
      */
     private String NumberToString(long numberOfRequests) {
         if (numberOfRequests <= 99) {
@@ -313,5 +324,17 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         } else {
             return "99+";
         }
+    }
+
+    /**
+     * Check if the device is connected to the network
+     * @return true if is connected, false if not
+     * @author Jianwei Li
+     */
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

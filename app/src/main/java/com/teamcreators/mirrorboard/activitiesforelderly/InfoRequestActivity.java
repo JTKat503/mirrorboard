@@ -32,7 +32,7 @@ import java.util.List;
  * if the user accept or remove request,
  * then will show the next new request or show "NO new request"
  *
- * @author Xuannan
+ * @author Xuannan Huang
  */
 public class InfoRequestActivity extends AppCompatActivity {
 
@@ -40,8 +40,6 @@ public class InfoRequestActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private TextView noRequest, contactName, contactNumber;
     private ImageView profileImage;
-    private List<String> receiverUserFriends = new ArrayList<>();
-    private List<String> senderUserFriends = new ArrayList<>();
     private Button addContact, removeRequest, goBack;
 
     @Override
@@ -71,88 +69,19 @@ public class InfoRequestActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // get the sender name
                 TextView tempName = findViewById(R.id.requestInfo_contactName);
-                String senderName = tempName.getText().toString();
                 // get the sender phone
                 TextView tempPhone = findViewById(R.id.requestInfo_contactNumber);
                 String senderPhone = tempPhone.getText().toString();
-                String myID = preferenceManager.getString(Constants.KEY_USER_ID);
-                // get the receiver's friend list
-                db.collection(Constants.KEY_COLLECTION_USERS)
-                        .document(myID)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful() && task.getResult() != null) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()) {
-                                        receiverUserFriends = (List<String>) document.get(Constants.KEY_FRIENDS);
-                                    }
-                                    receiverUserFriends.add(senderPhone);
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "Get failed with " +
-                                            task.getException(), Toast.LENGTH_SHORT).show();
-                                    finish();
-                                }
-                            }
-                        });
-                // get the sender's friend list
-                db.collection(Constants.KEY_COLLECTION_USERS)
-                        .document(senderPhone)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful() && task.getResult() != null) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()) {
-                                        senderUserFriends  = (List<String>) document.get(Constants.KEY_FRIENDS);
-                                    }
-                                    senderUserFriends.add(preferenceManager.getString(Constants.KEY_PHONE));
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "Get failed with " +
-                                            task.getException(), Toast.LENGTH_SHORT).show();
-                                    finish();
-                                }
-                            }
-                        });
-                // add the new friends to the friend collection
+                // get current user ID
+                String receiverPhone = preferenceManager.getString(Constants.KEY_PHONE);
+                // get and update the receiver's friend list
                 // add the sender phone number to receiver friend list
+                getAndUpdateFriendList(receiverPhone, senderPhone);
+                // get and update the sender's friend list
                 // add the receiver phone number to sender friend list
-                db.collection(Constants.KEY_COLLECTION_USERS)
-                        .document(preferenceManager.getString(Constants.KEY_PHONE)) // current user
-                        .update(Constants.KEY_FRIENDS, receiverUserFriends)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    db.collection(Constants.KEY_COLLECTION_USERS)
-                                            .document(senderPhone)
-                                            .update(Constants.KEY_FRIENDS, senderUserFriends)
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-                                                        db.collection(Constants.KEY_COLLECTION_USERS)
-                                                                .document(preferenceManager.getString(Constants.KEY_PHONE)) // current user
-                                                                .update(Constants.KEY_FRIENDS, receiverUserFriends)
-                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                    @Override
-                                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                                        if (task.isSuccessful()) {
-                                                                            Toast.makeText(InfoRequestActivity.this, "Contact added", Toast.LENGTH_SHORT).show();
-                                                                        }
-                                                                    }
-                                                                });
-                                                    }
-                                                }
-                                            });
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "Cannot add friend list " +
-                                            task.getException(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                getAndUpdateFriendList(senderPhone, receiverPhone);
+                // show the message to tell the user Contact added
+                Toast.makeText(InfoRequestActivity.this, "Contact added", Toast.LENGTH_SHORT).show();
                 // after adding the new friend
                 // delete the request and update the number of requests
                 deleteRequestAndUpdateRequestNumber(senderPhone);
@@ -177,7 +106,6 @@ public class InfoRequestActivity extends AppCompatActivity {
                                 showUserProfile();
                             }
                         }).show();
-//                showUserProfile();
             }
         });
 
@@ -195,8 +123,6 @@ public class InfoRequestActivity extends AppCompatActivity {
      * show the request information
      * after the accept or remove the request, will show the next request
      * if no new request, will show the message "No new request"
-     *
-     * @author added by Xuannan
      */
     private void showUserProfile() {
         db.collection(Constants.KEY_COLLECTION_USERS)
@@ -215,7 +141,7 @@ public class InfoRequestActivity extends AppCompatActivity {
                             .load(documentSnapshot.getString(Constants.KEY_AVATAR_URI))
                             .error(R.drawable.blank_profile)
                             .into(profileImage);
-                    // ** @author  below added by Jianwei */
+                    // ** @author  below added by Jianwei Li */
                     profileImage.setVisibility(View.VISIBLE);
                     contactName.setVisibility(View.VISIBLE);
                     contactNumber.setVisibility(View.VISIBLE);
@@ -232,17 +158,58 @@ public class InfoRequestActivity extends AppCompatActivity {
                     noRequest.setText(R.string.no_new_requests);
                     noRequest.setVisibility(View.VISIBLE);
                     goBack.setVisibility(View.VISIBLE);
-                    // ** @author  above added by Jianwei */
+                    // ** @author  above added by Jianwei Li */
                 }
             }
         });
     }
 
     /**
+     * get and update the receiver's friend list, add the sender phone number to receiver friend list
+     * get and update the sender's friend list, add the receiver phone number to sender friend list
+     * @param userPhone
+     * @param phoneNumber
+     */
+    private void getAndUpdateFriendList(String userPhone, String phoneNumber) {
+        // get the receiver's friend list
+        db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(userPhone)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            DocumentSnapshot document = task.getResult();
+                            List<String> UserFriendsList = new ArrayList<>();
+                            if (document.exists()) {
+                                UserFriendsList = (List<String>) document.get(Constants.KEY_FRIENDS);
+                            }
+                            UserFriendsList.add(phoneNumber);
+                            // update the friends list
+                            addFriendToList(userPhone, UserFriendsList);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Get failed with " +
+                                    task.getException(), Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Update current user's contacts list
+     * @param userPhone current user's phone number
+     * @param friendsList contacts list to be updated to database
+     */
+    public void addFriendToList(String userPhone, List<String> friendsList) {
+        db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(userPhone) // current user
+                .update(Constants.KEY_FRIENDS, friendsList);
+    }
+
+    /**
      * delete the request after accepting or removing
      * @param senderPhone
-     *
-     * @author added by Xuannan
      */
     public void deleteRequestAndUpdateRequestNumber(String senderPhone) {
         // delete the request from the database
@@ -250,8 +217,6 @@ public class InfoRequestActivity extends AppCompatActivity {
                 .document(preferenceManager.getString(Constants.KEY_PHONE))
                 .collection("requests")
                 .document(senderPhone).delete();
-//        Toast.makeText(InfoRequestActivity.this, "Delete", Toast.LENGTH_SHORT).show();
-
         // update the requests number
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))

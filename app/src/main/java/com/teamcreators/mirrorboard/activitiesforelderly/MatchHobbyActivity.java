@@ -33,6 +33,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * A class that matches contacts with the same hobby according to the hobby selected by the user.
+ *
+ * @author Jianwei Li
+ */
 public class MatchHobbyActivity extends AppCompatActivity {
 
     private Hobby hobby;
@@ -162,13 +167,13 @@ public class MatchHobbyActivity extends AppCompatActivity {
                                 sendInvitationTo(matchedStranger);
                             } else {
                                 Toast.makeText(getApplicationContext(),
-                                        "Failed to find a friend", Toast.LENGTH_SHORT).show();
+                                        "No matchable user", Toast.LENGTH_SHORT).show();
                                 matchFriendProgressBar.setVisibility(View.INVISIBLE);
                                 matchFriend.setVisibility(View.VISIBLE);
                             }
                         } else {
                             Toast.makeText(getApplicationContext(),
-                                    "Failed to find a friend", Toast.LENGTH_SHORT).show();
+                                    "No matchable user", Toast.LENGTH_SHORT).show();
                             matchFriendProgressBar.setVisibility(View.INVISIBLE);
                             matchFriend.setVisibility(View.VISIBLE);
                         }

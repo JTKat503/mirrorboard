@@ -91,18 +91,9 @@
         android:fontFamily="@font/rubik_medium"
         android:includeFontPadding="false"
         android:textColor="@color/colorTextDark"
-        android:textSize="20sp"
+        android:textSize="30sp"
         android:gravity="center"
         android:visibility="gone" />
-
-<!--    <ProgressBar-->
-<!--        android:id="@+id/main_loadContacts_progressBar"-->
-<!--        android:layout_width="@dimen/_25sdp"-->
-<!--        android:layout_height="@dimen/_25sdp"-->
-<!--        android:layout_below="@id/main_newRequests_button"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:visibility="gone" />-->
 
     <LinearLayout
         android:id="@+id/main_bottomLinearLayout"

@@ -28,23 +28,25 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * This Page is about searching a new user
+ * and send the request to the new user
  *
- * @author  all below added by Xuannan
+ * @author Xuannan Huang
  */
 public class AddContactActivity extends AppCompatActivity {
     private String receiverUserPhone, senderUserPhone, nickName;
     private Button sendRequest, goBack;
-    private final String TAG = "AddContactActivity";
     private FirebaseFirestore db;
     private PreferenceManager preferenceManager;
-    boolean flag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contact_elderly);
 
+        // get the database instance
         db = FirebaseFirestore.getInstance();
+        // get the button by ID
         goBack = findViewById(R.id.addContact_goBack_button);
         sendRequest = findViewById(R.id.addContact_sendRequest_button);
         sendRequest.setSelected(false);
@@ -63,8 +65,10 @@ public class AddContactActivity extends AppCompatActivity {
                 // get the nick name
                 EditText inputNickName = findViewById(R.id.addContact_nickname);
                 nickName = inputNickName.getText().toString();
-                getContactsIDs();
-
+                // get the friend list and Check if you are friends
+                // if not, then send the request
+                // otherwise, show the message to current user
+                getFriendList();
             }
         });
 
@@ -78,29 +82,11 @@ public class AddContactActivity extends AppCompatActivity {
         });
     }
 
-    private void manageChatRequests() {
-        sendRequest.setEnabled(false);
-        Map<String, Object> sender = new HashMap<>();
-        sender.put(Constants.KEY_PHONE, preferenceManager.getString(Constants.KEY_PHONE));
-        sender.put(Constants.KEY_NAME, preferenceManager.getString(Constants.KEY_NAME));
-        sender.put(Constants.KEY_AVATAR_URI, preferenceManager.getString(Constants.KEY_AVATAR_URI));
-        // need to add the user photo
-        db.collection("users").document(receiverUserPhone).collection("requests").document(senderUserPhone)
-                .set(sender)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            sendRequest.setEnabled(true);
-                            sendRequest.setText(R.string.request_sent);
-                            sendRequest.setSelected(true);
-                        }
-                    }
-                });
-        increaseRequests();
-    }
-
-    private void getContactsIDs() {
+    /**
+     * get the current user's friend list from the database
+     * and try to send the new request
+     */
+    private void getFriendList() {
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
                 .get()
@@ -111,7 +97,7 @@ public class AddContactActivity extends AppCompatActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 List<String> myFriendsIDs = (List<String>) document.get(Constants.KEY_FRIENDS);
-                                sendRequest(myFriendsIDs);
+                                manageRequest(myFriendsIDs);
                             } else {
                                 Toast.makeText(getApplicationContext(),
                                         "Failed to get contacts list", Toast.LENGTH_SHORT).show();
@@ -125,12 +111,20 @@ public class AddContactActivity extends AppCompatActivity {
                 });
     }
 
-    private void sendRequest(List<String> myFriendsIDs) {
+    /**
+     * manage a request
+     * if input number is empty, then show "Please enter a phone number"
+     * if input number is current user phone, then show "You cannot add yourself"
+     * if input number is current user's friend, then show "You are already friends."
+     * otherwise, send the request
+     * @param myFriendsIDs
+     */
+    private void manageRequest(List<String> myFriendsIDs) {
         // search user from the data base
         if (TextUtils.isEmpty(receiverUserPhone)) {         // check the input number
-            Toast.makeText(AddContactActivity.this, "Please enter a phone number", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddContactActivity.this, "Please enter a phone number.", Toast.LENGTH_SHORT).show();
         } else if (receiverUserPhone.equals(senderUserPhone)) {     // check the input number == own number
-            Toast.makeText(AddContactActivity.this, "You cannot add yourself", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddContactActivity.this, "You cannot add yourself.", Toast.LENGTH_SHORT).show();
         } else if (myFriendsIDs.contains(receiverUserPhone)) {      // Check if the number is your friend
             Toast.makeText(AddContactActivity.this, "You are already friends.", Toast.LENGTH_SHORT).show();
         } else {
@@ -144,8 +138,9 @@ public class AddContactActivity extends AppCompatActivity {
                                 // user does not exist
                                 Toast.makeText(AddContactActivity.this, "User does not exist", Toast.LENGTH_SHORT).show();
                             } else {
+                                // update the number of the request to database
+                                ifTheRequestNumIsZero();
                                 // user exist, send the request
-                                manageChatRequests();
                             }
                         }
                     })
@@ -158,6 +153,33 @@ public class AddContactActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * check the number of the requests
+     * if the number is 0, then add 1
+     * else need to check if the phone number is at Request
+     */
+    private void ifTheRequestNumIsZero() {
+        db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(receiverUserPhone)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
+                        if ((long)document.get(Constants.KEY_NUM_OF_REQUESTS) == 0) {
+                            trueToAddRequestNum(false);
+                        } else {
+                            Toast.makeText(AddContactActivity.this, "count " + document.get(Constants.KEY_NUM_OF_REQUESTS), Toast.LENGTH_SHORT).show();
+                            increaseRequests();
+                        }
+                    }
+                });
+    }
+
+    /**
+     * if the user phone is not in the request, then add 1 to the request number
+     * else, not add 1
+     */
     private void increaseRequests() {
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(receiverUserPhone)
@@ -166,22 +188,60 @@ public class AddContactActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
                         if (task.isSuccessful()) {
+                            boolean flag = false;
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 if (document.getId().equals(senderUserPhone)){
                                     flag = true;
                                 }
                             }
+                            Toast.makeText(AddContactActivity.this, "inside " + flag, Toast.LENGTH_SHORT).show();
+                            trueToAddRequestNum(flag);
                         } else {
                             Toast.makeText(getApplicationContext(),
                                     "Error getting documents: " + task.getException(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    /**
+     * if the flag is false, then add 1 to request number
+     * @param flag
+     */
+    public void trueToAddRequestNum(boolean flag) {
         if (!flag) {
             db.collection(Constants.KEY_COLLECTION_USERS)
                     .document(receiverUserPhone)
                     .update(Constants.KEY_NUM_OF_REQUESTS, FieldValue.increment(1));
         }
+        sendRequests();
+    }
+
+    /**
+     * send the request to new friend
+     * store the information, add the information to database
+     * show the message to user "Successfully send"
+     */
+    private void sendRequests() {
+        sendRequest.setEnabled(false);
+        Map<String, Object> sender = new HashMap<>();
+        sender.put(Constants.KEY_PHONE, preferenceManager.getString(Constants.KEY_PHONE));
+        sender.put(Constants.KEY_NAME, preferenceManager.getString(Constants.KEY_NAME));
+        sender.put(Constants.KEY_AVATAR_URI, preferenceManager.getString(Constants.KEY_AVATAR_URI));
+        db.collection("users").document(receiverUserPhone).collection("requests").document(senderUserPhone)
+                .set(sender)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+//                            Toast.makeText(AddContactActivity.this, "Successfully send", Toast.LENGTH_SHORT).show();
+                            sendRequest.setEnabled(true);
+                            sendRequest.setText(R.string.request_sent);
+                            sendRequest.setSelected(true);
+                        }
+                    }
+                });
     }
 }

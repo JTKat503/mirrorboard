@@ -24,14 +24,18 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.activitiesmutual.CallOutgoingActivity;
-import com.teamcreators.mirrorboard.listeners.ItemsListener;
-import com.teamcreators.mirrorboard.models.Hobby;
 import com.teamcreators.mirrorboard.models.User;
 import com.teamcreators.mirrorboard.utilities.Constants;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 import java.util.List;
 
+/**
+ * A class that displays contact information, including the functions
+ * of making video calls, modifying nickname and deleting contact
+ *
+ * @author Jianwei Li & Donghong Zhuang
+ */
 public class InfoContactActivity extends AppCompatActivity {
 
     private User user;
@@ -123,8 +127,7 @@ public class InfoContactActivity extends AppCompatActivity {
 
     /**
      * Delete the specified contact from the current user's contacts list
-     *
-     * @author added by Donghong
+     * @author Donghong Zhuang
      */
     private void removeContact() {
         String myID = preferenceManager.getString(Constants.KEY_USER_ID);
@@ -154,6 +157,7 @@ public class InfoContactActivity extends AppCompatActivity {
      * Initialize the information of the recipient of the video call and
      * start the video call, if can not find the recipient, display hint
      * @param user recipient of the video call
+     * @author Jianwei Li
      */
     private void initiateVideoCall(User user) {
         if (user.token == null || user.token.trim().isEmpty()) {
@@ -174,6 +178,7 @@ public class InfoContactActivity extends AppCompatActivity {
 //     * Initialize the information of the recipient of the audio call and
 //     * start the audio call, if can not find the recipient, display hint
 //     * @param user recipient of the video call
+//     * @author Jianwei Li
 //     */
 //    public void initiateAudioCall(User user) {
 //        if (user.token == null || user.token.trim().isEmpty()) {

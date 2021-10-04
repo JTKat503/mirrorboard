@@ -103,30 +103,7 @@ public class InfoContactActivity extends AppCompatActivity {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                            // ** @author  below added by Donghong */
-                                // delete contact, go back to main page
-                                String userID = preferenceManager.getString(Constants.KEY_USER_ID);
-                                FirebaseFirestore database = FirebaseFirestore.getInstance();
-                                database.collection(Constants.KEY_COLLECTION_USERS)
-                                        .document(userID)
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                if (task.isSuccessful() && task.getResult() != null) {
-                                                    DocumentSnapshot document = task.getResult();
-                                                    if (document.exists()) {
-                                                        List<String> friends = (List<String>) document.get(Constants.KEY_FRIENDS);
-                                                        friends.remove(user.phone);
-                                                        database.collection(Constants.KEY_COLLECTION_USERS)
-                                                                .document(userID)
-                                                                .update(Constants.KEY_FRIENDS, friends);
-
-                                                    }
-                                                }
-                                            }
-                                        });
-                            // ** @author  above added by Donghong */
+                                removeContact();
                                 onBackPressed();
                                 finish();
                             }
@@ -142,6 +119,35 @@ public class InfoContactActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    /**
+     * Delete the specified contact from the current user's contacts list
+     *
+     * @author added by Donghong
+     */
+    private void removeContact() {
+        String myID = preferenceManager.getString(Constants.KEY_USER_ID);
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(Constants.KEY_COLLECTION_USERS)
+                .document(myID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                List<String> friends = (List<String>) document.get(Constants.KEY_FRIENDS);
+                                friends.remove(user.phone);
+                                database.collection(Constants.KEY_COLLECTION_USERS)
+                                        .document(myID)
+                                        .update(Constants.KEY_FRIENDS, friends);
+                                preferenceManager.clearString(user.phone);
+                            }
+                        }
+                    }
+                });
     }
 
     /**

@@ -27,16 +27,21 @@ import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * the page for showing the requests
+ * if the user accept or remove request,
+ * then will show the next new request or show "NO new request"
+ *
+ * @author Xuannan
+ */
 public class InfoRequestActivity extends AppCompatActivity {
 
-    // ** @author  below added by Xuannan */
     private PreferenceManager preferenceManager;
     private FirebaseFirestore db;
     private TextView noRequest, contactName, contactNumber;
     private ImageView profileImage;
     private List<String> receiverUserFriends = new ArrayList<>();
     private List<String> senderUserFriends = new ArrayList<>();
-    // ** @author  above added by Xuannan */
     private Button addContact, removeRequest, goBack;
 
     @Override
@@ -46,32 +51,32 @@ public class InfoRequestActivity extends AppCompatActivity {
 
         addContact = findViewById(R.id.requestInfo_addContact_button);
         removeRequest = findViewById(R.id.requestInfo_removeRequest_button);
-        // ** @author  below added by Xuannan */
         db = FirebaseFirestore.getInstance();
         noRequest = findViewById(R.id.no_request);
         contactName = findViewById(R.id.requestInfo_contactName);
         contactNumber = findViewById(R.id.requestInfo_contactNumber);
         profileImage = findViewById(R.id.requestInfo_profileImage);
         goBack = findViewById(R.id.requestInfo_goBack_button);
-        preferenceManager = new PreferenceManager(getApplicationContext());// save current user info
-        showUserProfile(); // show the request user
-        // ** @author  above added by Xuannan */
+        // save current user info
+        preferenceManager = new PreferenceManager(getApplicationContext());
+        // show the request user
+        showUserProfile();
         contactName.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         contactName.setMarqueeRepeatLimit(1);
         contactName.setSelected(true);
 
         // adding contact button
-        // ** @author  below added by Xuannan */
         addContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // get the sender name
                 TextView tempName = findViewById(R.id.requestInfo_contactName);
                 String senderName = tempName.getText().toString();
-                // can add the photo, get the sender phone
+                // get the sender phone
                 TextView tempPhone = findViewById(R.id.requestInfo_contactNumber);
                 String senderPhone = tempPhone.getText().toString();
                 String myID = preferenceManager.getString(Constants.KEY_USER_ID);
+                // get the receiver's friend list
                 db.collection(Constants.KEY_COLLECTION_USERS)
                         .document(myID)
                         .get()
@@ -91,6 +96,7 @@ public class InfoRequestActivity extends AppCompatActivity {
                                 }
                             }
                         });
+                // get the sender's friend list
                 db.collection(Constants.KEY_COLLECTION_USERS)
                         .document(senderPhone)
                         .get()
@@ -111,6 +117,8 @@ public class InfoRequestActivity extends AppCompatActivity {
                             }
                         });
                 // add the new friends to the friend collection
+                // add the sender phone number to receiver friend list
+                // add the receiver phone number to sender friend list
                 db.collection(Constants.KEY_COLLECTION_USERS)
                         .document(preferenceManager.getString(Constants.KEY_PHONE)) // current user
                         .update(Constants.KEY_FRIENDS, receiverUserFriends)
@@ -132,7 +140,7 @@ public class InfoRequestActivity extends AppCompatActivity {
                                                                     @Override
                                                                     public void onComplete(@NonNull Task<Void> task) {
                                                                         if (task.isSuccessful()) {
-//                                                                            Toast.makeText(InfoRequestActivity.this, "Success Adding", Toast.LENGTH_SHORT).show();
+                                                                            Toast.makeText(InfoRequestActivity.this, "Contact added", Toast.LENGTH_SHORT).show();
                                                                         }
                                                                     }
                                                                 });
@@ -140,15 +148,16 @@ public class InfoRequestActivity extends AppCompatActivity {
                                                 }
                                             });
                                 } else {
-                                    Toast.makeText(getApplicationContext(), "cannot add friend list " +
+                                    Toast.makeText(getApplicationContext(), "Cannot add friend list " +
                                             task.getException(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
+                // after adding the new friend
+                // delete the request and update the number of requests
                 deleteRequestAndUpdateRequestNumber(senderPhone);
                 // show the next request or no request
                 showUserProfile();
-                // ** @author  above added by Xuannan */
             }
         });
 
@@ -162,16 +171,13 @@ public class InfoRequestActivity extends AppCompatActivity {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                // ** @author  below added by Xuannan */
-                                // delete request, go back to main page
                                 TextView tempPhone = findViewById(R.id.requestInfo_contactNumber);
                                 String senderPhone = tempPhone.getText().toString();
                                 deleteRequestAndUpdateRequestNumber(senderPhone);
                                 showUserProfile();
                             }
                         }).show();
-                showUserProfile();
-                // ** @author  above added by Xuannan */
+//                showUserProfile();
             }
         });
 
@@ -186,8 +192,11 @@ public class InfoRequestActivity extends AppCompatActivity {
     }
 
     /**
+     * show the request information
+     * after the accept or remove the request, will show the next request
+     * if no new request, will show the message "No new request"
      *
-     * @author  below added by Xuannan
+     * @author added by Xuannan
      */
     private void showUserProfile() {
         db.collection(Constants.KEY_COLLECTION_USERS)
@@ -206,27 +215,34 @@ public class InfoRequestActivity extends AppCompatActivity {
                             .load(documentSnapshot.getString(Constants.KEY_AVATAR_URI))
                             .error(R.drawable.blank_profile)
                             .into(profileImage);
+                    // ** @author  below added by Jianwei */
+                    profileImage.setVisibility(View.VISIBLE);
+                    contactName.setVisibility(View.VISIBLE);
+                    contactNumber.setVisibility(View.VISIBLE);
+                    addContact.setVisibility(View.VISIBLE);
+                    removeRequest.setVisibility(View.VISIBLE);
+                    goBack.setVisibility(View.VISIBLE);
+                } else {
                     profileImage.setVisibility(View.INVISIBLE);
                     contactName.setVisibility(View.INVISIBLE);
                     contactNumber.setVisibility(View.INVISIBLE);
                     addContact.setVisibility(View.INVISIBLE);
                     removeRequest.setVisibility(View.INVISIBLE);
-                    goBack.setVisibility(View.VISIBLE);
-                } else {
+                    goBack.setVisibility(View.INVISIBLE);
                     noRequest.setText(R.string.no_new_requests);
                     noRequest.setVisibility(View.VISIBLE);
                     goBack.setVisibility(View.VISIBLE);
+                    // ** @author  above added by Jianwei */
                 }
             }
         });
-
     }
 
-
     /**
+     * delete the request after accepting or removing
      * @param senderPhone
      *
-     * @author  below added by Xuannan
+     * @author added by Xuannan
      */
     public void deleteRequestAndUpdateRequestNumber(String senderPhone) {
         // delete the request from the database

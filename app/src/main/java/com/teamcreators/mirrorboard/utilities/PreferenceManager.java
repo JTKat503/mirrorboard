@@ -57,4 +57,10 @@ public class PreferenceManager {
         editor.clear();
         editor.apply();
     }
+
+    public void clearString(String key) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(key);
+        editor.apply();
+    }
 }

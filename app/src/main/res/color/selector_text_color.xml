@@ -6,7 +6,7 @@
 <!--    &lt;!&ndash;    default text color / not pressed &ndash;&gt;-->
 <!--    <item android:color="@color/colorTextLight"/>-->
 
-    <item android:state_pressed="true" android:color="@color/colorGrey"/>
+    <item android:state_pressed="true" android:color="@color/colorBlue"/>
     <item android:state_selected="true" android:color="@color/colorGrey"/>
     <!--    default text color / not pressed -->
     <item android:color="@color/colorBlue"/>

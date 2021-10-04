@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:state_pressed="true" android:color="@color/colorBlue"/>
+<!--    <item android:state_pressed="true" android:color="@color/colorBlue"/>-->
+<!--    <item android:state_selected="true" android:color="@color/colorBlue"/>-->
+<!--    &lt;!&ndash;    default text color / not pressed &ndash;&gt;-->
+<!--    <item android:color="@color/colorTextLight"/>-->
 
-    <item android:state_selected="true" android:color="@color/colorBlue"/>
-
+    <item android:state_pressed="true" android:color="@color/colorGrey"/>
+    <item android:state_selected="true" android:color="@color/colorGrey"/>
     <!--    default text color / not pressed -->
-    <item android:color="@color/colorTextLight"/>
+    <item android:color="@color/colorBlue"/>
 
 </selector>

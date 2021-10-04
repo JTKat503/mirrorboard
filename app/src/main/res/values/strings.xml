@@ -16,7 +16,6 @@
     <string name="find_match">Find Match</string>
     <string name="add_contact">Add Contact</string>
     <string name="remove_request">Remove Request</string>
-    <string name="next_request">Next Request</string>
     <string name="find_a_call">Find a Call</string>
     <string name="remove_hobby">Remove Hobby</string>
     <string name="log_in">Log In</string>
@@ -68,5 +67,6 @@
     <string name="music">Music</string>
     <string name="pets">Pets</string>
     <string name="films_tv">Films / TV</string>
-    <string name="cancel_request">Cancel Request</string>
+    <string name="request_sent">Request Sent</string>
+    <string name="no_new_requests">No new requests</string>
 </resources>

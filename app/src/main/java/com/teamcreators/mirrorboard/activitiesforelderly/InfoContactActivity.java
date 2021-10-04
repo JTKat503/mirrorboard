@@ -8,9 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +35,7 @@ import java.util.List;
 public class InfoContactActivity extends AppCompatActivity {
 
     private User user;
+    private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ public class InfoContactActivity extends AppCompatActivity {
         setContentView(R.layout.activity_info_contact);
 
         user = (User) getIntent().getSerializableExtra("user");
+        preferenceManager = new PreferenceManager(getApplicationContext());
         Button makeVideoCall = findViewById(R.id.contactInfo_makeCall_button);
         Button editFriendsNickname = findViewById(R.id.contactInfo_editNickname_button);
         Button removeContact = findViewById(R.id.contactInfo_removeContact_button);
@@ -70,7 +74,21 @@ public class InfoContactActivity extends AppCompatActivity {
         editFriendsNickname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // to do
+                AlertDialog.Builder builder = new AlertDialog.Builder(InfoContactActivity.this);
+                final EditText newName = new EditText(InfoContactActivity.this);
+                newName.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setTitle("Enter a new name")
+                        .setView(newName)
+                        .setNegativeButton(android.R.string.no, null)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                String name = newName.getText().toString();
+                                if (!name.trim().isEmpty()) {
+                                    preferenceManager.putString(user.phone, name);
+                                }
+                            }
+                        }).show();
             }
         });
 
@@ -85,9 +103,8 @@ public class InfoContactActivity extends AppCompatActivity {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                // ** @author  below added by Donghong */
+                            // ** @author  below added by Donghong */
                                 // delete contact, go back to main page
-                                PreferenceManager preferenceManager = new PreferenceManager(getApplicationContext());
                                 String userID = preferenceManager.getString(Constants.KEY_USER_ID);
                                 FirebaseFirestore database = FirebaseFirestore.getInstance();
                                 database.collection(Constants.KEY_COLLECTION_USERS)
@@ -109,7 +126,7 @@ public class InfoContactActivity extends AppCompatActivity {
                                                 }
                                             }
                                         });
-                                // ** @author  above added by Donghong */
+                            // ** @author  above added by Donghong */
                                 onBackPressed();
                                 finish();
                             }

@@ -5,7 +5,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -33,12 +32,12 @@ public class InfoRequestActivity extends AppCompatActivity {
     // ** @author  below added by Xuannan */
     private PreferenceManager preferenceManager;
     private FirebaseFirestore db;
-    private TextView NoRequest, contactName, contactNumber;
+    private TextView noRequest, contactName, contactNumber;
     private ImageView profileImage;
     private List<String> receiverUserFriends = new ArrayList<>();
     private List<String> senderUserFriends = new ArrayList<>();
     // ** @author  above added by Xuannan */
-    private Button addContact, removeRequest, nextRequest, goBack;
+    private Button addContact, removeRequest, goBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +48,14 @@ public class InfoRequestActivity extends AppCompatActivity {
         removeRequest = findViewById(R.id.requestInfo_removeRequest_button);
         // ** @author  below added by Xuannan */
         db = FirebaseFirestore.getInstance();
-        NoRequest = findViewById(R.id.No_request);
+        noRequest = findViewById(R.id.no_request);
         contactName = findViewById(R.id.requestInfo_contactName);
         contactNumber = findViewById(R.id.requestInfo_contactNumber);
         profileImage = findViewById(R.id.requestInfo_profileImage);
-        nextRequest = findViewById(R.id.requestInfo_nextRequest_button);
         goBack = findViewById(R.id.requestInfo_goBack_button);
-        // save the current user information
-        preferenceManager = new PreferenceManager(getApplicationContext());
-        // show the request user
-        showUserProfile();
+        preferenceManager = new PreferenceManager(getApplicationContext());// save current user info
+        showUserProfile(); // show the request user
         // ** @author  above added by Xuannan */
-
         contactName.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         contactName.setMarqueeRepeatLimit(1);
         contactName.setSelected(true);
@@ -73,8 +68,7 @@ public class InfoRequestActivity extends AppCompatActivity {
                 // get the sender name
                 TextView tempName = findViewById(R.id.requestInfo_contactName);
                 String senderName = tempName.getText().toString();
-                // can add the photo
-                // get the sender phone
+                // can add the photo, get the sender phone
                 TextView tempPhone = findViewById(R.id.requestInfo_contactNumber);
                 String senderPhone = tempPhone.getText().toString();
                 String myID = preferenceManager.getString(Constants.KEY_USER_ID);
@@ -151,7 +145,6 @@ public class InfoRequestActivity extends AppCompatActivity {
                                 }
                             }
                         });
-
                 deleteRequestAndUpdateRequestNumber(senderPhone);
                 // show the next request or no request
                 showUserProfile();
@@ -182,15 +175,6 @@ public class InfoRequestActivity extends AppCompatActivity {
             }
         });
 
-        // next Request button
-        nextRequest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // to do
-                // if this is the last request, show hint
-            }
-        });
-
         // goBack button
         goBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,7 +190,6 @@ public class InfoRequestActivity extends AppCompatActivity {
      * @author  below added by Xuannan
      */
     private void showUserProfile() {
-        // haven't add the photo
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_PHONE))
                 .collection("requests").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -223,15 +206,16 @@ public class InfoRequestActivity extends AppCompatActivity {
                             .load(documentSnapshot.getString(Constants.KEY_AVATAR_URI))
                             .error(R.drawable.blank_profile)
                             .into(profileImage);
-                } else {
-                    NoRequest.setVisibility(View.VISIBLE);
+                    profileImage.setVisibility(View.INVISIBLE);
                     contactName.setVisibility(View.INVISIBLE);
                     contactNumber.setVisibility(View.INVISIBLE);
-                    profileImage.setVisibility(View.INVISIBLE);
                     addContact.setVisibility(View.INVISIBLE);
                     removeRequest.setVisibility(View.INVISIBLE);
-                    nextRequest.setVisibility(View.INVISIBLE);
-
+                    goBack.setVisibility(View.VISIBLE);
+                } else {
+                    noRequest.setText(R.string.no_new_requests);
+                    noRequest.setVisibility(View.VISIBLE);
+                    goBack.setVisibility(View.VISIBLE);
                 }
             }
         });

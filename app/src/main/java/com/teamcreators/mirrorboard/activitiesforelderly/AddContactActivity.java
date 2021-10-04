@@ -34,7 +34,6 @@ import java.util.Map;
 public class AddContactActivity extends AppCompatActivity {
     private String receiverUserPhone, senderUserPhone, nickName;
     private Button sendRequest, goBack;
-
     private final String TAG = "AddContactActivity";
     private FirebaseFirestore db;
     private PreferenceManager preferenceManager;
@@ -46,14 +45,11 @@ public class AddContactActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_contact_elderly);
 
         db = FirebaseFirestore.getInstance();
-
-
         goBack = findViewById(R.id.addContact_goBack_button);
         sendRequest = findViewById(R.id.addContact_sendRequest_button);
-
+        sendRequest.setSelected(false);
         // save the current user information
         preferenceManager = new PreferenceManager(getApplicationContext());
-
         // current user's phone
         senderUserPhone = preferenceManager.getString(Constants.KEY_PHONE);
 
@@ -64,11 +60,9 @@ public class AddContactActivity extends AppCompatActivity {
                 // get the receiver's Phone
                 EditText getPhone = findViewById(R.id.addContact_phoneNum);
                 receiverUserPhone = getPhone.getText().toString();
-
                 // get the nick name
                 EditText inputNickName = findViewById(R.id.addContact_nickname);
                 nickName = inputNickName.getText().toString();
-
                 getContactsIDs();
 
             }
@@ -84,14 +78,13 @@ public class AddContactActivity extends AppCompatActivity {
         });
     }
 
-    private void ManageChatRequests() {
+    private void manageChatRequests() {
         sendRequest.setEnabled(false);
         Map<String, Object> sender = new HashMap<>();
         sender.put(Constants.KEY_PHONE, preferenceManager.getString(Constants.KEY_PHONE));
         sender.put(Constants.KEY_NAME, preferenceManager.getString(Constants.KEY_NAME));
         sender.put(Constants.KEY_AVATAR_URI, preferenceManager.getString(Constants.KEY_AVATAR_URI));
         // need to add the user photo
-
         db.collection("users").document(receiverUserPhone).collection("requests").document(senderUserPhone)
                 .set(sender)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -99,7 +92,8 @@ public class AddContactActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             sendRequest.setEnabled(true);
-                            sendRequest.setText(R.string.cancel_request);
+                            sendRequest.setText(R.string.request_sent);
+                            sendRequest.setSelected(true);
                         }
                     }
                 });
@@ -151,7 +145,7 @@ public class AddContactActivity extends AppCompatActivity {
                                 Toast.makeText(AddContactActivity.this, "User does not exist", Toast.LENGTH_SHORT).show();
                             } else {
                                 // user exist, send the request
-                                ManageChatRequests();
+                                manageChatRequests();
                             }
                         }
                     })

@@ -180,10 +180,15 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     User contact = new User();
-                                    contact.name = document.getString(Constants.KEY_NAME);
                                     contact.phone = document.getString(Constants.KEY_PHONE);
                                     contact.token = document.getString(Constants.KEY_FCM_TOKEN);
                                     contact.avatarUri = document.getString(Constants.KEY_AVATAR_URI);
+                                    String nickName = preferenceManager.getString(contact.phone);
+                                    if (nickName == null) {
+                                        contact.name = document.getString(Constants.KEY_NAME);
+                                    } else {
+                                        contact.name = nickName;
+                                    }
                                     contacts.add(contact);
                                 }
                                 if (contacts.size() > 0) {

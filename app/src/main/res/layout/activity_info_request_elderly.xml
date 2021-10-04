@@ -23,18 +23,19 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_alignParentBottom="true"
-            app:shapeAppearanceOverlay="@style/RoundedSquare" />
+            app:shapeAppearanceOverlay="@style/RoundedSquare"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/No_request"
+        android:id="@+id/no_request"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="200dp"
         android:gravity="center"
         android:textColor="@color/colorTextDark"
         android:textSize="30sp"
-        android:visibility="invisible"/>
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/requestInfo_contactName"
@@ -46,7 +47,8 @@
         android:scrollHorizontally="true"
         android:singleLine="true"
         android:textColor="@color/colorTextDark"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/requestInfo_contactNumber"
@@ -55,7 +57,8 @@
         android:layout_below="@id/requestInfo_contactName"
         android:gravity="center"
         android:textColor="@color/colorTextDark"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:visibility="gone"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/requestInfo_addContact_button"
@@ -75,7 +78,8 @@
         app:cornerRadius="12dp"
         app:icon="@drawable/ic_round_plus_48"
         app:iconGravity="start"
-        app:iconTint="@color/colorTextLight" />
+        app:iconTint="@color/colorTextLight"
+        android:visibility="gone"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/requestInfo_removeRequest_button"
@@ -95,27 +99,8 @@
         app:cornerRadius="12dp"
         app:icon="@drawable/ic_round_cross_48"
         app:iconGravity="start"
-        app:iconTint="@color/colorTextLight" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/requestInfo_nextRequest_button"
-        android:layout_width="match_parent"
-        android:layout_height="85dp"
-        android:layout_below="@+id/requestInfo_removeRequest_button"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="@color/colorGrey"
-        android:fontFamily="@font/rubik_medium"
-        android:includeFontPadding="false"
-        android:padding="8dp"
-        android:text="@string/next_request"
-        android:textAlignment="textStart"
-        android:textAllCaps="false"
-        android:textColor="@color/colorTextLight"
-        android:textSize="30sp"
-        app:cornerRadius="12dp"
-        app:icon="@drawable/ic_round_arrow_right_48"
-        app:iconGravity="start"
-        app:iconTint="@color/colorTextLight" />
+        app:iconTint="@color/colorTextLight"
+        android:visibility="gone"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/requestInfo_goBack_button"
@@ -135,6 +120,7 @@
         app:cornerRadius="12dp"
         app:icon="@drawable/ic_round_arrow_left_48"
         app:iconGravity="start"
-        app:iconTint="@color/colorTextLight" />
+        app:iconTint="@color/colorTextLight"
+        android:visibility="gone"/>
 
 </RelativeLayout>

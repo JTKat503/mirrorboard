@@ -1,11 +1,15 @@
 package com.teamcreators.mirrorboard.activitiesforelderly;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -102,6 +106,15 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
      * and load the hobbies list
      */
     private void getHobbies() {
+        // check if internet connection is available
+        if (!isNetworkAvailable()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(StartActivityActivity.this);
+            builder.setTitle("No Internet Connection")
+                    .setMessage("Please reconnect and try again.")
+                    .setPositiveButton(android.R.string.yes, null).show();
+            swipeRefreshLayout.setRefreshing(false);
+            return;
+        }
         hobbies.clear();
         swipeRefreshLayout.setRefreshing(true);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -137,11 +150,11 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
                 hobbiesAdapter.notifyDataSetChanged();
                 textErrorMessage.setVisibility(View.GONE);
             } else {
-                textErrorMessage.setText(String.format("%s", "No hobbies"));
+                textErrorMessage.setText(String.format("%s", "No Hobbies"));
                 textErrorMessage.setVisibility(View.VISIBLE);
             }
         } else {
-            textErrorMessage.setText(String.format("%s", "No hobbies"));
+            textErrorMessage.setText(String.format("%s", "No Hobbies"));
             textErrorMessage.setVisibility(View.VISIBLE);
         }
     }
@@ -197,4 +210,15 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
      */
     @Override
     public void onMultipleUsersAction(Boolean isMultipleUsersSelected) {}
+
+    /**
+     * Check if the device is connected to the network
+     * @return true if is connected, false if not
+     */
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }

@@ -20,10 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * A class for building adapters connecting users and RecyclerViews
  *
+ * @author Jianwei Li
  */
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHolder> {
-
     private List<User> users;
     private ItemsListener usersListener;
     private List<User> selectedUsers;

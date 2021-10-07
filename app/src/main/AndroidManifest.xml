@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.teamcreators.mirrorboard" >
+    package="com.teamcreators.mirrorboard">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -18,7 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MirrorBoard"
         android:usesCleartextTraffic="true"
-        tools:targetApi="m" >
+        tools:targetApi="m">
+        <activity
+            android:name=".activitiesforfamily.SettingsActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activitiesforfamily.InfoContactActivityFamily"
+            android:exported="true" />
         <activity
             android:name=".activitiesforfamily.InfoRequestActivityFamily"
             android:exported="true" />
@@ -36,7 +42,7 @@
             android:exported="true" />
         <activity
             android:name=".activitiesmutual.LoginActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,10 +50,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activitiesforelderly.InfoRequestActivity"
+            android:name=".activitiesforelderly.InfoRequestActivityElderly"
             android:exported="true" />
         <activity
-            android:name=".activitiesforelderly.InfoContactActivity"
+            android:name=".activitiesforelderly.InfoContactActivityElderly"
             android:exported="true" />
         <activity
             android:name=".activitiesforelderly.EditProfileActivity"
@@ -68,7 +74,7 @@
             android:name=".activitiesforelderly.AddHobbyActivity"
             android:exported="true" />
         <activity
-            android:name=".activitiesforelderly.AddContactActivity"
+            android:name=".activitiesforelderly.AddContactActivityElderly"
             android:exported="true" />
         <activity
             android:name=".activitiesforelderly.MainActivityElderly"
@@ -76,7 +82,7 @@
 
         <service
             android:name=".firebase.MessagingService"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -85,7 +91,6 @@
         <activity
             android:name="com.canhub.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-
     </application>
 
 </manifest>

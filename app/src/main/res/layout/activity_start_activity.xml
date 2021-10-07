@@ -101,7 +101,7 @@
         android:fontFamily="@font/rubik_medium"
         android:includeFontPadding="false"
         android:textColor="@color/colorTextDark"
-        android:textSize="20sp"
+        android:textSize="30sp"
         android:gravity="center"
         android:visibility="gone" />
 

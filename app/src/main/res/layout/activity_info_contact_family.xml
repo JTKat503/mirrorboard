@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activitiesforfamily.InfoContactActivityFamily"
+    android:background="@color/colorPrimary"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="20dp">
+
+    <ImageView
+        android:id="@+id/family_infoContact_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_round_arrow_left_48"
+        app:tint="@color/colorTextDark" />
+
+    <TextView
+        android:id="@+id/family_infoContact_name"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/rubik_medium"
+        android:gravity="center"
+        android:maxLines="2"
+        android:textColor="@color/colorTextDark"
+        android:textSize="35sp" />
+
+    <ImageView
+        android:id="@+id/family_infoContact_editName"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_round_edit_48"
+        app:tint="@color/colorTextDark" />
+
+    <RelativeLayout
+        android:id="@+id/family_infoContact_profileLayout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/family_infoContact_name"
+        android:layout_marginTop="60dp"
+        android:gravity="center_horizontal">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/family_infoContact_avatar"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_alignParentBottom="true"
+            app:shapeAppearanceOverlay="@style/RoundedSquare" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/family_infoContact_profileLayout"
+        android:layout_marginTop="30dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/family_infoContact_audioCall"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginEnd="80dp"
+            android:backgroundTint="@color/colorBlue"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="@dimen/_29sdp"
+            app:icon="@drawable/ic_round_call_48"
+            app:iconGravity="textStart"
+            app:iconTint="@color/colorTextLight"
+            android:paddingStart="19dp"
+            tools:ignore="RtlSymmetry" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/family_infoContact_videoCall"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:backgroundTint="@color/colorBlue"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="@dimen/_29sdp"
+            app:icon="@drawable/ic_round_videocam_48"
+            app:iconGravity="textStart"
+            app:iconTint="@color/colorTextLight"
+            android:paddingStart="19dp"
+            tools:ignore="RtlSymmetry"/>
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/family_infoContact_remove"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorAccent"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/remove_contact"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="26sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_cross_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/family_infoContact_history"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_above="@id/family_infoContact_remove"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorGrey"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/call_history"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="30sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_history_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight" />
+
+</RelativeLayout>

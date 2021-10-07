@@ -144,8 +144,8 @@ public class CallIncomingActivity extends AppCompatActivity {
                             builder.setWelcomePageEnabled(false);
                             builder.setRoom(getIntent().getStringExtra(Constants.REMOTE_MSG_MEETING_ROOM));
                             if (callingType.equals("audio")) {
-                                builder.setVideoMuted(true);
-//                                builder.setAudioOnly(true);
+//                                builder.setVideoMuted(true);
+                                builder.setAudioOnly(true);
                             }
                             JitsiMeetActivity.launch(CallIncomingActivity.this, builder.build());
                             finish();

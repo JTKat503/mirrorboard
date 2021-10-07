@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activitiesforfamily.SettingsActivity"
+    android:background="@color/colorPrimary"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="20dp">
+
+    <ImageView
+        android:id="@+id/family_settings_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_round_arrow_left_48"
+        app:tint="@color/colorTextDark" />
+
+    <TextView
+        android:id="@+id/family_settings_header"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/rubik_medium"
+        android:gravity="center"
+        android:text="@string/settings"
+        android:textColor="@color/colorTextDark"
+        android:textSize="35sp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/family_settings_takePhoto"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_below="@+id/family_settings_header"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/colorGrey"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/retake_picture"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="28sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_camera_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/family_settings_editName"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_below="@+id/family_settings_takePhoto"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorGrey"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/edit_nickname"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="28sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_edit_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/family_settings_notificationSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_below="@id/family_settings_editName"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/radio_button_unselected"
+        android:drawableStart="@drawable/ic_round_notification_48"
+        android:drawablePadding="@dimen/_6sdp"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/notifications"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textOff="@string/off"
+        android:textOn="@string/on"
+        android:textSize="27sp"
+        android:thumb="@drawable/switch_thumb"
+        app:showText="true"
+        app:track="@drawable/switch_track" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/family_settings_logout"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorAccent"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/logout"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="30sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_exit_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight" />
+
+</RelativeLayout>

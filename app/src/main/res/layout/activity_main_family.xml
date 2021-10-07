@@ -12,7 +12,7 @@
     android:paddingBottom="20dp">
 
     <TextView
-        android:id="@+id/mainFamily_textView"
+        android:id="@+id/family_main_header"
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:layout_marginTop="5dp"
@@ -23,7 +23,7 @@
         android:textSize="35sp" />
 
     <ImageView
-        android:id="@+id/mainFamily_setting_imageView"
+        android:id="@+id/family_main_settings"
         android:layout_width="30dp"
         android:layout_height="50dp"
         android:layout_alignParentEnd="true"
@@ -32,10 +32,10 @@
         app:tint="@color/colorTextDark" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/mainFamily_addContact_button"
+        android:id="@+id/family_main_addContact"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_below="@+id/mainFamily_textView"
+        android:layout_below="@+id/family_main_header"
         android:layout_marginTop="15dp"
         android:backgroundTint="@color/colorBlue"
         android:fontFamily="@font/rubik_medium"
@@ -52,10 +52,10 @@
         app:iconTint="@color/colorTextLight" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/mainFamily_newRequests_button"
+        android:id="@+id/family_main_newRequests"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_below="@+id/mainFamily_addContact_button"
+        android:layout_below="@+id/family_main_addContact"
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/colorGrey"
         android:fontFamily="@font/rubik_medium"
@@ -73,16 +73,16 @@
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/mainFamily_swipeRefreshLayout"
+        android:id="@+id/family_main_contactsLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@+id/mainFamily_newRequests_button"
+        android:layout_below="@+id/family_main_newRequests"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/mainFamily_contacts_RecyclerView"
+            android:id="@+id/family_main_contactsView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -91,24 +91,40 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <TextView
-        android:id="@+id/mainFamily_errorMessage_textView"
+        android:id="@+id/family_main_errorMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/mainFamily_newRequests_button"
-        android:layout_marginTop="10dp"
+        android:layout_centerInParent="true"
         android:fontFamily="@font/rubik_medium"
         android:includeFontPadding="false"
-        android:textColor="@color/colorTextLight"
-        android:textSize="20sp"
+        android:textColor="@color/colorTextDark"
+        android:textSize="30sp"
         android:gravity="center"
         android:visibility="gone" />
 
-    <ProgressBar
-        android:id="@+id/mainFamily_loadUsers_progressBar"
-        android:layout_width="@dimen/_25sdp"
-        android:layout_height="@dimen/_25sdp"
-        android:layout_below="@id/mainFamily_newRequests_button"
-        android:layout_marginTop="10dp"
-        android:visibility="gone" />
+    <ImageView
+        android:id="@+id/family_main_conference"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_round_conference_48"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        app:tint="@color/colorBlue" />
+
+    <TextView
+        android:id="@+id/family_main_numOfRequests"
+        android:layout_width="@dimen/_32sdp"
+        android:layout_height="@dimen/_32sdp"
+        android:layout_below="@id/family_main_addContact"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/shape_circle_background"
+        android:elevation="@dimen/_10sdp"
+        android:fontFamily="@font/rubik_medium"
+        android:gravity="center"
+        android:textColor="@color/colorTextLight"
+        android:textSize="@dimen/_20sdp"
+        android:visibility="gone"/>
 
 </RelativeLayout>

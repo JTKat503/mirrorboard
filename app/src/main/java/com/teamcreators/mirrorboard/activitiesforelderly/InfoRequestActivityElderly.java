@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,8 +35,7 @@ import java.util.List;
  *
  * @author Xuannan Huang
  */
-public class InfoRequestActivity extends AppCompatActivity {
-
+public class InfoRequestActivityElderly extends AppCompatActivity {
     private PreferenceManager preferenceManager;
     private FirebaseFirestore db;
     private TextView noRequest, contactName, contactNumber;
@@ -47,14 +47,14 @@ public class InfoRequestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_request_elderly);
 
-        addContact = findViewById(R.id.requestInfo_addContact_button);
-        removeRequest = findViewById(R.id.requestInfo_removeRequest_button);
         db = FirebaseFirestore.getInstance();
-        noRequest = findViewById(R.id.no_request);
-        contactName = findViewById(R.id.requestInfo_contactName);
-        contactNumber = findViewById(R.id.requestInfo_contactNumber);
-        profileImage = findViewById(R.id.requestInfo_profileImage);
-        goBack = findViewById(R.id.requestInfo_goBack_button);
+        addContact = findViewById(R.id.elderly_infoRequest_add);
+        removeRequest = findViewById(R.id.elderly_infoRequest_remove);
+        noRequest = findViewById(R.id.elderly_infoRequest_errorMessage);
+        contactName = findViewById(R.id.elderly_infoRequest_name);
+        contactNumber = findViewById(R.id.elderly_infoRequest_phone);
+        profileImage = findViewById(R.id.elderly_infoRequest_avatar);
+        goBack = findViewById(R.id.elderly_infoRequest_back);
         // save current user info
         preferenceManager = new PreferenceManager(getApplicationContext());
         // show the request user
@@ -67,11 +67,8 @@ public class InfoRequestActivity extends AppCompatActivity {
         addContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // get the sender name
-                TextView tempName = findViewById(R.id.requestInfo_contactName);
                 // get the sender phone
-                TextView tempPhone = findViewById(R.id.requestInfo_contactNumber);
-                String senderPhone = tempPhone.getText().toString();
+                String senderPhone = contactNumber.getText().toString();
                 // get current user ID
                 String receiverPhone = preferenceManager.getString(Constants.KEY_PHONE);
                 // get and update the receiver's friend list
@@ -81,7 +78,7 @@ public class InfoRequestActivity extends AppCompatActivity {
                 // add the receiver phone number to sender friend list
                 getAndUpdateFriendList(senderPhone, receiverPhone);
                 // show the message to tell the user Contact added
-                Toast.makeText(InfoRequestActivity.this, "Contact added", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "Contact added", Snackbar.LENGTH_SHORT).show();
                 // after adding the new friend
                 // delete the request and update the number of requests
                 deleteRequestAndUpdateRequestNumber(senderPhone);
@@ -94,13 +91,13 @@ public class InfoRequestActivity extends AppCompatActivity {
         removeRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(InfoRequestActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(InfoRequestActivityElderly.this);
                 builder.setMessage("Are you sure you want to delete this request?")
                         .setNegativeButton(android.R.string.no, null)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                TextView tempPhone = findViewById(R.id.requestInfo_contactNumber);
+                                TextView tempPhone = findViewById(R.id.elderly_infoRequest_phone);
                                 String senderPhone = tempPhone.getText().toString();
                                 deleteRequestAndUpdateRequestNumber(senderPhone);
                                 showUserProfile();
@@ -137,7 +134,7 @@ public class InfoRequestActivity extends AppCompatActivity {
                     senderPhone = documentSnapshot.getString(Constants.KEY_PHONE);
                     contactName.setText(senderName);
                     contactNumber.setText(senderPhone);
-                    Glide.with(InfoRequestActivity.this)
+                    Glide.with(InfoRequestActivityElderly.this)
                             .load(documentSnapshot.getString(Constants.KEY_AVATAR_URI))
                             .error(R.drawable.blank_profile)
                             .into(profileImage);

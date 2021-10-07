@@ -44,7 +44,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CallOutgoingActivity extends AppCompatActivity {
-
     private PreferenceManager preferenceManager;
     private String inviterToken = null;
     private String meetingRoomID = null;
@@ -244,8 +243,8 @@ public class CallOutgoingActivity extends AppCompatActivity {
                         builder.setWelcomePageEnabled(false);
                         builder.setRoom(meetingRoomID);
                         if (callingType.equals("audio")) {
-                            builder.setVideoMuted(true);
-//                            builder.setAudioOnly(true);
+//                            builder.setVideoMuted(true);
+                            builder.setAudioOnly(true);
                         }
                         JitsiMeetActivity.launch(CallOutgoingActivity.this, builder.build());
                         finish();

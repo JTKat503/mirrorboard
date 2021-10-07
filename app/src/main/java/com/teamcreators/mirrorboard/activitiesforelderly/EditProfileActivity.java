@@ -51,11 +51,11 @@ import java.util.List;
 import java.util.UUID;
 
 /**
+ * A class for setting users' avatars, names for elderly
  *
+ * @author Jianwei Li
  */
 public class EditProfileActivity extends AppCompatActivity {
-
-    private Button takePicture, keepChanges, goBack, signOut;
     private EditText newName;
     private ImageView avatar;
     private Uri newAvatarUri;
@@ -68,10 +68,10 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        takePicture = findViewById(R.id.editProfile_takePicture_button);
-        keepChanges = findViewById(R.id.editProfile_keepChanges_button);
-        goBack = findViewById(R.id.editProfile_goBack_button);
-        signOut = findViewById(R.id.editProfile_signOut_button);
+        Button takePicture = findViewById(R.id.editProfile_takePicture_button);
+        Button keepChanges = findViewById(R.id.editProfile_keepChanges_button);
+        Button goBack = findViewById(R.id.editProfile_goBack_button);
+        Button signOut = findViewById(R.id.editProfile_signOut_button);
         avatar = findViewById(R.id.editProfile_profileImage);
         newName = findViewById(R.id.editProfile_newNickname);
         preferenceManager = new PreferenceManager(getApplicationContext());
@@ -149,7 +149,8 @@ public class EditProfileActivity extends AppCompatActivity {
                         .withPermissions(
                                 Manifest.permission.READ_EXTERNAL_STORAGE,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.CAMERA)
+                                Manifest.permission.CAMERA
+                        )
                         .withListener(new MultiplePermissionsListener() {
                             @Override
                             public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
@@ -319,14 +320,14 @@ public class EditProfileActivity extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         preferenceManager.putString(Constants.KEY_NAME, newName);
                         Snackbar.make(findViewById(android.R.id.content),
-                                "New name updated", Snackbar.LENGTH_SHORT).show();
+                                "New name saved", Snackbar.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(EditProfileActivity.this,
-                                "Failed to update new name: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                "Failed to save new name: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -350,14 +351,14 @@ public class EditProfileActivity extends AppCompatActivity {
                                     public void onSuccess(Void unused) {
                                         preferenceManager.putString(Constants.KEY_AVATAR_URI, uri.toString());
                                         Snackbar.make(findViewById(android.R.id.content),
-                                                "New avatar updated", Snackbar.LENGTH_SHORT).show();
+                                                "New avatar saved", Snackbar.LENGTH_SHORT).show();
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
                                         Toast.makeText(EditProfileActivity.this,
-                                                "Failed to update new avatar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                "Failed to save new avatar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 });
                     }
@@ -366,7 +367,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(EditProfileActivity.this,
-                                "Failed to update new avatar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                "Failed to save new avatar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -394,14 +395,14 @@ public class EditProfileActivity extends AppCompatActivity {
                                     public void onSuccess(Void unused) {
                                         preferenceManager.putString(Constants.KEY_AVATAR_URI, uri.toString());
                                         Snackbar.make(findViewById(android.R.id.content),
-                                                "New name and avatar updated", Snackbar.LENGTH_SHORT).show();
+                                                "New name and avatar saved", Snackbar.LENGTH_SHORT).show();
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
                                         Toast.makeText(EditProfileActivity.this,
-                                                "Failed to update new name and avatar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                "Failed to save new name and avatar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 });
                     }
@@ -410,7 +411,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(EditProfileActivity.this,
-                                "Failed to update new name and avatar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                "Failed to save new name and avatar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

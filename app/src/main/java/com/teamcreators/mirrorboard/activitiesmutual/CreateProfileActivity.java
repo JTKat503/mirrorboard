@@ -8,7 +8,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -47,15 +46,15 @@ import com.teamcreators.mirrorboard.utilities.Constants;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
+ * A class for creating users' avatars, names
  *
+ * @author Jianwei Li
  */
 public class CreateProfileActivity extends AppCompatActivity {
 
@@ -78,8 +77,8 @@ public class CreateProfileActivity extends AppCompatActivity {
         phone = bundle.getString("phone");
         password = bundle.getString("password");
 
-        nickName = findViewById(R.id.createProfile_nickname);
-        avatar = findViewById(R.id.createProfile_profileImage);
+        nickName = findViewById(R.id.createProfile_name);
+        avatar = findViewById(R.id.createProfile_avatar);
         preferenceManager = new PreferenceManager(getApplicationContext());
 
 
@@ -134,12 +133,13 @@ public class CreateProfileActivity extends AppCompatActivity {
         });
 
         // takePicture button
-        findViewById(R.id.createProfile_takePicture_button).setOnClickListener(view -> {
+        findViewById(R.id.createProfile_takePhoto).setOnClickListener(view -> {
             Dexter.withContext(CreateProfileActivity.this)
                     .withPermissions(
                             Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.CAMERA)
+                            Manifest.permission.CAMERA
+                    )
                     .withListener(new MultiplePermissionsListener() {
                         @Override
                         public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
@@ -154,14 +154,14 @@ public class CreateProfileActivity extends AppCompatActivity {
         });
 
         // back button, back to CreateAccount interface
-        findViewById(R.id.createProfile_back_button).setOnClickListener(view -> {
+        findViewById(R.id.createProfile_back).setOnClickListener(view -> {
             // After backing, save the information filled in the CreateAccount interface
             onBackPressed();
             finish();
         });
 
         // creating account button
-        findViewById(R.id.createProfile_create_button).setOnClickListener(view -> {
+        findViewById(R.id.createProfile_create).setOnClickListener(view -> {
             if (nickName.getText().toString().trim().isEmpty()) {
                 Toast.makeText(getApplicationContext(), "Please enter your name", Toast.LENGTH_SHORT).show();
                 return;

@@ -1,9 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activitiesforfamily.AddContactActivityFamily">
+    tools:context=".activitiesforfamily.AddContactActivityFamily"
+    android:background="@color/colorPrimary"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="20dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:id="@+id/family_addContact_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_round_arrow_left_48"
+        app:tint="@color/colorTextDark" />
+
+    <TextView
+        android:id="@+id/family_addContact_header"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/rubik_medium"
+        android:gravity="center"
+        android:text="@string/add_a_contact"
+        android:textColor="@color/colorTextDark"
+        android:textSize="35sp" />
+
+    <TextView
+        android:id="@+id/family_addContact_phoneTitle"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_below="@id/family_addContact_header"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/rubik_medium"
+        android:gravity="center"
+        android:text="@string/phone_number"
+        android:textColor="@color/colorTextDark"
+        android:textSize="25sp" />
+
+    <EditText
+        android:id="@+id/family_addContact_phoneNum"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_below="@id/family_addContact_phoneTitle"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape_stroke_blue"
+        android:fontFamily="@font/rubik_medium"
+        android:imeOptions="actionNext"
+        android:importantForAutofill="no"
+        android:includeFontPadding="false"
+        android:inputType="phone"
+        android:padding="15dp"
+        android:textColor="@color/colorTextDark"
+        android:textColorHint="@color/colorHintText"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/family_addContact_nameTitle"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_below="@id/family_addContact_phoneNum"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/rubik_medium"
+        android:gravity="center"
+        android:text="@string/nickname"
+        android:textColor="@color/colorTextDark"
+        android:textSize="25sp" />
+
+    <EditText
+        android:id="@+id/family_addContact_name"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_below="@id/family_addContact_nameTitle"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape_stroke_blue"
+        android:fontFamily="@font/rubik_medium"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        android:includeFontPadding="false"
+        android:inputType="textPersonName"
+        android:padding="15dp"
+        android:textColor="@color/colorTextDark"
+        android:textColorHint="@color/colorHintText"
+        android:textSize="30sp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/family_addContact_sendRequest"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_below="@+id/family_addContact_name"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@color/selector_text_color"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/send_request"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="28sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_mail_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight" />
+
+</RelativeLayout>

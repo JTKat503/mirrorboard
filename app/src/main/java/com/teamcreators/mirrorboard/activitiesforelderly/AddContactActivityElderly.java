@@ -33,8 +33,9 @@ import java.util.Map;
  *
  * @author Xuannan Huang
  */
-public class AddContactActivity extends AppCompatActivity {
-    private String receiverUserPhone, senderUserPhone, nickName;
+public class AddContactActivityElderly extends AppCompatActivity {
+    private String receiverUserPhone;
+    private String senderUserPhone;
     private Button sendRequest, goBack;
     private FirebaseFirestore db;
     private PreferenceManager preferenceManager;
@@ -47,8 +48,8 @@ public class AddContactActivity extends AppCompatActivity {
         // get the database instance
         db = FirebaseFirestore.getInstance();
         // get the button by ID
-        goBack = findViewById(R.id.addContact_goBack_button);
-        sendRequest = findViewById(R.id.addContact_sendRequest_button);
+        goBack = findViewById(R.id.elderly_addContact_goBack);
+        sendRequest = findViewById(R.id.elderly_addContact_sendRequest);
         sendRequest.setSelected(false);
         // save the current user information
         preferenceManager = new PreferenceManager(getApplicationContext());
@@ -60,11 +61,8 @@ public class AddContactActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // get the receiver's Phone
-                EditText getPhone = findViewById(R.id.addContact_phoneNum);
+                EditText getPhone = findViewById(R.id.elderly_addContact_phoneNum);
                 receiverUserPhone = getPhone.getText().toString();
-                // get the nick name
-                EditText inputNickName = findViewById(R.id.addContact_nickname);
-                nickName = inputNickName.getText().toString();
                 // get the friend list and Check if you are friends
                 // if not, then send the request
                 // otherwise, show the message to current user
@@ -122,11 +120,11 @@ public class AddContactActivity extends AppCompatActivity {
     private void manageRequest(List<String> myFriendsIDs) {
         // search user from the data base
         if (TextUtils.isEmpty(receiverUserPhone)) {         // check the input number
-            Toast.makeText(AddContactActivity.this, "Please enter a phone number.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddContactActivityElderly.this, "Please enter a phone number.", Toast.LENGTH_SHORT).show();
         } else if (receiverUserPhone.equals(senderUserPhone)) {     // check the input number == own number
-            Toast.makeText(AddContactActivity.this, "You cannot add yourself.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddContactActivityElderly.this, "You cannot add yourself.", Toast.LENGTH_SHORT).show();
         } else if (myFriendsIDs.contains(receiverUserPhone)) {      // Check if the number is your friend
-            Toast.makeText(AddContactActivity.this, "You are already friends.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddContactActivityElderly.this, "You are already friends.", Toast.LENGTH_SHORT).show();
         } else {
             db.collection(Constants.KEY_COLLECTION_USERS)
                     .whereEqualTo(Constants.KEY_PHONE, receiverUserPhone)
@@ -136,7 +134,7 @@ public class AddContactActivity extends AppCompatActivity {
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             if (queryDocumentSnapshots.isEmpty()) {
                                 // user does not exist
-                                Toast.makeText(AddContactActivity.this, "User does not exist", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddContactActivityElderly.this, "User does not exist", Toast.LENGTH_SHORT).show();
                             } else {
                                 // update the number of the request to database
                                 ifTheRequestNumIsZero();
@@ -169,7 +167,7 @@ public class AddContactActivity extends AppCompatActivity {
                         if ((long)document.get(Constants.KEY_NUM_OF_REQUESTS) == 0) {
                             trueToAddRequestNum(false);
                         } else {
-                            Toast.makeText(AddContactActivity.this, "count " + document.get(Constants.KEY_NUM_OF_REQUESTS), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddContactActivityElderly.this, "count " + document.get(Constants.KEY_NUM_OF_REQUESTS), Toast.LENGTH_SHORT).show();
                             increaseRequests();
                         }
                     }
@@ -196,7 +194,7 @@ public class AddContactActivity extends AppCompatActivity {
                                     flag = true;
                                 }
                             }
-                            Toast.makeText(AddContactActivity.this, "inside " + flag, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddContactActivityElderly.this, "inside " + flag, Toast.LENGTH_SHORT).show();
                             trueToAddRequestNum(flag);
                         } else {
                             Toast.makeText(getApplicationContext(),

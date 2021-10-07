@@ -36,20 +36,19 @@ import java.util.List;
  *
  * @author Jianwei Li & Donghong Zhuang
  */
-public class InfoContactActivity extends AppCompatActivity {
-
+public class InfoContactActivityElderly extends AppCompatActivity {
     private User user;
     private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_info_contact);
+        setContentView(R.layout.activity_info_contact_elderly);
 
         user = (User) getIntent().getSerializableExtra("user");
         preferenceManager = new PreferenceManager(getApplicationContext());
         Button makeVideoCall = findViewById(R.id.contactInfo_makeCall_button);
-        Button editFriendsNickname = findViewById(R.id.contactInfo_editNickname_button);
+        Button editContactName = findViewById(R.id.contactInfo_editNickname_button);
         Button removeContact = findViewById(R.id.contactInfo_removeContact_button);
         Button goBack = findViewById(R.id.contactInfo_goBack_button);
 
@@ -75,11 +74,11 @@ public class InfoContactActivity extends AppCompatActivity {
         });
 
         // editing friends nickname button
-        editFriendsNickname.setOnClickListener(new View.OnClickListener() {
+        editContactName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(InfoContactActivity.this);
-                final EditText newName = new EditText(InfoContactActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(InfoContactActivityElderly.this);
+                final EditText newName = new EditText(InfoContactActivityElderly.this);
                 newName.setInputType(InputType.TYPE_CLASS_TEXT);
                 builder.setTitle("Enter a new name")
                         .setView(newName)
@@ -100,7 +99,7 @@ public class InfoContactActivity extends AppCompatActivity {
         removeContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(InfoContactActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(InfoContactActivityElderly.this);
                 builder.setTitle("Delete Contact")
                         .setMessage("Are you sure you want to delete this contact?")
                         .setNegativeButton(android.R.string.no, null)
@@ -173,25 +172,4 @@ public class InfoContactActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
-
-//    /**
-//     * Initialize the information of the recipient of the audio call and
-//     * start the audio call, if can not find the recipient, display hint
-//     * @param user recipient of the video call
-//     * @author Jianwei Li
-//     */
-//    public void initiateAudioCall(User user) {
-//        if (user.token == null || user.token.trim().isEmpty()) {
-//            Toast.makeText(
-//                    this,
-//                    user.name + " is not available",
-//                    Toast.LENGTH_SHORT
-//            ).show();
-//        } else {
-//            Intent intent = new Intent(getApplicationContext(), CallOutgoingActivity.class);
-//            intent.putExtra("user", user);
-//            intent.putExtra("type", "audio");
-//            startActivity(intent);
-//        }
-//    }
 }

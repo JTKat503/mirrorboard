@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activitiesforelderly.InfoContactActivity"
+    tools:context=".activitiesforelderly.InfoContactActivityElderly"
     android:background="@color/colorPrimary"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"

@@ -13,7 +13,7 @@
     android:paddingBottom="20dp">
 
     <TextView
-        android:id="@+id/main_textView"
+        android:id="@+id/elderly_main_header"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="5dp"
@@ -24,10 +24,10 @@
         android:textSize="35sp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/main_addContact_button"
+        android:id="@+id/elderly_main_addContact"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_below="@+id/main_textView"
+        android:layout_below="@+id/elderly_main_header"
         android:layout_marginTop="15dp"
         android:backgroundTint="@color/colorBlue"
         android:fontFamily="@font/rubik_medium"
@@ -44,10 +44,10 @@
         app:iconTint="@color/colorTextLight" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/main_newRequests_button"
+        android:id="@+id/elderly_main_newRequests"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_below="@+id/main_addContact_button"
+        android:layout_below="@+id/elderly_main_addContact"
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/colorGrey"
         android:fontFamily="@font/rubik_medium"
@@ -65,16 +65,16 @@
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/main_swipeRefreshLayout"
+        android:id="@+id/elderly_main_contactsLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_above="@+id/main_bottomLinearLayout"
-        android:layout_below="@+id/main_newRequests_button"
+        android:layout_above="@+id/elderly_main_footerLayout"
+        android:layout_below="@+id/elderly_main_newRequests"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="10dp">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/main_contacts_RecyclerView"
+            android:id="@+id/elderly_main_contactsView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -83,11 +83,10 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <TextView
-        android:id="@+id/main_errorMessage_textView"
+        android:id="@+id/elderly_main_errorMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/main_newRequests_button"
-        android:layout_marginTop="50dp"
+        android:layout_centerInParent="true"
         android:fontFamily="@font/rubik_medium"
         android:includeFontPadding="false"
         android:textColor="@color/colorTextDark"
@@ -96,13 +95,13 @@
         android:visibility="gone" />
 
     <LinearLayout
-        android:id="@+id/main_bottomLinearLayout"
+        android:id="@+id/elderly_main_footerLayout"
         android:layout_width="match_parent"
         android:layout_height="85dp"
         android:layout_alignParentBottom="true">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/main_exit_button"
+            android:id="@+id/elderly_main_exit"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
@@ -115,7 +114,7 @@
             app:iconGravity="textStart"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/main_hobbies_button"
+            android:id="@+id/elderly_main_hobbies"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="5"
@@ -137,21 +136,21 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/main_conference_imageView"
+        android:id="@+id/elderly_main_conference"
         android:layout_width="@dimen/_50sdp"
         android:layout_height="@dimen/_50sdp"
         android:contentDescription="@string/app_name"
         android:src="@drawable/ic_round_conference_48"
         android:visibility="gone"
-        android:layout_above="@id/main_bottomLinearLayout"
+        android:layout_above="@id/elderly_main_footerLayout"
         android:layout_centerInParent="true"
         app:tint="@color/colorBlue" />
 
     <TextView
-        android:id="@+id/main_numOfRequests_textView"
+        android:id="@+id/elderly_main_numOfRequests"
         android:layout_width="@dimen/_32sdp"
         android:layout_height="@dimen/_32sdp"
-        android:layout_below="@id/main_addContact_button"
+        android:layout_below="@id/elderly_main_addContact"
         android:layout_marginTop="5dp"
         android:background="@drawable/shape_circle_background"
         android:elevation="@dimen/_10sdp"

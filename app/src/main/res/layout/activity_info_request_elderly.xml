@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activitiesforelderly.InfoRequestActivity"
+    tools:context=".activitiesforelderly.InfoRequestActivityElderly"
     android:background="@color/colorPrimary"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
@@ -12,14 +12,14 @@
     android:paddingBottom="20dp">
 
     <RelativeLayout
-        android:id="@+id/requestInfo_topRelativeLayout"
+        android:id="@+id/elderly_infoRequest_profileLayout"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:gravity="center_horizontal"
         android:layout_alignParentTop="true">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/requestInfo_profileImage"
+            android:id="@+id/elderly_infoRequest_avatar"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_alignParentBottom="true"
@@ -28,7 +28,7 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/no_request"
+        android:id="@+id/elderly_infoRequest_errorMessage"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_centerInParent="true"
@@ -39,10 +39,10 @@
         android:visibility="gone"/>
 
     <TextView
-        android:id="@+id/requestInfo_contactName"
+        android:id="@+id/elderly_infoRequest_name"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/requestInfo_topRelativeLayout"
+        android:layout_below="@id/elderly_infoRequest_profileLayout"
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:scrollHorizontally="true"
@@ -52,20 +52,20 @@
         android:visibility="gone"/>
 
     <TextView
-        android:id="@+id/requestInfo_contactNumber"
+        android:id="@+id/elderly_infoRequest_phone"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/requestInfo_contactName"
+        android:layout_below="@id/elderly_infoRequest_name"
         android:gravity="center"
         android:textColor="@color/colorTextDark"
         android:textSize="30sp"
         android:visibility="gone"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/requestInfo_addContact_button"
+        android:id="@+id/elderly_infoRequest_add"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_below="@+id/requestInfo_contactNumber"
+        android:layout_below="@+id/elderly_infoRequest_phone"
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/colorBlue"
         android:fontFamily="@font/rubik_medium"
@@ -83,10 +83,10 @@
         android:visibility="gone"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/requestInfo_removeRequest_button"
+        android:id="@+id/elderly_infoRequest_remove"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_below="@+id/requestInfo_addContact_button"
+        android:layout_below="@+id/elderly_infoRequest_add"
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/colorAccent"
         android:fontFamily="@font/rubik_medium"
@@ -104,7 +104,7 @@
         android:visibility="gone"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/requestInfo_goBack_button"
+        android:id="@+id/elderly_infoRequest_back"
         android:layout_width="match_parent"
         android:layout_height="85dp"
         android:layout_alignParentBottom="true"

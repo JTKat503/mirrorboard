@@ -1,9 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activitiesforfamily.InfoRequestActivityFamily">
+    tools:context=".activitiesforfamily.InfoRequestActivityFamily"
+    android:background="@color/colorPrimary"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="20dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:id="@+id/family_infoRequest_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/ic_round_arrow_left_48"
+        app:tint="@color/colorTextDark" />
+
+    <TextView
+        android:id="@+id/family_infoRequest_header"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/rubik_medium"
+        android:gravity="center"
+        android:text="@string/new_requests"
+        android:textColor="@color/colorTextDark"
+        android:textSize="35sp" />
+
+    <RelativeLayout
+        android:id="@+id/family_infoRequest_profileLayout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/family_infoRequest_header"
+        android:layout_marginTop="60dp"
+        android:gravity="center_horizontal">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/family_infoRequest_avatar"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            app:shapeAppearanceOverlay="@style/RoundedSquare" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/family_infoRequest_errorMessage"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:textColor="@color/colorTextDark"
+        android:textSize="30sp"
+        android:fontFamily="@font/rubik_medium"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/family_infoRequest_name"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/family_infoRequest_profileLayout"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColor="@color/colorTextDark"
+        android:textSize="30sp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/family_infoRequest_phone"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/family_infoRequest_name"
+        android:gravity="center"
+        android:textColor="@color/colorTextDark"
+        android:textSize="30sp"
+        android:visibility="gone"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/family_infoRequest_remove"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentBottom="true"
+        android:backgroundTint="@color/colorAccent"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/remove_request"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="26sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_cross_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight"
+        android:visibility="gone"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/family_infoRequest_add"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_above="@id/family_infoRequest_remove"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorBlue"
+        android:fontFamily="@font/rubik_medium"
+        android:includeFontPadding="false"
+        android:padding="8dp"
+        android:text="@string/add_contact"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextLight"
+        android:textSize="30sp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_round_plus_48"
+        app:iconGravity="start"
+        app:iconTint="@color/colorTextLight"
+        android:visibility="gone"/>
+
+</RelativeLayout>

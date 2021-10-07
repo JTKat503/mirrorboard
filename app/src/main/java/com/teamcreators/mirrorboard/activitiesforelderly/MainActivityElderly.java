@@ -39,18 +39,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A class that displays the main interface of the APP,
+ * A class that displays the main interface of the APP for elderly,
  * including a contact list, adding new contacts and viewing requests functions
  *
  * @author Jianwei Li & Xuannan Huang
  */
 public class MainActivityElderly extends AppCompatActivity implements ItemsListener {
-
     private PreferenceManager preferenceManager;
     private List<User> contacts;
     private UsersAdapter contactsAdapter;
-    private TextView textErrorMessage, requestsNumber;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private TextView errorMessage, requestsNumber;
+    private SwipeRefreshLayout contactsLayout;
     private ImageView conference;
 
     @Override
@@ -58,32 +57,24 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_elderly);
 
-        // check if internet connection is available
-        if (!isNetworkAvailable()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityElderly.this);
-            builder.setTitle("No Internet Connection")
-                    .setMessage("Please reconnect and try again.")
-                    .setPositiveButton(android.R.string.yes, null).show();
-        }
-
         preferenceManager = new PreferenceManager(getApplicationContext());
-        textErrorMessage = findViewById(R.id.main_errorMessage_textView);
-        conference = findViewById(R.id.main_conference_imageView);
-        swipeRefreshLayout = findViewById(R.id.main_swipeRefreshLayout);
-        Button newRequests = findViewById(R.id.main_newRequests_button);
-        Button newContact = findViewById(R.id.main_addContact_button);
-        Button hobbies = findViewById(R.id.main_hobbies_button);
-        Button exit = findViewById(R.id.main_exit_button);
+        errorMessage = findViewById(R.id.elderly_main_errorMessage);
+        conference = findViewById(R.id.elderly_main_conference);
+        contactsLayout = findViewById(R.id.elderly_main_contactsLayout);
+        Button newRequests = findViewById(R.id.elderly_main_newRequests);
+        Button newContact = findViewById(R.id.elderly_main_addContact);
+        Button hobbies = findViewById(R.id.elderly_main_hobbies);
+        Button exit = findViewById(R.id.elderly_main_exit);
 
         // building and loading contacts list
-        RecyclerView contactsRecyclerView = findViewById(R.id.main_contacts_RecyclerView);
+        RecyclerView contactsView = findViewById(R.id.elderly_main_contactsView);
         contacts = new ArrayList<>();
         contactsAdapter = new UsersAdapter(contacts, this);
-        contactsRecyclerView.setAdapter(contactsAdapter);
+        contactsView.setAdapter(contactsAdapter);
         getContactsIDs();
 
         // refreshing contacts list
-        swipeRefreshLayout.setOnRefreshListener(this::getContactsIDs);
+        contactsLayout.setOnRefreshListener(this::getContactsIDs);
         // show the real time of the number of requests
         numberOfRequestsRealtime(); // ** @author this line added by Xuannan Huang*/
 
@@ -101,7 +92,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         newContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivityElderly.this, AddContactActivity.class);
+                Intent intent = new Intent(MainActivityElderly.this, AddContactActivityElderly.class);
                 startActivity(intent);
             }
         });
@@ -110,7 +101,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         newRequests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivityElderly.this, InfoRequestActivity.class);
+                Intent intent = new Intent(MainActivityElderly.this, InfoRequestActivityElderly.class);
                 startActivity(intent);
             }
         });
@@ -141,6 +132,15 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      * @author Jianwei Li
      */
     private void getContactsIDs() {
+        // check if internet connection is available
+        if (!isNetworkAvailable()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityElderly.this);
+            builder.setTitle("No Internet Connection")
+                    .setMessage("Please reconnect and try again.")
+                    .setPositiveButton(android.R.string.yes, null).show();
+            contactsLayout.setRefreshing(false);
+            return;
+        }
         String myID = preferenceManager.getString(Constants.KEY_USER_ID);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USERS)
@@ -173,11 +173,11 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      */
     private void getContacts(List<String> contactsIDs) {
         contacts.clear();
-        swipeRefreshLayout.setRefreshing(true);
+        contactsLayout.setRefreshing(true);
         if (contactsIDs == null || contactsIDs.isEmpty()) {
-            swipeRefreshLayout.setRefreshing(false);
-            textErrorMessage.setText(String.format("%s", "No contacts"));
-            textErrorMessage.setVisibility(View.VISIBLE);
+            contactsLayout.setRefreshing(false);
+            errorMessage.setText(String.format("%s", "No Contacts"));
+            errorMessage.setVisibility(View.VISIBLE);
         } else {
             FirebaseFirestore database = FirebaseFirestore.getInstance();
             database.collection(Constants.KEY_COLLECTION_USERS)
@@ -186,7 +186,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            swipeRefreshLayout.setRefreshing(false);
+                            contactsLayout.setRefreshing(false);
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     User contact = new User();
@@ -203,14 +203,14 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
                                 }
                                 if (contacts.size() > 0) {
                                 contactsAdapter.notifyDataSetChanged();
-                                textErrorMessage.setVisibility(View.GONE);
+                                errorMessage.setVisibility(View.GONE);
                                 } else {
-                                textErrorMessage.setText(String.format("%s", "No contacts"));
-                                textErrorMessage.setVisibility(View.VISIBLE);
+                                errorMessage.setText(String.format("%s", "No contacts"));
+                                errorMessage.setVisibility(View.VISIBLE);
                                 }
                             } else {
-                                textErrorMessage.setText(String.format("%s", "No contacts"));
-                                textErrorMessage.setVisibility(View.VISIBLE);
+                                errorMessage.setText(String.format("%s", "No contacts"));
+                                errorMessage.setVisibility(View.VISIBLE);
                             }
                         }
                     });
@@ -236,13 +236,13 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
 
     /**
      * Implementation of ItemsAdapter interface method.
-     * Jump to the InfoContactActivity and display the personal information of the selected user
+     * Jump to the InfoContactActivityElderly and display the personal information of the selected user
      * @param user the contact selected by clicking, whose information is to be displayed
      * @author Jianwei Li
      */
     @Override
     public void displayContactInformation(User user) {
-        Intent intent = new Intent(getApplicationContext(), InfoContactActivity.class);
+        Intent intent = new Intent(getApplicationContext(), InfoContactActivityElderly.class);
         intent.putExtra("user", user);
         startActivity(intent);
     }
@@ -287,7 +287,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      */
     public void numberOfRequestsRealtime(){
         // get the TextView of the red dot
-        requestsNumber = findViewById(R.id.main_numOfRequests_textView);
+        requestsNumber = findViewById(R.id.elderly_main_numOfRequests);
         // get the Firestore database
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(Constants.KEY_COLLECTION_USERS)
@@ -303,7 +303,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
                                 requestsNumber.setVisibility(View.GONE);
                             } else {
                                 requestsNumber.setVisibility(View.VISIBLE);
-                                requestsNumber.setText(NumberToString(numberOfRequests));
+                                requestsNumber.setText(numberToString(numberOfRequests));
                             }
                         } else {
                             Toast.makeText(MainActivityElderly.this, "Cannot get data.", Toast.LENGTH_SHORT).show();
@@ -318,7 +318,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      * @return string of number
      * @author Xuannan Huang
      */
-    private String NumberToString(long numberOfRequests) {
+    private String numberToString(long numberOfRequests) {
         if (numberOfRequests <= 99) {
             return String.valueOf(numberOfRequests);
         } else {

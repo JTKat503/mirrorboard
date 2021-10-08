@@ -99,9 +99,6 @@ public class CreateProfileActivity extends AppCompatActivity {
                         avatarUri = result.getUriContent();
                         avatar.setImageURI(avatarUri);
                     }
-                    else {
-                        Toast.makeText(getApplicationContext(), "Failed to start cropper", Toast.LENGTH_SHORT).show();
-                    }
                 });
 
         // imageView for loading avatar
@@ -188,7 +185,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         CropImageContractOptions options = new CropImageContractOptions(null, new CropImageOptions());
         options.setActivityTitle("Crop Image")
                 .setAspectRatio(1,1)
-                .setRequestedSize(250,250)
+                .setRequestedSize(500,500)
                 .setOutputCompressFormat(Bitmap.CompressFormat.PNG);
         cropImageLauncher.launch(options);
     }
@@ -201,7 +198,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         CropImageContractOptions options = new CropImageContractOptions(imagePath, new CropImageOptions());
         options.setActivityTitle("Crop Image")
                 .setAspectRatio(1,1)
-                .setRequestedSize(250,250)
+                .setRequestedSize(500,500)
                 .setOutputCompressFormat(Bitmap.CompressFormat.PNG);
         cropImageLauncher.launch(options);
     }
@@ -263,6 +260,7 @@ public class CreateProfileActivity extends AppCompatActivity {
                 user.put(Constants.KEY_HOBBIES, new ArrayList<>());
                 user.put(Constants.KEY_FRIENDS, new ArrayList<>());
                 user.put(Constants.KEY_NUM_OF_REQUESTS, 0);
+                user.put(Constants.KEY_NOTICE_ON, true);
 
                 FirebaseFirestore database = FirebaseFirestore.getInstance();
                 final String userID = phone;

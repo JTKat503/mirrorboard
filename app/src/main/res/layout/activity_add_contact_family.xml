@@ -24,13 +24,13 @@
         android:id="@+id/family_addContact_header"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_marginTop="5dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
         android:fontFamily="@font/rubik_medium"
         android:gravity="center"
         android:text="@string/add_a_contact"
         android:textColor="@color/colorTextDark"
-        android:textSize="35sp" />
+        android:textSize="31sp" />
 
     <TextView
         android:id="@+id/family_addContact_phoneTitle"

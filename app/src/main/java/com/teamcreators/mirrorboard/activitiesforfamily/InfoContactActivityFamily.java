@@ -65,7 +65,7 @@ public class InfoContactActivityFamily extends AppCompatActivity {
         makeVideoCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                initiateVideoCall(user);
+                isAvailableForVideoCall(user);
             }
         });
 
@@ -73,7 +73,7 @@ public class InfoContactActivityFamily extends AppCompatActivity {
         makeAudioCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                initiateAudioCall(user);
+                isAvailableForAudioCall(user);
             }
         });
 
@@ -129,6 +129,76 @@ public class InfoContactActivityFamily extends AppCompatActivity {
     }
 
     /**
+     * Check whether the contact's notification function is turned on,
+     * if it is turned on, make a video call, if not, do not dial
+     * @param user the contact to be called
+     * @author Jianwei Li
+     */
+    private void isAvailableForVideoCall(User user) {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(Constants.KEY_COLLECTION_USERS)
+                .document(user.phone)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                if (document.getBoolean(Constants.KEY_NOTICE_ON)) {
+                                    initiateVideoCall(user);
+                                } else {
+                                    Toast.makeText(InfoContactActivityFamily.this,
+                                            user.name + " is not available", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(InfoContactActivityFamily.this,
+                                        user.name + " is not available", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(InfoContactActivityFamily.this,
+                                    user.name + " is not available", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Check whether the contact's notification function is turned on,
+     * if it is turned on, make a audio call, if not, do not dial
+     * @param user the contact to be called
+     * @author Jianwei Li
+     */
+    private void isAvailableForAudioCall(User user) {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(Constants.KEY_COLLECTION_USERS)
+                .document(user.phone)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                if (document.getBoolean(Constants.KEY_NOTICE_ON)) {
+                                    initiateAudioCall(user);
+                                } else {
+                                    Toast.makeText(InfoContactActivityFamily.this,
+                                            user.name + " is not available", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(InfoContactActivityFamily.this,
+                                        user.name + " is not available", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(InfoContactActivityFamily.this,
+                                    user.name + " is not available", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    /**
      * Initialize the information of the recipient of the video call and
      * start the video call, if can not find the recipient, display hint
      * @param user recipient of the video call
@@ -139,8 +209,7 @@ public class InfoContactActivityFamily extends AppCompatActivity {
             Toast.makeText(
                     this,
                     user.name + " is not available",
-                    Toast.LENGTH_SHORT
-            ).show();
+                    Toast.LENGTH_SHORT).show();
         } else {
             Intent intent = new Intent(getApplicationContext(), CallOutgoingActivity.class);
             intent.putExtra("user", user);
@@ -160,8 +229,7 @@ public class InfoContactActivityFamily extends AppCompatActivity {
             Toast.makeText(
                     this,
                     user.name + " is not available",
-                    Toast.LENGTH_SHORT
-            ).show();
+                    Toast.LENGTH_SHORT).show();
         } else {
             Intent intent = new Intent(getApplicationContext(), CallOutgoingActivity.class);
             intent.putExtra("user", user);

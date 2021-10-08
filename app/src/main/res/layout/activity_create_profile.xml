@@ -43,7 +43,6 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/shape_stroke_blue"
         android:fontFamily="@font/rubik_medium"
-        android:hint="@string/hint_people_name"
         android:imeOptions="actionDone"
         android:importantForAutofill="no"
         android:includeFontPadding="false"

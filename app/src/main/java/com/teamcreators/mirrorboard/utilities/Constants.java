@@ -18,6 +18,7 @@ public class Constants {
     public static final String KEY_NUM_OF_REQUESTS = "numberOfRequests";
     public static final String KEY_IS_SIGNED_IN = "isSignedIn";
     public static final String KEY_MODE = "mode";
+    public static final String KEY_NOTICE_ON = "notice_on";
     public static final String MODE_ELDERLY = "Elderly";
 
     public static final String REMOTE_MSG_AUTHORIZATION = "Authorization";

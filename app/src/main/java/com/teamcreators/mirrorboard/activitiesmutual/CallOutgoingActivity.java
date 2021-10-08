@@ -43,6 +43,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * A class that contains information about the outgoing call interface
+ *
+ * @author Jianwei Li
+ */
 public class CallOutgoingActivity extends AppCompatActivity {
     private PreferenceManager preferenceManager;
     private String inviterToken = null;
@@ -58,16 +63,16 @@ public class CallOutgoingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call_outgoing);
 
-        ImageView imageCallingType = findViewById(R.id.outgoingCall_imageCallingType);
         contactAvatar = findViewById(R.id.outgoingCall_profileImage);
         contactName = findViewById(R.id.outgoingCall_userName_textView);
         contactPhoneNum = findViewById(R.id.outgoingCall_phoneNum_textView);
+        ImageView imageCallingType = findViewById(R.id.outgoingCall_imageCallingType);
         LinearLayout hangUp = findViewById(R.id.outgoingCall_hangup_layout);
-
         preferenceManager = new PreferenceManager(getApplicationContext());
         callingType = getIntent().getStringExtra("type");
         User user = (User) getIntent().getSerializableExtra("user");
 
+        // determines the icon of the type of call
         if (callingType != null) {
             if (callingType.equals("video")) {
                 imageCallingType.setImageResource(R.drawable.ic_round_videocam_48);
@@ -95,7 +100,8 @@ public class CallOutgoingActivity extends AppCompatActivity {
                         // Initiate a multi-party call invitation
                         if (getIntent().getBooleanExtra("isMultiple", false)) {
                             Type type = new TypeToken<ArrayList<User>>() {}.getType();
-                            ArrayList<User> receivers = new Gson().fromJson(getIntent().getStringExtra("selectedUsers"), type);
+                            ArrayList<User> receivers = new Gson().fromJson(
+                                    getIntent().getStringExtra("selectedUsers"), type);
                             if (receivers != null) {
                                 totalReceivers = receivers.size();
                             }
@@ -118,7 +124,8 @@ public class CallOutgoingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (getIntent().getBooleanExtra("isMultiple", false)) {
                     Type type = new TypeToken<ArrayList<User>>() {}.getType();
-                    ArrayList<User> receivers = new Gson().fromJson(getIntent().getStringExtra("selectedUsers"), type);
+                    ArrayList<User> receivers = new Gson().fromJson(
+                            getIntent().getStringExtra("selectedUsers"), type);
                     cancelInvitation(null, receivers);
                 } else {
                     if (user != null) {
@@ -173,7 +180,11 @@ public class CallOutgoingActivity extends AppCompatActivity {
         }
     }
 
-    // send the token and calling info of inviter to receiver
+    /**
+     * Send the token, profile and calling information of inviter to receiver
+     * @param remoteMessageBody the token, inviter's profile and calling information
+     * @param type the calling type (video/audio)
+     */
     private void sendRemoteMessage(String remoteMessageBody, String type) {
         ApiClient.getClient().create(ApiService.class).sendRemoteMessage(
                 Constants.getRemoteMessageHeaders(), remoteMessageBody
@@ -182,19 +193,22 @@ public class CallOutgoingActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<String> call,@NonNull Response<String> response) {
                 if (response.isSuccessful()) {
                     // if type.equals(Constants.REMOTE_MSG_INVITATION), invitation successfully sent
-                    // if type.equals(Constants.REMOTE_MSG_INVITATION_RESPONSE), invitation accepted/rejected by sender
+                    // if type.equals(Constants.REMOTE_MSG_INVITATION_RESPONSE),
+                    // invitation accepted/rejected by sender
                     if (type.equals(Constants.REMOTE_MSG_INVITATION_RESPONSE)) {
                         finish();
                     }
                 } else {
-                    Toast.makeText(CallOutgoingActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CallOutgoingActivity.this,
+                            response.message(), Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<String> call,@NonNull Throwable t) {
-                Toast.makeText(CallOutgoingActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(CallOutgoingActivity.this,
+                        t.getMessage(), Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -229,6 +243,9 @@ public class CallOutgoingActivity extends AppCompatActivity {
         }
     }
 
+    // Respond accordingly to the response of the call recipient.
+    // If the other party rejects the call invitation, the invitation will be ended.
+    // If the other party accepts the call invitation, the call room will be established.
     private BroadcastReceiver invitationResponseReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -243,7 +260,6 @@ public class CallOutgoingActivity extends AppCompatActivity {
                         builder.setWelcomePageEnabled(false);
                         builder.setRoom(meetingRoomID);
                         if (callingType.equals("audio")) {
-//                            builder.setVideoMuted(true);
                             builder.setAudioOnly(true);
                         }
                         JitsiMeetActivity.launch(CallOutgoingActivity.this, builder.build());

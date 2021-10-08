@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MirrorBoard</string>
+    <string name="app_name">Video Connect</string>
     <string name="family_and_friends"><![CDATA[Family & Friends]]></string>
     <string name="new_contact">New Contact</string>
     <string name="new_requests">New Requests</string>
@@ -22,7 +22,6 @@
     <string name="phone_number">Phone Number</string>
     <string name="password">Password</string>
 
-    <string name="password_hint">• • • • • • • • •</string>
     <string name="new_account">New Account</string>
     <string name="exit_app">Exit App</string>
     <string name="create_an_account">Create an Account</string>
@@ -35,8 +34,6 @@
     <string name="take_picture">Take Picture</string>
     <string name="create">Create</string>
     <string name="add_a_contact">Add a Contact</string>
-    <string name="hint_phone_number">0456789123</string>
-    <string name="hint_people_name">Eliza Lawrence</string>
     <string name="send_request">Send Request</string>
     <string name="edit_your_profile">Edit your Profile</string>
     <string name="change_nickname">Change Nickname</string>
@@ -48,13 +45,6 @@
     <string name="reject_call">Reject Call</string>
     <string name="dialing">Dialing…</string>
     <string name="cancel">Cancel</string>
-
-    <!--strings below should be deleted when 'activity_call_activity' is deprecated-->
-    <string name="hang_up">Hang Up</string>
-    <string name="place_on_hold">Place on Hold</string>
-    <string name="hold">Hold</string>
-    <string name="friend">Friend</string>
-    <!--strings above should be deleted when 'activity_call_activity' is deprecated-->
 
     <string name="logout">Log Out</string>
     <string name="contacts">Contacts</string>

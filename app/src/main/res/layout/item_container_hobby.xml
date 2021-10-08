@@ -24,7 +24,7 @@
         android:id="@+id/hobbyContainer_more_imageView"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/ic_round_plus_48"
+        android:src="@drawable/ic_round_arrow_right_48"
         android:tint="@color/colorTextDark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

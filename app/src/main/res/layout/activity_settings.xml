@@ -30,7 +30,7 @@
         android:gravity="center"
         android:text="@string/settings"
         android:textColor="@color/colorTextDark"
-        android:textSize="35sp" />
+        android:textSize="31sp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/family_settings_takePhoto"
@@ -90,7 +90,7 @@
         android:textColor="@color/colorTextLight"
         android:textOff="@string/off"
         android:textOn="@string/on"
-        android:textSize="27sp"
+        android:textSize="28sp"
         android:thumb="@drawable/switch_thumb"
         app:showText="true"
         app:track="@drawable/switch_track" />
@@ -109,7 +109,7 @@
         android:textAlignment="textStart"
         android:textAllCaps="false"
         android:textColor="@color/colorTextLight"
-        android:textSize="30sp"
+        android:textSize="28sp"
         app:cornerRadius="12dp"
         app:icon="@drawable/ic_round_exit_48"
         app:iconGravity="start"

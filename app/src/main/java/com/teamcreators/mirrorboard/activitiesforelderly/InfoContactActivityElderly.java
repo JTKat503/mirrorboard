@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamcreators.mirrorboard.R;
+import com.teamcreators.mirrorboard.activitiesforfamily.InfoContactActivityFamily;
 import com.teamcreators.mirrorboard.activitiesmutual.CallOutgoingActivity;
 import com.teamcreators.mirrorboard.models.User;
 import com.teamcreators.mirrorboard.utilities.Constants;
@@ -69,7 +70,7 @@ public class InfoContactActivityElderly extends AppCompatActivity {
         makeVideoCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                initiateVideoCall(user);
+                isAvailableForVideoCall(user);
             }
         });
 
@@ -147,6 +148,41 @@ public class InfoContactActivityElderly extends AppCompatActivity {
                                         .update(Constants.KEY_FRIENDS, friends);
                                 preferenceManager.clearString(user.phone);
                             }
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Check whether the contact's notification function is turned on,
+     * if it is turned on, make a video call, if not, do not dial
+     * @param user the contact to be called
+     * @author Jianwei Li
+     */
+    private void isAvailableForVideoCall(User user) {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(Constants.KEY_COLLECTION_USERS)
+                .document(user.phone)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                if (document.getBoolean(Constants.KEY_NOTICE_ON)) {
+                                    initiateVideoCall(user);
+                                } else {
+                                    Toast.makeText(InfoContactActivityElderly.this,
+                                            user.name + " is not available", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(InfoContactActivityElderly.this,
+                                        user.name + " is not available", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(InfoContactActivityElderly.this,
+                                    user.name + " is not available", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

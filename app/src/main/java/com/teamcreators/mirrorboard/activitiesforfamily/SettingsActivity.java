@@ -32,7 +32,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -43,7 +42,6 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.teamcreators.mirrorboard.R;
-import com.teamcreators.mirrorboard.activitiesforelderly.EditProfileActivity;
 import com.teamcreators.mirrorboard.activitiesmutual.LoginActivity;
 import com.teamcreators.mirrorboard.utilities.Constants;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
@@ -82,10 +80,6 @@ public class SettingsActivity extends AppCompatActivity {
                         if (newAvatarUri != null) {
                             uploadImageToFirebaseStorage();
                         }
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(),
-                                "Failed to start cropper", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -137,24 +131,11 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         // switch button for notification
-        notificationSwitch.setChecked(false);
-        isNotificationOn();
+        initiateNotificationStatus();
         notificationSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (notificationSwitch.isChecked()) {
-                    // gains token from Messaging server then send it to database
-                    FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-                        @Override
-                        public void onComplete(@NonNull Task<String> task) {
-                            if (task.isSuccessful() && task.getResult() != null) {
-                                sendFCMTokenToDatabase(task.getResult());
-                            }
-                        }
-                    });
-                } else {
-                    removeToken();
-                }
+                setNotificationTo(notificationSwitch.isChecked());
             }
         });
 
@@ -183,7 +164,7 @@ public class SettingsActivity extends AppCompatActivity {
         CropImageContractOptions options = new CropImageContractOptions(null, new CropImageOptions());
         options.setActivityTitle("Crop Image")
                 .setAspectRatio(1,1)
-                .setRequestedSize(250,250)
+                .setRequestedSize(500,500)
                 .setOutputCompressFormat(Bitmap.CompressFormat.PNG);
         cropImageLauncher.launch(options);
     }
@@ -293,18 +274,11 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     /**
-     * Set the notification switch to on
-     */
-    private void setNotificationSwitchOn() {
-        notificationSwitch.setChecked(true);
-    }
-
-    /**
-     * Check whether the user's notification function is turned on
-     * If there is a token stored in the user's database -> ON
+     * Check whether the user's notification status is turned on
+     * If the value of notice_on field stored in the user's database is true -> ON
      * otherwise -> OFF
      */
-    private void isNotificationOn() {
+    private void initiateNotificationStatus() {
         String myID = preferenceManager.getString(Constants.KEY_USER_ID);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USERS)
@@ -316,10 +290,8 @@ public class SettingsActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
-                                String token = document.getString(Constants.KEY_FCM_TOKEN);
-                                if (token != null && !token.trim().isEmpty()) {
-                                    setNotificationSwitchOn();
-                                }
+                                boolean noticeStatus = document.getBoolean(Constants.KEY_NOTICE_ON);
+                                notificationSwitch.setChecked(noticeStatus);
                             }
                         } else {
                             Toast.makeText(getApplicationContext(),
@@ -330,37 +302,23 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     /**
-     * Send the personal FCM token used for communication to the database for storage
-     * @param token the personal FCM token used for communication
+     * Set the value of the field that whether allows notification or not
+     * in the user's database to the given value
+     * @param value The value (true/false) of the notification field to be set
      */
-    private void sendFCMTokenToDatabase(String token) {
+    private void setNotificationTo(boolean value) {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         DocumentReference documentReference = database
                 .collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID));
-
-        documentReference.update(Constants.KEY_FCM_TOKEN, token).addOnFailureListener(e ->
-                Toast.makeText(SettingsActivity.this,
-                        "Unable to send token: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-    }
-
-    /**
-     * Remove the user's token from the database
-     */
-    private void removeToken() {
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-        DocumentReference documentReference = database
-                .collection(Constants.KEY_COLLECTION_USERS)
-                .document(preferenceManager.getString(Constants.KEY_USER_ID));
-        // delete user's FCM token from database
         HashMap<String, Object> updates = new HashMap<>();
-        updates.put(Constants.KEY_FCM_TOKEN, FieldValue.delete());
+        updates.put(Constants.KEY_NOTICE_ON, value);
         documentReference.update(updates)
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(SettingsActivity.this,
-                                "Unable to switch off: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                "Failed with: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -395,6 +353,4 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 });
     }
-
-
 }

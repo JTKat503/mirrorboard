@@ -107,9 +107,6 @@ public class EditProfileActivity extends AppCompatActivity {
                         newAvatarUri = result.getUriContent();
                         avatar.setImageURI(newAvatarUri);
                     }
-                    else {
-                        Toast.makeText(getApplicationContext(), "Image cropper failed to start", Toast.LENGTH_SHORT).show();
-                    }
                 });
 
         // imageView for resetting avatar
@@ -213,7 +210,7 @@ public class EditProfileActivity extends AppCompatActivity {
         CropImageContractOptions options = new CropImageContractOptions(imagePath, new CropImageOptions());
         options.setActivityTitle("Crop Image")
                 .setAspectRatio(1,1)
-                .setRequestedSize(250,250)
+                .setRequestedSize(500,500)
                 .setOutputCompressFormat(Bitmap.CompressFormat.PNG);
         cropImageLauncher.launch(options);
     }

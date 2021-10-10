@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activitiesmutual.CallIncomingActivity"
+    tools:context=".activitiesforelderly.IncomingCallActivityElderly"
     android:background="@color/colorPrimary"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
@@ -12,7 +12,7 @@
     android:paddingBottom="20dp">
 
     <ImageView
-        android:id="@+id/incomingCall_imageMeetingType"
+        android:id="@+id/elderly_incomingCall_callingType"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="30dp"
@@ -32,7 +32,7 @@
         android:text="@string/incoming_call"
         android:textColor="@color/colorTextDark"
         android:textSize="30sp"
-        app:layout_constraintTop_toBottomOf="@id/incomingCall_imageMeetingType" />
+        app:layout_constraintTop_toBottomOf="@id/elderly_incomingCall_callingType" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,13 +43,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/incomingCall_profileImage"
+            android:id="@+id/elderly_incomingCall_avatar"
             android:layout_width="200dp"
             android:layout_height="200dp"
             app:shapeAppearanceOverlay="@style/RoundedSquare" />
 
         <TextView
-            android:id="@+id/incomingCall_userName_textView"
+            android:id="@+id/elderly_incomingCall_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -60,7 +60,7 @@
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/incomingCall_phoneNum_textView"
+            android:id="@+id/elderly_incomingCall_phoneNum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -73,7 +73,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/incomingCall_reject_button"
+        android:id="@+id/elderly_incomingCall_reject"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -101,10 +101,10 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/incomingCall_answer_layout"
+        android:id="@+id/elderly_incomingCall_answer"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        app:layout_constraintBottom_toTopOf="@id/incomingCall_reject_button"
+        app:layout_constraintBottom_toTopOf="@id/elderly_incomingCall_reject"
         android:layout_marginBottom="15dp"
         android:background="@drawable/shape_answer_call_button"
         android:gravity="center"
@@ -126,6 +126,5 @@
             android:drawablePadding="5dp"/>
 
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

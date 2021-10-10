@@ -1,4 +1,4 @@
-package com.teamcreators.mirrorboard.activitiesmutual;
+package com.teamcreators.mirrorboard.activitiesforelderly;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +12,6 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,26 +34,33 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CallIncomingActivity extends AppCompatActivity {
-
+/**
+ * A class that contains information about the incoming call interface of elderly
+ *
+ * @author Jianwei Li
+ */
+public class IncomingCallActivityElderly extends AppCompatActivity {
     private String callingType = null;
     private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_call_incoming);
+        setContentView(R.layout.activity_incoming_call_elderly);
 
-        ImageView imageCallingType = findViewById(R.id.incomingCall_imageMeetingType);
-        TextView contactName = findViewById(R.id.incomingCall_userName_textView);
-        TextView contactPhoneNum = findViewById(R.id.incomingCall_phoneNum_textView);
-        ImageView contactAvatar = findViewById(R.id.incomingCall_profileImage);
+        ImageView imageCallingType = findViewById(R.id.elderly_incomingCall_callingType);
+        TextView contactName = findViewById(R.id.elderly_incomingCall_name);
+        TextView contactPhoneNum = findViewById(R.id.elderly_incomingCall_phoneNum);
+        ImageView contactAvatar = findViewById(R.id.elderly_incomingCall_avatar);
+        LinearLayout answerCall = findViewById(R.id.elderly_incomingCall_answer);
+        LinearLayout rejectCall = findViewById(R.id.elderly_incomingCall_reject);
 
         callingType = getIntent().getStringExtra(Constants.REMOTE_MSG_MEETING_TYPE);
         String inviterName = getIntent().getStringExtra(Constants.KEY_NAME);
         String inviterPhoneNum = getIntent().getStringExtra(Constants.KEY_PHONE);
         String inviterAvatarUri = getIntent().getStringExtra(Constants.KEY_AVATAR_URI);
 
+        // determines the icon of the type of call
         if (callingType != null) {
             if (callingType.equals("video")) {
                 imageCallingType.setImageResource(R.drawable.ic_round_videocam_48);
@@ -83,33 +89,30 @@ public class CallIncomingActivity extends AppCompatActivity {
         mediaPlayer.start();
 
         // answer call button
-        LinearLayout answerCall = findViewById(R.id.incomingCall_answer_layout);
-        answerCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mediaPlayer.stop();
-                sendInvitationResponse(
-                        Constants.REMOTE_MSG_INVITATION_ACCEPTED,
-                        getIntent().getStringExtra(Constants.REMOTE_MSG_INVITER_TOKEN)
-                );
-            }
+        answerCall.setOnClickListener(view -> {
+            mediaPlayer.stop();
+            sendInvitationResponse(
+                    Constants.REMOTE_MSG_INVITATION_ACCEPTED,
+                    getIntent().getStringExtra(Constants.REMOTE_MSG_INVITER_TOKEN)
+            );
         });
 
         // reject call button
-        LinearLayout rejectCall = findViewById(R.id.incomingCall_reject_button);
-        rejectCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mediaPlayer.stop();
-                sendInvitationResponse(
-                        Constants.REMOTE_MSG_INVITATION_REJECTED,
-                        getIntent().getStringExtra(Constants.REMOTE_MSG_INVITER_TOKEN)
-                );
-            }
+        rejectCall.setOnClickListener(view -> {
+            mediaPlayer.stop();
+            sendInvitationResponse(
+                    Constants.REMOTE_MSG_INVITATION_REJECTED,
+                    getIntent().getStringExtra(Constants.REMOTE_MSG_INVITER_TOKEN)
+            );
         });
     }
 
-    // // 构建针对通话邀请的反应的数据
+    /**
+     * Respond to the incoming call invitation (reject or accept),
+     * then construct the response data and send it to the other party
+     * @param type Type of response (reject or accept)
+     * @param receiverToken the token of invitation receiver
+     */
     private void sendInvitationResponse(String type, String receiverToken) {
         try {
             JSONArray tokens = new JSONArray();
@@ -127,7 +130,12 @@ public class CallIncomingActivity extends AppCompatActivity {
         }
     }
 
-    // implementing the facility to accept or reject call invitation
+    /**
+     * Implement the facility to accept or reject call invitation
+     * Send the token, response and calling information of recipient to inviter
+     * @param remoteMessageBody the token and calling information
+     * @param type the response (accept or reject)
+     */
     private void sendRemoteMessage(String remoteMessageBody, String type) {
         ApiClient.getClient().create(ApiService.class).sendRemoteMessage(
                 Constants.getRemoteMessageHeaders(), remoteMessageBody
@@ -142,15 +150,16 @@ public class CallIncomingActivity extends AppCompatActivity {
                             JitsiMeetConferenceOptions.Builder builder = new JitsiMeetConferenceOptions.Builder();
                             builder.setServerURL(serverURL);
                             builder.setWelcomePageEnabled(false);
-                            builder.setRoom(getIntent().getStringExtra(Constants.REMOTE_MSG_MEETING_ROOM));
+                            builder.setRoom(getIntent()
+                                    .getStringExtra(Constants.REMOTE_MSG_MEETING_ROOM));
                             if (callingType.equals("audio")) {
-//                                builder.setVideoMuted(true);
                                 builder.setAudioOnly(true);
                             }
-                            JitsiMeetActivity.launch(CallIncomingActivity.this, builder.build());
+                            JitsiMeetActivity.launch(IncomingCallActivityElderly.this, builder.build());
                             finish();
                         } catch (Exception e) {
-                            Toast.makeText(CallIncomingActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(IncomingCallActivityElderly.this,
+                                    e.getMessage(), Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     } else {
@@ -158,14 +167,16 @@ public class CallIncomingActivity extends AppCompatActivity {
                         finish();
                     }
                 } else {
-                    Toast.makeText(CallIncomingActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(IncomingCallActivityElderly.this,
+                            response.message(), Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<String> call,@NonNull Throwable t) {
-                Toast.makeText(CallIncomingActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(IncomingCallActivityElderly.this,
+                        t.getMessage(), Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -178,7 +189,6 @@ public class CallIncomingActivity extends AppCompatActivity {
             if (type != null) {
                 if (type.equals(Constants.REMOTE_MSG_INVITATION_CANCELLED)) {
                     mediaPlayer.stop();
-//                    Toast.makeText(context, "Cancelled", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }

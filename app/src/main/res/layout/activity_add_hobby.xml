@@ -12,7 +12,7 @@
     android:paddingBottom="20dp">
 
     <TextView
-        android:id="@+id/addHobby_textView"
+        android:id="@+id/addHobby_header"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="5dp"
@@ -22,29 +22,11 @@
         android:textColor="@color/colorTextDark"
         android:textSize="35sp" />
 
-<!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
-<!--        android:id="@+id/addHobby_swipeRefreshLayout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_above="@+id/addHobby_goBack_button"-->
-<!--        android:layout_below="@+id/addHobby_textView"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:layout_marginBottom="10dp">-->
-
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/addHobby_hobbies_RecyclerView"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:clipToPadding="false"-->
-<!--            android:orientation="vertical"-->
-<!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />-->
-<!--    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/addHobby_bottomLinearLayout"
-        android:layout_below="@id/addHobby_textView"
+        android:layout_above="@id/addHobby_footerLayout"
+        android:layout_below="@id/addHobby_header"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="10dp"
         android:scrollbars="none">
@@ -66,7 +48,7 @@
                     android:src="@drawable/hobby_icon_cooking"
                     app:shapeAppearanceOverlay="@style/RoundedSquare" />
                 <CheckBox
-                    android:id="@+id/addHobby_cooking_checkbox"
+                    android:id="@+id/addHobby_cooking"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="@string/cooking"
@@ -92,7 +74,7 @@
                     android:src="@drawable/hobby_icon_exercise"
                     app:shapeAppearanceOverlay="@style/RoundedSquare" />
                 <CheckBox
-                    android:id="@+id/addHobby_exercise_checkbox"
+                    android:id="@+id/addHobby_exercise"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="@string/exercise"
@@ -120,7 +102,7 @@
                     app:shapeAppearanceOverlay="@style/RoundedSquare" />
 
                 <CheckBox
-                    android:id="@+id/addHobby_fishing_checkbox"
+                    android:id="@+id/addHobby_fishing"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/rubik_medium"
@@ -146,7 +128,7 @@
                     android:src="@drawable/hobby_icon_gardening"
                     app:shapeAppearanceOverlay="@style/RoundedSquare" />
                 <CheckBox
-                    android:id="@+id/addHobby_gardening_checkbox"
+                    android:id="@+id/addHobby_gardening"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="@string/gardening"
@@ -172,7 +154,7 @@
                     android:src="@drawable/hobby_icon_knitting"
                     app:shapeAppearanceOverlay="@style/RoundedSquare" />
                 <CheckBox
-                    android:id="@+id/addHobby_knitting_checkbox"
+                    android:id="@+id/addHobby_knitting"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="@string/knitting"
@@ -198,7 +180,7 @@
                     android:src="@drawable/hobby_icon_music"
                     app:shapeAppearanceOverlay="@style/RoundedSquare" />
                 <CheckBox
-                    android:id="@+id/addHobby_music_checkbox"
+                    android:id="@+id/addHobby_music"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="@string/music"
@@ -224,7 +206,7 @@
                     android:src="@drawable/hobby_icon_pets"
                     app:shapeAppearanceOverlay="@style/RoundedSquare" />
                 <CheckBox
-                    android:id="@+id/addHobby_pets_checkbox"
+                    android:id="@+id/addHobby_pets"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="@string/pets"
@@ -250,7 +232,7 @@
                     android:src="@drawable/hobby_icon_tv"
                     app:shapeAppearanceOverlay="@style/RoundedSquare" />
                 <CheckBox
-                    android:id="@+id/addHobby_tv_checkbox"
+                    android:id="@+id/addHobby_tv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="@string/films_tv"
@@ -266,13 +248,13 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/addHobby_bottomLinearLayout"
+        android:id="@+id/addHobby_footerLayout"
         android:layout_width="match_parent"
         android:layout_height="85dp"
         android:layout_alignParentBottom="true">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/addHobby_back_button"
+            android:id="@+id/addHobby_back"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -292,7 +274,7 @@
             app:iconGravity="start"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/addHobby_done_button"
+            android:id="@+id/addHobby_done"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

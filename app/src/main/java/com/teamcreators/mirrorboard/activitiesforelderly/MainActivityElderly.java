@@ -1,6 +1,5 @@
 package com.teamcreators.mirrorboard.activitiesforelderly;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,17 +16,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.teamcreators.mirrorboard.R;
-import com.teamcreators.mirrorboard.activitiesmutual.CallOutgoingActivity;
+import com.teamcreators.mirrorboard.activitiesmutual.OutgoingCallActivity;
 import com.teamcreators.mirrorboard.adapters.UsersAdapter;
 import com.teamcreators.mirrorboard.listeners.ItemsListener;
 import com.teamcreators.mirrorboard.models.Hobby;
@@ -79,50 +75,35 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         numberOfRequestsRealtime(); // ** @author this line added by Xuannan Huang*/
 
         // gains token from Messaging server then send it to database
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    sendFCMTokenToDatabase(task.getResult());
-                }
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                sendFCMTokenToDatabase(task.getResult());
             }
         });
 
         // creating new contact button
-        newContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivityElderly.this, AddContactActivityElderly.class);
-                startActivity(intent);
-            }
+        newContact.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivityElderly.this, AddContactActivityElderly.class);
+            startActivity(intent);
         });
 
         // checking new requests button
-        newRequests.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivityElderly.this, InfoRequestActivityElderly.class);
-                startActivity(intent);
-            }
+        newRequests.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivityElderly.this, InfoRequestActivityElderly.class);
+            startActivity(intent);
         });
 
         // matching hobbies button
-        hobbies.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivityElderly.this, StartActivityActivity.class);
-                startActivity(intent);
-            }
+        hobbies.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivityElderly.this, StartActivityActivity.class);
+            startActivity(intent);
         });
 
         // exit app button
-        exit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                moveTaskToBack(true);
-                android.os.Process.killProcess(android.os.Process.myPid());
-                System.exit(0);
-            }
+        exit.setOnClickListener(view -> {
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
         });
     }
 
@@ -146,22 +127,23 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         database.collection(Constants.KEY_COLLECTION_USERS)
                 .document(myID)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                List<String> myFriendsIDs = (List<String>) document.get(Constants.KEY_FRIENDS);
-                                getContacts(myFriendsIDs);
-                            } else {
-                                Toast.makeText(getApplicationContext(),
-                                        "Failed to get contacts list", Toast.LENGTH_SHORT).show();
-                            }
+                .addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            List<String> myFriendsIDs = (List<String>) document.get(Constants.KEY_FRIENDS);
+                            getContacts(myFriendsIDs);
                         } else {
-                            Toast.makeText(getApplicationContext(), "Get failed with " +
-                                    task.getException(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "Failed to get contacts list",
+                                    Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "Get failed with " + task.getException(),
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -183,35 +165,32 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
             database.collection(Constants.KEY_COLLECTION_USERS)
                     .whereIn(Constants.KEY_PHONE, contactsIDs)
                     .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            contactsLayout.setRefreshing(false);
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    User contact = new User();
-                                    contact.phone = document.getString(Constants.KEY_PHONE);
-                                    contact.token = document.getString(Constants.KEY_FCM_TOKEN);
-                                    contact.avatarUri = document.getString(Constants.KEY_AVATAR_URI);
-                                    String nickName = preferenceManager.getString(contact.phone);
-                                    if (nickName == null) {
-                                        contact.name = document.getString(Constants.KEY_NAME);
-                                    } else {
-                                        contact.name = nickName;
-                                    }
-                                    contacts.add(contact);
-                                }
-                                if (contacts.size() > 0) {
-                                contactsAdapter.notifyDataSetChanged();
-                                errorMessage.setVisibility(View.GONE);
+                    .addOnCompleteListener(task -> {
+                        contactsLayout.setRefreshing(false);
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                User contact = new User();
+                                contact.phone = document.getString(Constants.KEY_PHONE);
+                                contact.token = document.getString(Constants.KEY_FCM_TOKEN);
+                                contact.avatarUri = document.getString(Constants.KEY_AVATAR_URI);
+                                String nickName = preferenceManager.getString(contact.phone);
+                                if (nickName == null) {
+                                    contact.name = document.getString(Constants.KEY_NAME);
                                 } else {
-                                errorMessage.setText(String.format("%s", "No contacts"));
-                                errorMessage.setVisibility(View.VISIBLE);
+                                    contact.name = nickName;
                                 }
-                            } else {
-                                errorMessage.setText(String.format("%s", "No contacts"));
-                                errorMessage.setVisibility(View.VISIBLE);
+                                contacts.add(contact);
                             }
+                            if (contacts.size() > 0) {
+                            contactsAdapter.notifyDataSetChanged();
+                            errorMessage.setVisibility(View.GONE);
+                            } else {
+                            errorMessage.setText(String.format("%s", "No contacts"));
+                            errorMessage.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            errorMessage.setText(String.format("%s", "No contacts"));
+                            errorMessage.setVisibility(View.VISIBLE);
                         }
                     });
         }
@@ -228,15 +207,18 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         DocumentReference documentReference = database
                 .collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID));
-
+        // update token to database
         documentReference.update(Constants.KEY_FCM_TOKEN, token).addOnFailureListener(e ->
-                        Toast.makeText(MainActivityElderly.this,
-                                "Unable to send token: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                        Toast.makeText(
+                                MainActivityElderly.this,
+                                "Unable to send token: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show());
     }
 
     /**
      * Implementation of ItemsAdapter interface method.
-     * Jump to the InfoContactActivityElderly and display the personal information of the selected user
+     * Jump to the InfoContactActivityElderly and
+     * display the personal information of the selected user
      * @param user the contact selected by clicking, whose information is to be displayed
      * @author Jianwei Li
      */
@@ -265,15 +247,14 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
     public void onMultipleUsersAction(Boolean isMultipleUsersSelected) {
         if (isMultipleUsersSelected) {
             conference.setVisibility(View.VISIBLE);
-            conference.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getApplicationContext(), CallOutgoingActivity.class);
-                    intent.putExtra("selectedUsers", new Gson().toJson(contactsAdapter.getSelectedUsers()));
-                    intent.putExtra("type", "video");
-                    intent.putExtra("isMultiple", true);
-                    startActivity(intent);
-                }
+            conference.setOnClickListener(view -> {
+                Intent intent = new Intent(getApplicationContext(), OutgoingCallActivity.class);
+                intent.putExtra(
+                        "selectedUsers",
+                        new Gson().toJson(contactsAdapter.getSelectedUsers()));
+                intent.putExtra("type", "video");
+                intent.putExtra("isMultiple", true);
+                startActivity(intent);
             });
         } else {
             conference.setVisibility(View.GONE);
@@ -294,11 +275,13 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
                 .addSnapshotListener((snapshot, e) -> {
                     if (e != null) {
-                        Toast.makeText(MainActivityElderly.this, "Listen failed.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(
+                                MainActivityElderly.this,
+                                "Listen failed.",
+                                Toast.LENGTH_SHORT).show();
                     } else {
                         if (snapshot != null && snapshot.exists()) {
                             long numberOfRequests = (long) snapshot.get(Constants.KEY_NUM_OF_REQUESTS);
-
                             if (numberOfRequests == 0) {
                                 requestsNumber.setVisibility(View.GONE);
                             } else {
@@ -306,7 +289,10 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
                                 requestsNumber.setText(numberToString(numberOfRequests));
                             }
                         } else {
-                            Toast.makeText(MainActivityElderly.this, "Cannot get data.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(
+                                    MainActivityElderly.this,
+                                    "Cannot get data.",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

@@ -7,9 +7,15 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.teamcreators.mirrorboard.activitiesmutual.CallIncomingActivity;
+import com.teamcreators.mirrorboard.activitiesforelderly.IncomingCallActivityElderly;
 import com.teamcreators.mirrorboard.utilities.Constants;
 
+/**
+ * A class to monitor calls and build the call inviter information
+ * displayed on incoming call interface
+ *
+ * @author Jianwei Li
+ */
 public class MessagingService extends FirebaseMessagingService {
 
     @Override
@@ -25,7 +31,7 @@ public class MessagingService extends FirebaseMessagingService {
         String type = remoteMessage.getData().get(Constants.REMOTE_MSG_TYPE);
         if (type != null) {
             if (type.equals(Constants.REMOTE_MSG_INVITATION)) {
-                Intent intent = new Intent(getApplicationContext(), CallIncomingActivity.class);
+                Intent intent = new Intent(getApplicationContext(), IncomingCallActivityElderly.class);
                 intent.putExtra(
                         Constants.REMOTE_MSG_MEETING_TYPE,
                         remoteMessage.getData().get(Constants.REMOTE_MSG_MEETING_TYPE)
@@ -64,7 +70,4 @@ public class MessagingService extends FirebaseMessagingService {
             }
         }
     }
-
-
-
 }

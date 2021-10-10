@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activitiesmutual.OutgoingCallActivity"
+    tools:context=".activitiesforfamily.IncomingCallActivityFamily"
     android:background="@color/colorPrimary"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
@@ -12,7 +12,7 @@
     android:paddingBottom="20dp">
 
     <ImageView
-        android:id="@+id/outgoingCall_imageCallingType"
+        android:id="@+id/family_incomingCall_callingType"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="30dp"
@@ -29,12 +29,13 @@
         android:fontFamily="@font/rubik_medium"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:text="@string/dialing"
+        android:text="@string/incoming_call"
         android:textColor="@color/colorTextDark"
         android:textSize="30sp"
-        app:layout_constraintTop_toBottomOf="@id/outgoingCall_imageCallingType" />
+        app:layout_constraintTop_toBottomOf="@id/family_incomingCall_callingType" />
 
     <LinearLayout
+        android:id="@+id/family_incomingCall_profileLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -43,13 +44,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/outgoingCall_avatar"
+            android:id="@+id/family_incomingCall_avatar"
             android:layout_width="200dp"
             android:layout_height="200dp"
             app:shapeAppearanceOverlay="@style/RoundedSquare" />
 
         <TextView
-            android:id="@+id/outgoingCall_name"
+            android:id="@+id/family_incomingCall_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -60,7 +61,7 @@
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/outgoingCall_phoneNum"
+            android:id="@+id/family_incomingCall_phoneNum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -73,31 +74,47 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/outgoingCall_cancel"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@drawable/shape_reject_call_button"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:gravity="center"
-        android:clickable="true"
-        android:focusable="true">
+        app:layout_constraintTop_toBottomOf="@id/family_incomingCall_profileLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/family_incomingCall_reject"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:layout_marginEnd="70dp"
+            android:backgroundTint="@color/colorAccent"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="@dimen/_35sdp"
+            app:icon="@drawable/ic_round_call_end_48"
+            app:iconGravity="textStart"
+            app:iconTint="@color/colorTextLight"
+            android:paddingStart="19dp"
+            tools:ignore="RtlSymmetry" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:text="@string/cancel"
-            android:textAllCaps="false"
-            android:textColor="@color/colorTextLight"
-            android:textSize="30sp"
-            android:fontFamily="@font/rubik_medium"
-            app:drawableStartCompat="@drawable/ic_round_cross_48"
-            app:drawableTint="@color/colorTextLight"
-            android:drawablePadding="5dp"/>
-
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/family_incomingCall_answer"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:backgroundTint="@color/colorGreen"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="@dimen/_35sdp"
+            app:icon="@drawable/ic_round_call_48"
+            app:iconGravity="textStart"
+            app:iconTint="@color/colorTextLight"
+            android:paddingStart="19dp"
+            tools:ignore="RtlSymmetry"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

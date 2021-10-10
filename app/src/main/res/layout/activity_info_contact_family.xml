@@ -30,7 +30,7 @@
         android:gravity="center"
         android:maxLines="2"
         android:textColor="@color/colorTextDark"
-        android:textSize="35sp" />
+        android:textSize="31sp" />
 
     <ImageView
         android:id="@+id/family_infoContact_editName"
@@ -67,15 +67,15 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/family_infoContact_audioCall"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginEnd="80dp"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:layout_marginEnd="30dp"
             android:backgroundTint="@color/colorBlue"
             android:insetLeft="0dp"
             android:insetTop="0dp"
             android:insetRight="0dp"
             android:insetBottom="0dp"
-            app:cornerRadius="@dimen/_29sdp"
+            app:cornerRadius="@dimen/_35sdp"
             app:icon="@drawable/ic_round_call_48"
             app:iconGravity="textStart"
             app:iconTint="@color/colorTextLight"
@@ -85,14 +85,14 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/family_infoContact_videoCall"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
             android:backgroundTint="@color/colorBlue"
             android:insetLeft="0dp"
             android:insetTop="0dp"
             android:insetRight="0dp"
             android:insetBottom="0dp"
-            app:cornerRadius="@dimen/_29sdp"
+            app:cornerRadius="@dimen/_35sdp"
             app:icon="@drawable/ic_round_videocam_48"
             app:iconGravity="textStart"
             app:iconTint="@color/colorTextLight"

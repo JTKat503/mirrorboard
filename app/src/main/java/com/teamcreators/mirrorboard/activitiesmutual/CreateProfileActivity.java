@@ -8,29 +8,21 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.canhub.cropper.CropImageContract;
 import com.canhub.cropper.CropImageContractOptions;
 import com.canhub.cropper.CropImageOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -52,12 +44,12 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * A class for creating users' avatars, names
+ * A class that contains the function of creating user profile,
+ * user profile includes avatar and name.
  *
  * @author Jianwei Li
  */
 public class CreateProfileActivity extends AppCompatActivity {
-
     private EditText nickName;
     private ImageView avatar;
     private Uri avatarUri;
@@ -83,13 +75,11 @@ public class CreateProfileActivity extends AppCompatActivity {
 
 
         // an alternative method for startActivityForResult() & onActivityResult()
-        chooseImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    Uri imagePath = result.getData().getData();
-                    startCroppingFromGallery(imagePath);
-                }
+        chooseImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                Uri imagePath = result.getData().getData();
+                startCroppingFromGallery(imagePath);
             }
         });
 
@@ -102,31 +92,29 @@ public class CreateProfileActivity extends AppCompatActivity {
                 });
 
         // imageView for loading avatar
-        avatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Dynamic permission application
-                Dexter.withContext(CreateProfileActivity.this)
-                        .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                        .withListener(new PermissionListener() {
-                            @Override
-                            public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                                Intent intent = new Intent(Intent.ACTION_PICK);
-                                intent.setType("image/*");
-                                chooseImageLauncher.launch(Intent.createChooser(intent, "Select Image File"));
-                            }
+        avatar.setOnClickListener(view -> {
+            // Dynamic permission application
+            Dexter.withContext(CreateProfileActivity.this)
+                    .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    .withListener(new PermissionListener() {
+                        @Override
+                        public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+                            Intent intent = new Intent(Intent.ACTION_PICK);
+                            intent.setType("image/*");
+                            chooseImageLauncher.launch(
+                                    Intent.createChooser(intent, "Select Image File"));
+                        }
 
-                            @Override
-                            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+                        @Override
+                        public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
 
-                            }
+                        }
 
-                            @Override
-                            public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
-                                permissionToken.continuePermissionRequest();
-                            }
-                        }).check();
-            }
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+                            permissionToken.continuePermissionRequest();
+                        }
+                    }).check();
         });
 
         // takePicture button
@@ -160,7 +148,10 @@ public class CreateProfileActivity extends AppCompatActivity {
         // creating account button
         findViewById(R.id.createProfile_create).setOnClickListener(view -> {
             if (nickName.getText().toString().trim().isEmpty()) {
-                Toast.makeText(getApplicationContext(), "Please enter your name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Please enter your name",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
             // allows users to use the default profile avatar
@@ -211,33 +202,29 @@ public class CreateProfileActivity extends AppCompatActivity {
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setTitle("Uploading Image...");
         dialog.show();
-
         final String randomKey = UUID.randomUUID().toString();
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference uploader = storage.getReference().child("images/" + randomKey);
 
         uploader.putFile(avatarUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        dialog.dismiss();
-                        Snackbar.make(findViewById(android.R.id.content), "Image Uploaded", Snackbar.LENGTH_SHORT).show();
-                        signUp(uploader);
-                    }
+                .addOnSuccessListener(taskSnapshot -> {
+                    dialog.dismiss();
+                    Snackbar.make(
+                            findViewById(android.R.id.content),
+                            "Image Uploaded",
+                            Snackbar.LENGTH_SHORT).show();
+                    signUp(uploader);
                 })
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                        double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
-                        dialog.setMessage("Percentage: " + (int)progress + "%");
-                    }
+                .addOnProgressListener(snapshot -> {
+                    double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+                    dialog.setMessage("Percentage: " + (int)progress + "%");
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        dialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "Failed to Upload", Toast.LENGTH_SHORT).show();
-            }
+                .addOnFailureListener(e -> {
+                    dialog.dismiss();
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "Failed to Upload",
+                            Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -248,28 +235,24 @@ public class CreateProfileActivity extends AppCompatActivity {
      * @param uploader the content of uploaded avatar information
      */
     private void signUp(StorageReference uploader) {
-        uploader.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                HashMap<String, Object> user = new HashMap<>();
-                user.put(Constants.KEY_MODE, mode);
-                user.put(Constants.KEY_PHONE, phone);
-                user.put(Constants.KEY_PASSWORD, password);
-                user.put(Constants.KEY_NAME, nickName.getText().toString());
-                user.put(Constants.KEY_AVATAR_URI, uri.toString());
-                user.put(Constants.KEY_HOBBIES, new ArrayList<>());
-                user.put(Constants.KEY_FRIENDS, new ArrayList<>());
-                user.put(Constants.KEY_NUM_OF_REQUESTS, 0);
-                user.put(Constants.KEY_NOTICE_ON, true);
+        uploader.getDownloadUrl().addOnSuccessListener(uri -> {
+            HashMap<String, Object> user = new HashMap<>();
+            user.put(Constants.KEY_MODE, mode);
+            user.put(Constants.KEY_PHONE, phone);
+            user.put(Constants.KEY_PASSWORD, password);
+            user.put(Constants.KEY_NAME, nickName.getText().toString());
+            user.put(Constants.KEY_AVATAR_URI, uri.toString());
+            user.put(Constants.KEY_HOBBIES, new ArrayList<>());
+            user.put(Constants.KEY_FRIENDS, new ArrayList<>());
+            user.put(Constants.KEY_NUM_OF_REQUESTS, 0);
+            user.put(Constants.KEY_NOTICE_ON, true);
 
-                FirebaseFirestore database = FirebaseFirestore.getInstance();
-                final String userID = phone;
-                database.collection(Constants.KEY_COLLECTION_USERS)
-                        .document(userID)
-                        .set(user)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
+            FirebaseFirestore database = FirebaseFirestore.getInstance();
+            final String userID = phone;
+            database.collection(Constants.KEY_COLLECTION_USERS)
+                    .document(userID)
+                    .set(user)
+                    .addOnSuccessListener(unused -> {
                         preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
                         preferenceManager.putString(Constants.KEY_USER_ID, phone);
                         preferenceManager.putString(Constants.KEY_MODE, mode);
@@ -279,14 +262,11 @@ public class CreateProfileActivity extends AppCompatActivity {
                         preferenceManager.putStringSet(Constants.KEY_HOBBIES, new HashSet<>());
                         startUserMode();
                         finish();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(CreateProfileActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
+                    }).addOnFailureListener(e ->
+                    Toast.makeText(
+                            CreateProfileActivity.this,
+                            "Error: " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show());
         });
     }
 

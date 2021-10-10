@@ -14,10 +14,11 @@ import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.utilities.Constants;
 
 /**
+ * A class that contains the function of creating user accounts
  *
+ * @author Jianwei Li
  */
 public class CreateAccountActivity extends AppCompatActivity {
-
     private RadioButton selectedMode;
     private EditText phoneNumber, inputPassword, reenteredPassword;
 
@@ -37,29 +38,36 @@ public class CreateAccountActivity extends AppCompatActivity {
         });
 
         // back button, back to Login page
-        findViewById(R.id.createAccount_back_button).setOnClickListener(view -> {
+        findViewById(R.id.createAccount_back).setOnClickListener(view -> {
             // After backing, save the information filled in the Login interface
             onBackPressed();
             finish();
         });
 
         // next button, go to CreateProfile interface
-        findViewById(R.id.createAccount_next_button).setOnClickListener(view -> {
+        findViewById(R.id.createAccount_next).setOnClickListener(view -> {
             String phone = phoneNumber.getText().toString().trim();
             String PW = inputPassword.getText().toString().trim();
             String RPW = reenteredPassword.getText().toString().trim();
             if (selectedMode == null) {
-                Toast.makeText(CreateAccountActivity.this, "Please choose Elderly or Family", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateAccountActivity.this,
+                        "Please choose Elderly or Family", Toast.LENGTH_SHORT).show();
             } else if (phone.isEmpty()) {
-                Toast.makeText(CreateAccountActivity.this, "Please enter your phone number", Toast.LENGTH_SHORT).show();
-            } else if (phone.length() < Constants.MIN_PHONE_NUM_LENGTH || !Patterns.PHONE.matcher(phone).matches()) {
-                Toast.makeText(CreateAccountActivity.this, "Please enter an valid phone number", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateAccountActivity.this,
+                        "Please enter your phone number", Toast.LENGTH_SHORT).show();
+            } else if (phone.length() < Constants.MIN_PHONE_NUM_LENGTH
+                    || !Patterns.PHONE.matcher(phone).matches()) {
+                Toast.makeText(CreateAccountActivity.this,
+                        "Please enter an valid phone number", Toast.LENGTH_SHORT).show();
             } else if (PW.isEmpty()) {
-                Toast.makeText(CreateAccountActivity.this, "Please enter your password", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateAccountActivity.this,
+                        "Please enter your password", Toast.LENGTH_SHORT).show();
             } else if (RPW.isEmpty()) {
-                Toast.makeText(CreateAccountActivity.this, "Please confirm your password", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateAccountActivity.this,
+                        "Please confirm your password", Toast.LENGTH_SHORT).show();
             } else if (!PW.equals(RPW)) {
-                Toast.makeText(CreateAccountActivity.this, "Passwords must be same", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateAccountActivity.this,
+                        "Passwords must be same", Toast.LENGTH_SHORT).show();
             } else {
                 String mode = selectedMode.getText().toString().trim();
                 Intent intent = new Intent(CreateAccountActivity.this, CreateProfileActivity.class);
@@ -71,6 +79,5 @@ public class CreateAccountActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
 }

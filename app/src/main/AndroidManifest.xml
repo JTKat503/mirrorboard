@@ -20,6 +20,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
+            android:name=".activitiesforfamily.IncomingCallActivityFamily"
+            android:exported="true" />
+        <activity
             android:name=".activitiesforfamily.SettingsActivity"
             android:exported="true" />
         <activity
@@ -65,10 +68,10 @@
             android:name=".activitiesmutual.CreateAccountActivity"
             android:exported="true" />
         <activity
-            android:name=".activitiesmutual.CallOutgoingActivity"
+            android:name=".activitiesmutual.OutgoingCallActivity"
             android:exported="true" />
         <activity
-            android:name=".activitiesmutual.CallIncomingActivity"
+            android:name=".activitiesforelderly.IncomingCallActivityElderly"
             android:exported="true" />
         <activity
             android:name=".activitiesforelderly.AddHobbyActivity"

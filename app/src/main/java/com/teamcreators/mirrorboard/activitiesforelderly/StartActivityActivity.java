@@ -1,6 +1,5 @@
 package com.teamcreators.mirrorboard.activitiesforelderly;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,8 +15,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamcreators.mirrorboard.R;
@@ -32,8 +29,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * A class that shows the user’s hobbies and provides access to edit user profile
+ *
+ * @author Jianwei Li
+ */
 public class StartActivityActivity extends AppCompatActivity implements ItemsListener {
-
     private List<Hobby> hobbies;
     private HobbiesAdapter hobbiesAdapter;
     private TextView textErrorMessage;
@@ -45,16 +46,16 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_activity);
 
-        Button editProfile = findViewById(R.id.startActivity_editProfile_button);
-        Button addHobby = findViewById(R.id.startActivity_addHobby_button);
-        Button exit = findViewById(R.id.startActivity_exit_button);
-        Button family = findViewById(R.id.startActivity_family_button);
-        textErrorMessage = findViewById(R.id.startActivity_errorMessage_textView);
-        swipeRefreshLayout = findViewById(R.id.startActivity_swipeRefreshLayout);
+        Button editProfile = findViewById(R.id.startActivity_editProfile);
+        Button addHobby = findViewById(R.id.startActivity_addHobby);
+        Button exit = findViewById(R.id.startActivity_exit);
+        Button family = findViewById(R.id.startActivity_family);
+        textErrorMessage = findViewById(R.id.startActivity_errorMessage);
+        swipeRefreshLayout = findViewById(R.id.startActivity_hobbiesLayout);
         preferenceManager = new PreferenceManager(getApplicationContext());
 
         // building and loading hobbies list
-        RecyclerView hobbiesRecyclerView = findViewById(R.id.startActivity_hobbies_RecyclerView);
+        RecyclerView hobbiesRecyclerView = findViewById(R.id.startActivity_hobbiesView);
         hobbies = new ArrayList<>();
         hobbiesAdapter = new HobbiesAdapter(hobbies, this);
         hobbiesRecyclerView.setAdapter(hobbiesAdapter);
@@ -64,40 +65,28 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
         swipeRefreshLayout.setOnRefreshListener(this::getHobbies);
 
         // editing Profile button
-        editProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(StartActivityActivity.this, EditProfileActivity.class);
-                startActivity(intent);
-            }
+        editProfile.setOnClickListener(view -> {
+            Intent intent = new Intent(StartActivityActivity.this, EditProfileActivity.class);
+            startActivity(intent);
         });
 
         // adding new hobbies button
-        addHobby.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(StartActivityActivity.this, AddHobbyActivity.class);
-                startActivity(intent);
-            }
+        addHobby.setOnClickListener(view -> {
+            Intent intent = new Intent(StartActivityActivity.this, AddHobbyActivity.class);
+            startActivity(intent);
         });
 
         // going back to main interface button
-        family.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-                finish();
-            }
+        family.setOnClickListener(view -> {
+            onBackPressed();
+            finish();
         });
 
         // exit app button
-        exit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                moveTaskToBack(true);
-                android.os.Process.killProcess(android.os.Process.myPid());
-                System.exit(0);
-            }
+        exit.setOnClickListener(view -> {
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
         });
     }
 
@@ -122,20 +111,18 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
         database.collection(Constants.KEY_COLLECTION_USERS)
                 .document(myID)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        swipeRefreshLayout.setRefreshing(false);
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                List<String> myHobbiesNames = (List<String>) document.get(Constants.KEY_HOBBIES);
-                                HashSet<String> myHobbiesSet = new HashSet<>(myHobbiesNames);
-                                preferenceManager.putStringSet(Constants.KEY_HOBBIES, myHobbiesSet);
-                            }
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Sync failed", Toast.LENGTH_SHORT).show();
+                .addOnCompleteListener(task -> {
+                    swipeRefreshLayout.setRefreshing(false);
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            List<String> myHobbiesNames = (List<String>) document.get(Constants.KEY_HOBBIES);
+                            HashSet<String> myHobbiesSet = new HashSet<>(myHobbiesNames);
+                            preferenceManager.putStringSet(Constants.KEY_HOBBIES, myHobbiesSet);
                         }
+                    } else {
+                        Toast.makeText(getApplicationContext(),
+                                "Sync failed", Toast.LENGTH_SHORT).show();
                     }
                 });
         HashSet<String> myHobbies = preferenceManager.getStringSet(Constants.KEY_HOBBIES);
@@ -143,7 +130,7 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
             for (String hobbyName : myHobbies) {
                 Hobby hobby = new Hobby();
                 hobby.name = hobbyName;
-                hobby.drawable = getHobbyIcon(hobbyName);
+                hobby.icon = getHobbyIcon(hobbyName);
                 hobbies.add(hobby);
             }
             if (hobbies.size() > 0) {

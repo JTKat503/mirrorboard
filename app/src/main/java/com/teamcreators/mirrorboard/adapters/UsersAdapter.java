@@ -79,9 +79,9 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
         UserViewHolder(@NonNull View itemView) {
             super(itemView);
             textUserName = itemView.findViewById(R.id.userContainer_userName);
-            imageUserAvatar = itemView.findViewById(R.id.userContainer_imageAvatar);
+            imageUserAvatar = itemView.findViewById(R.id.userContainer_userAvatar);
             userContainer = itemView.findViewById(R.id.userContainer);
-            imageSelected = itemView.findViewById(R.id.userContainer_imageSelected);
+            imageSelected = itemView.findViewById(R.id.userContainer_selected);
         }
 
         /**
@@ -104,40 +104,38 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
             Not in multi-selected state:
                 click user -> display user information
              */
-            userContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (imageSelected.getVisibility() != View.VISIBLE) {
-                        if (selectedUsers.size() == 0) {
-                            usersListener.displayContactInformation(user);
-                        } else {
-                            selectedUsers.add(user);
-                            imageSelected.setVisibility(View.VISIBLE);
-                        }
+            userContainer.setOnClickListener(view -> {
+                if (imageSelected.getVisibility() != View.VISIBLE) {
+                    if (selectedUsers.size() == 0) {
+                        usersListener.displayContactInformation(user);
                     } else {
-                        selectedUsers.remove(user);
-                        imageSelected.setVisibility(View.GONE);
-                        if (selectedUsers.size() == 0) {
-                            usersListener.onMultipleUsersAction(false);
-                        }
+                        selectedUsers.add(user);
+                        imageSelected.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    selectedUsers.remove(user);
+                    imageSelected.setVisibility(View.GONE);
+                    if (selectedUsers.size() == 0) {
+                        usersListener.onMultipleUsersAction(false);
                     }
                 }
             });
 
+            /*
+            In accordance with the requirements of the UX Design team,
+            this function is disabled.
+             */
             // Long press the user to add the user to the multi-party call invitation list
             // Enter multiple selection state
-            userContainer.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    // prevent repeated selection of the same contact
-                    if (imageSelected.getVisibility() != View.VISIBLE) {
-                        selectedUsers.add(user);
-                        imageSelected.setVisibility(View.VISIBLE);
-                        usersListener.onMultipleUsersAction(true);
-                    }
-                    return true;
-                }
-            });
+//            userContainer.setOnLongClickListener(view -> {
+//                // prevent repeated selection of the same contact
+//                if (imageSelected.getVisibility() != View.VISIBLE) {
+//                    selectedUsers.add(user);
+//                    imageSelected.setVisibility(View.VISIBLE);
+//                    usersListener.onMultipleUsersAction(true);
+//                }
+//                return true;
+//            });
         }
     }
 }

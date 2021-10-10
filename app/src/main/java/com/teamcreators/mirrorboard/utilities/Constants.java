@@ -2,8 +2,12 @@ package com.teamcreators.mirrorboard.utilities;
 
 import java.util.HashMap;
 
+/**
+ * A class that holds constants used by the APP
+ *
+ * @author Jianwei Li
+ */
 public class Constants {
-
     public static final String KEY_COLLECTION_USERS = "users";
     public static final String KEY_PHONE = "phone";
     public static final String KEY_NAME = "name";

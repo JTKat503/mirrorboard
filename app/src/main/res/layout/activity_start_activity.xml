@@ -12,7 +12,7 @@
     android:paddingBottom="20dp">
 
     <TextView
-        android:id="@+id/startActivity_start_textView"
+        android:id="@+id/startActivity_header"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="5dp"
@@ -23,10 +23,10 @@
         android:textSize="35sp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/startActivity_editProfile_button"
+        android:id="@+id/startActivity_editProfile"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_below="@+id/startActivity_start_textView"
+        android:layout_below="@+id/startActivity_header"
         android:layout_marginTop="15dp"
         android:backgroundTint="@color/colorGrey"
         android:fontFamily="@font/rubik_medium"
@@ -43,10 +43,10 @@
         app:iconTint="@color/colorTextLight" />
 
     <TextView
-        android:id="@+id/startActivity_hobbies_textView"
+        android:id="@+id/startActivity_hobbyTitle"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@+id/startActivity_editProfile_button"
+        android:layout_below="@+id/startActivity_editProfile"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/rubik_medium"
         android:gravity="center"
@@ -55,10 +55,10 @@
         android:textSize="30sp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/startActivity_addHobby_button"
+        android:id="@+id/startActivity_addHobby"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_below="@+id/startActivity_hobbies_textView"
+        android:layout_below="@+id/startActivity_hobbyTitle"
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/colorBlue"
         android:fontFamily="@font/rubik_medium"
@@ -75,16 +75,16 @@
         app:iconTint="@color/colorTextLight" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/startActivity_swipeRefreshLayout"
+        android:id="@+id/startActivity_hobbiesLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_above="@id/startActivity_bottomLinearLayout"
-        android:layout_below="@id/startActivity_addHobby_button"
+        android:layout_above="@id/startActivity_footerLayout"
+        android:layout_below="@id/startActivity_addHobby"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/startActivity_hobbies_RecyclerView"
+            android:id="@+id/startActivity_hobbiesView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -93,10 +93,10 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <TextView
-        android:id="@+id/startActivity_errorMessage_textView"
+        android:id="@+id/startActivity_errorMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/startActivity_addHobby_button"
+        android:layout_below="@id/startActivity_addHobby"
         android:layout_marginTop="50dp"
         android:fontFamily="@font/rubik_medium"
         android:includeFontPadding="false"
@@ -106,13 +106,13 @@
         android:visibility="gone" />
 
     <LinearLayout
-        android:id="@+id/startActivity_bottomLinearLayout"
+        android:id="@+id/startActivity_footerLayout"
         android:layout_width="match_parent"
         android:layout_height="85dp"
         android:layout_alignParentBottom="true">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/startActivity_exit_button"
+            android:id="@+id/startActivity_exit"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
@@ -125,7 +125,7 @@
             app:iconGravity="textStart"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/startActivity_family_button"
+            android:id="@+id/startActivity_family"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="5"

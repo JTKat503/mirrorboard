@@ -1,6 +1,5 @@
 package com.teamcreators.mirrorboard.activitiesforelderly;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,16 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.teamcreators.mirrorboard.R;
-import com.teamcreators.mirrorboard.activitiesmutual.CallOutgoingActivity;
+import com.teamcreators.mirrorboard.activitiesmutual.OutgoingCallActivity;
 import com.teamcreators.mirrorboard.models.Hobby;
 import com.teamcreators.mirrorboard.models.User;
 import com.teamcreators.mirrorboard.utilities.Constants;
@@ -39,7 +33,6 @@ import java.util.List;
  * @author Jianwei Li
  */
 public class MatchHobbyActivity extends AppCompatActivity {
-
     private Hobby hobby;
     private Button matchFriend;
     private HashSet<String> hobbies;
@@ -55,10 +48,10 @@ public class MatchHobbyActivity extends AppCompatActivity {
         preferenceManager = new PreferenceManager(getApplicationContext());
         hobbies = preferenceManager.getStringSet(Constants.KEY_HOBBIES);
         preferenceManager = new PreferenceManager(getApplicationContext());
-        matchFriend = findViewById(R.id.matchHobby_findCall_button);
+        matchFriend = findViewById(R.id.matchHobby_findCall);
         matchFriendProgressBar = findViewById(R.id.matchHobby_progressbar);
-        Button removeHobby = findViewById(R.id.matchHobby_removeHobby_button);
-        Button goBack = findViewById(R.id.matchHobby_goBack_button);
+        Button removeHobby = findViewById(R.id.matchHobby_removeHobby);
+        Button goBack = findViewById(R.id.matchHobby_back);
 
         // setting selected hobby's name
         TextView hobbyName = findViewById(R.id.matchHobby_hobbyName);
@@ -70,55 +63,41 @@ public class MatchHobbyActivity extends AppCompatActivity {
         // setting selected hobby's icon
         ImageView hobbyIcon = findViewById(R.id.matchHobby_hobbyIcon);
         Glide.with(this)
-                .load(hobby.drawable)
+                .load(hobby.icon)
                 .fitCenter()
                 .error(R.drawable.blank_hobby_image)
                 .into(hobbyIcon);
 
         // match a friend (button) based on a specific hobby
-        matchFriend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                matchFriend.setVisibility(View.INVISIBLE);
-                matchFriendProgressBar.setVisibility(View.VISIBLE);
-                getContactsIDs();
-            }
+        matchFriend.setOnClickListener(view -> {
+            matchFriend.setVisibility(View.INVISIBLE);
+            matchFriendProgressBar.setVisibility(View.VISIBLE);
+            getContactsIDs();
         });
 
         // removing current hobby button
-        removeHobby.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hobbies.remove(hobby.name);
-                FirebaseFirestore database = FirebaseFirestore.getInstance();
-                String myID = preferenceManager.getString(Constants.KEY_USER_ID);
-                database.collection(Constants.KEY_COLLECTION_USERS)
-                        .document(myID)
-                        .update(Constants.KEY_HOBBIES, new ArrayList<>(hobbies))
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                preferenceManager.putStringSet(Constants.KEY_HOBBIES, hobbies);
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getApplicationContext(), "Sync failed", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                onBackPressed();
-                finish();
-            }
+        removeHobby.setOnClickListener(view -> {
+            hobbies.remove(hobby.name);
+            FirebaseFirestore database = FirebaseFirestore.getInstance();
+            String myID = preferenceManager.getString(Constants.KEY_USER_ID);
+            database.collection(Constants.KEY_COLLECTION_USERS)
+                    .document(myID)
+                    .update(Constants.KEY_HOBBIES, new ArrayList<>(hobbies))
+                    .addOnSuccessListener(unused ->
+                            preferenceManager.putStringSet(Constants.KEY_HOBBIES, hobbies))
+                    .addOnFailureListener(e ->
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "Sync failed",
+                                    Toast.LENGTH_SHORT).show());
+            onBackPressed();
+            finish();
         });
 
         // goBack button
-        goBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-                finish();
-            }
+        goBack.setOnClickListener(view -> {
+            onBackPressed();
+            finish();
         });
     }
 
@@ -129,7 +108,7 @@ public class MatchHobbyActivity extends AppCompatActivity {
      * @param user recipient of the video call
      */
     private void initiateVideoCall(User user) {
-        Intent intent = new Intent(getApplicationContext(), CallOutgoingActivity.class);
+        Intent intent = new Intent(getApplicationContext(), OutgoingCallActivity.class);
         intent.putExtra("user", user);
         intent.putExtra("type", "video");
         startActivity(intent);
@@ -149,34 +128,35 @@ public class MatchHobbyActivity extends AppCompatActivity {
         database.collection(Constants.KEY_COLLECTION_USERS)
                 .whereArrayContains(Constants.KEY_HOBBIES, hobby.name)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            ArrayList<QueryDocumentSnapshot> strangers = new ArrayList<>();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                if (!myFriendsIDs.contains(document.getId())
-                                        && !document.getId().equals(myID)
-                                        && document.getString(Constants.KEY_FCM_TOKEN) != null) {
-                                    strangers.add(document);
-                                }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<QueryDocumentSnapshot> strangers = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            if (!myFriendsIDs.contains(document.getId())
+                                    && !document.getId().equals(myID)
+                                    && document.getString(Constants.KEY_FCM_TOKEN) != null) {
+                                strangers.add(document);
                             }
-                            if (strangers.size() > 0) {
-                                int randomIndex = (int) (Math.random() * strangers.size());
-                                DocumentSnapshot matchedStranger = strangers.get(randomIndex);
-                                sendInvitationTo(matchedStranger);
-                            } else {
-                                Toast.makeText(getApplicationContext(),
-                                        "No matchable user", Toast.LENGTH_SHORT).show();
-                                matchFriendProgressBar.setVisibility(View.INVISIBLE);
-                                matchFriend.setVisibility(View.VISIBLE);
-                            }
+                        }
+                        if (strangers.size() > 0) {
+                            int randomIndex = (int) (Math.random() * strangers.size());
+                            DocumentSnapshot matchedStranger = strangers.get(randomIndex);
+                            sendInvitationTo(matchedStranger);
                         } else {
-                            Toast.makeText(getApplicationContext(),
-                                    "No matchable user", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "No matchable user",
+                                    Toast.LENGTH_SHORT).show();
                             matchFriendProgressBar.setVisibility(View.INVISIBLE);
                             matchFriend.setVisibility(View.VISIBLE);
                         }
+                    } else {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "No matchable user",
+                                Toast.LENGTH_SHORT).show();
+                        matchFriendProgressBar.setVisibility(View.INVISIBLE);
+                        matchFriend.setVisibility(View.VISIBLE);
                     }
                 });
     }
@@ -191,26 +171,27 @@ public class MatchHobbyActivity extends AppCompatActivity {
         database.collection(Constants.KEY_COLLECTION_USERS)
                 .document(myID)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                List<String> myFriendsIDs = (List<String>) document.get(Constants.KEY_FRIENDS);
-                                randomlyGetMatchedStranger(myFriendsIDs);
-                            } else {
-                                Toast.makeText(getApplicationContext(),
-                                        "Failed to get contacts list", Toast.LENGTH_SHORT).show();
-                                matchFriendProgressBar.setVisibility(View.INVISIBLE);
-                                matchFriend.setVisibility(View.VISIBLE);
-                            }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            List<String> myFriendsIDs = (List<String>) document.get(Constants.KEY_FRIENDS);
+                            randomlyGetMatchedStranger(myFriendsIDs);
                         } else {
-                            Toast.makeText(getApplicationContext(), "Get failed with " +
-                                    task.getException(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "Failed to get contacts list",
+                                    Toast.LENGTH_SHORT).show();
                             matchFriendProgressBar.setVisibility(View.INVISIBLE);
                             matchFriend.setVisibility(View.VISIBLE);
                         }
+                    } else {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "Get failed with " + task.getException(),
+                                Toast.LENGTH_SHORT).show();
+                        matchFriendProgressBar.setVisibility(View.INVISIBLE);
+                        matchFriend.setVisibility(View.VISIBLE);
                     }
                 });
     }

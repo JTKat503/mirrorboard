@@ -1,6 +1,5 @@
 package com.teamcreators.mirrorboard.activitiesforfamily;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,19 +16,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.teamcreators.mirrorboard.R;
-import com.teamcreators.mirrorboard.activitiesforelderly.InfoContactActivityElderly;
-import com.teamcreators.mirrorboard.activitiesforelderly.MainActivityElderly;
-import com.teamcreators.mirrorboard.activitiesmutual.CallOutgoingActivity;
+import com.teamcreators.mirrorboard.activitiesmutual.OutgoingCallActivity;
 import com.teamcreators.mirrorboard.adapters.UsersAdapter;
 import com.teamcreators.mirrorboard.listeners.ItemsListener;
 import com.teamcreators.mirrorboard.models.Hobby;
@@ -80,40 +74,28 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
         numberOfRequestsRealtime(); // ** @author this line added by Xuannan Huang*/
 
         // gains token from Messaging server then send it to database
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    sendFCMTokenToDatabase(task.getResult());
-                }
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                sendFCMTokenToDatabase(task.getResult());
             }
         });
 
         // creating new contact button
-        newContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivityFamily.this, AddContactActivityFamily.class);
-                startActivity(intent);
-            }
+        newContact.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivityFamily.this, AddContactActivityFamily.class);
+            startActivity(intent);
         });
 
         // checking new requests button
-        newRequests.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivityFamily.this, InfoRequestActivityFamily.class);
-                startActivity(intent);
-            }
+        newRequests.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivityFamily.this, InfoRequestActivityFamily.class);
+            startActivity(intent);
         });
 
         // settings button
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivityFamily.this, SettingsActivity.class);
-                startActivity(intent);
-            }
+        settings.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivityFamily.this, SettingsActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -137,22 +119,23 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
         database.collection(Constants.KEY_COLLECTION_USERS)
                 .document(myID)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                List<String> myFriendsIDs = (List<String>) document.get(Constants.KEY_FRIENDS);
-                                getContacts(myFriendsIDs);
-                            } else {
-                                Toast.makeText(getApplicationContext(),
-                                        "Failed to get contacts list", Toast.LENGTH_SHORT).show();
-                            }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            List<String> myFriendsIDs = (List<String>) document.get(Constants.KEY_FRIENDS);
+                            getContacts(myFriendsIDs);
                         } else {
-                            Toast.makeText(getApplicationContext(), "Get failed with " +
-                                    task.getException(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "Failed to get contacts list",
+                                    Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "Get failed with " + task.getException(),
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -174,35 +157,32 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
             database.collection(Constants.KEY_COLLECTION_USERS)
                     .whereIn(Constants.KEY_PHONE, contactsIDs)
                     .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            contactsLayout.setRefreshing(false);
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    User contact = new User();
-                                    contact.phone = document.getString(Constants.KEY_PHONE);
-                                    contact.token = document.getString(Constants.KEY_FCM_TOKEN);
-                                    contact.avatarUri = document.getString(Constants.KEY_AVATAR_URI);
-                                    String nickName = preferenceManager.getString(contact.phone);
-                                    if (nickName == null) {
-                                        contact.name = document.getString(Constants.KEY_NAME);
-                                    } else {
-                                        contact.name = nickName;
-                                    }
-                                    contacts.add(contact);
-                                }
-                                if (contacts.size() > 0) {
-                                    contactsAdapter.notifyDataSetChanged();
-                                    errorMessage.setVisibility(View.GONE);
+                    .addOnCompleteListener(task -> {
+                        contactsLayout.setRefreshing(false);
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                User contact = new User();
+                                contact.phone = document.getString(Constants.KEY_PHONE);
+                                contact.token = document.getString(Constants.KEY_FCM_TOKEN);
+                                contact.avatarUri = document.getString(Constants.KEY_AVATAR_URI);
+                                String nickName = preferenceManager.getString(contact.phone);
+                                if (nickName == null) {
+                                    contact.name = document.getString(Constants.KEY_NAME);
                                 } else {
-                                    errorMessage.setText(String.format("%s", "No contacts"));
-                                    errorMessage.setVisibility(View.VISIBLE);
+                                    contact.name = nickName;
                                 }
+                                contacts.add(contact);
+                            }
+                            if (contacts.size() > 0) {
+                                contactsAdapter.notifyDataSetChanged();
+                                errorMessage.setVisibility(View.GONE);
                             } else {
                                 errorMessage.setText(String.format("%s", "No contacts"));
                                 errorMessage.setVisibility(View.VISIBLE);
                             }
+                        } else {
+                            errorMessage.setText(String.format("%s", "No contacts"));
+                            errorMessage.setVisibility(View.VISIBLE);
                         }
                     });
         }
@@ -219,10 +199,12 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
         DocumentReference documentReference = database
                 .collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID));
-
+        // update toke to database
         documentReference.update(Constants.KEY_FCM_TOKEN, token).addOnFailureListener(e ->
-                Toast.makeText(MainActivityFamily.this,
-                        "Unable to send token: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                Toast.makeText(
+                        MainActivityFamily.this,
+                        "Unable to send token: " + e.getMessage(),
+                        Toast.LENGTH_SHORT).show());
     }
 
     /**
@@ -259,8 +241,10 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
             conference.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(getApplicationContext(), CallOutgoingActivity.class);
-                    intent.putExtra("selectedUsers", new Gson().toJson(contactsAdapter.getSelectedUsers()));
+                    Intent intent = new Intent(getApplicationContext(), OutgoingCallActivity.class);
+                    intent.putExtra(
+                            "selectedUsers",
+                            new Gson().toJson(contactsAdapter.getSelectedUsers()));
                     intent.putExtra("type", "video");
                     intent.putExtra("isMultiple", true);
                     startActivity(intent);
@@ -285,7 +269,10 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
                 .addSnapshotListener((snapshot, e) -> {
                     if (e != null) {
-                        Toast.makeText(MainActivityFamily.this, "Listen failed.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(
+                                MainActivityFamily.this,
+                                "Listen failed.",
+                                Toast.LENGTH_SHORT).show();
                     } else {
                         if (snapshot != null && snapshot.exists()) {
                             long numberOfRequests = (long) snapshot.get(Constants.KEY_NUM_OF_REQUESTS);
@@ -297,7 +284,10 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
                                 requestsNumber.setText(numberToString(numberOfRequests));
                             }
                         } else {
-                            Toast.makeText(MainActivityFamily.this, "Cannot get data.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(
+                                    MainActivityFamily.this,
+                                    "Cannot get data.",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

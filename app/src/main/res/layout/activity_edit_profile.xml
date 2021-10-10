@@ -12,7 +12,7 @@
     android:paddingBottom="20dp">
 
     <TextView
-        android:id="@+id/editProfile_textView"
+        android:id="@+id/editProfile_header"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="5dp"
@@ -24,10 +24,10 @@
 
 
     <TextView
-        android:id="@+id/editProfile_changeNickname_textView"
+        android:id="@+id/editProfile_changeName"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:layout_below="@id/editProfile_textView"
+        android:layout_below="@id/editProfile_header"
         android:layout_marginTop="15dp"
         android:fontFamily="@font/rubik_medium"
         android:gravity="center"
@@ -36,10 +36,10 @@
         android:textSize="25sp" />
 
     <EditText
-        android:id="@+id/editProfile_newNickname"
+        android:id="@+id/editProfile_newName"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_below="@id/editProfile_changeNickname_textView"
+        android:layout_below="@id/editProfile_changeName"
         android:layout_marginTop="10dp"
         android:background="@drawable/shape_stroke_blue"
         android:fontFamily="@font/rubik_medium"
@@ -54,25 +54,25 @@
         tools:ignore="TextFields" />
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/editProfile_profileImage"
+        android:id="@+id/editProfile_newAvatar"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:layout_below="@id/editProfile_newNickname"
+        android:layout_below="@id/editProfile_newName"
         android:layout_marginTop="15dp"
         android:clickable="true"
         android:focusable="true"
         app:shapeAppearanceOverlay="@style/RoundedSquare" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/editProfile_takePicture_button"
+        android:id="@+id/editProfile_takePhoto"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_below="@id/editProfile_newNickname"
+        android:layout_below="@id/editProfile_newName"
         android:layout_centerInParent="true"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="107dp"
-        android:layout_toRightOf="@id/editProfile_profileImage"
+        android:layout_toRightOf="@id/editProfile_newAvatar"
         android:backgroundTint="@color/colorBlue"
         android:insetLeft="0dp"
         android:insetTop="0dp"
@@ -86,10 +86,10 @@
         tools:ignore="RtlHardcoded,RtlSymmetry" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/editProfile_keepChanges_button"
+        android:id="@+id/editProfile_save"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_above="@id/editProfile_bottomLinearLayout"
+        android:layout_above="@id/editProfile_footerLayout"
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/colorBlue"
         android:fontFamily="@font/rubik_medium"
@@ -105,34 +105,14 @@
         app:iconGravity="start"
         app:iconTint="@color/colorTextLight" />
 
-<!--    <com.google.android.material.button.MaterialButton-->
-<!--        android:id="@+id/editProfile_goBack_button"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="85dp"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:backgroundTint="@color/colorGrey"-->
-<!--        android:fontFamily="@font/rubik_medium"-->
-<!--        android:includeFontPadding="false"-->
-<!--        android:padding="8dp"-->
-<!--        android:text="@string/go_back"-->
-<!--        android:textAlignment="textStart"-->
-<!--        android:textAllCaps="false"-->
-<!--        android:textColor="@color/colorTextLight"-->
-<!--        android:textSize="30sp"-->
-<!--        app:cornerRadius="12dp"-->
-<!--        app:icon="@drawable/ic_round_arrow_left_48"-->
-<!--        app:iconGravity="start"-->
-<!--        app:iconTint="@color/colorTextLight" />-->
-
     <LinearLayout
-        android:id="@+id/editProfile_bottomLinearLayout"
+        android:id="@+id/editProfile_footerLayout"
         android:layout_width="match_parent"
         android:layout_height="85dp"
         android:layout_alignParentBottom="true">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/editProfile_goBack_button"
+            android:id="@+id/editProfile_back"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -152,7 +132,7 @@
             app:iconTint="@color/colorTextLight"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/editProfile_signOut_button"
+            android:id="@+id/editProfile_logOut"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"

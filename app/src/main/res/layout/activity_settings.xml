@@ -12,7 +12,7 @@
     android:paddingBottom="20dp">
 
     <ImageView
-        android:id="@+id/family_settings_back"
+        android:id="@+id/settings_back"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentStart="true"
@@ -21,7 +21,7 @@
         app:tint="@color/colorTextDark" />
 
     <TextView
-        android:id="@+id/family_settings_header"
+        android:id="@+id/settings_header"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_centerHorizontal="true"
@@ -33,10 +33,10 @@
         android:textSize="31sp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/family_settings_takePhoto"
+        android:id="@+id/settings_takePhoto"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_below="@+id/family_settings_header"
+        android:layout_below="@+id/settings_header"
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/colorGrey"
         android:fontFamily="@font/rubik_medium"
@@ -53,10 +53,10 @@
         app:iconTint="@color/colorTextLight" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/family_settings_editName"
+        android:id="@+id/settings_editName"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_below="@+id/family_settings_takePhoto"
+        android:layout_below="@+id/settings_takePhoto"
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/colorGrey"
         android:fontFamily="@font/rubik_medium"
@@ -73,10 +73,10 @@
         app:iconTint="@color/colorTextLight" />
 
     <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/family_settings_notificationSwitch"
+        android:id="@+id/settings_notificationSwitch"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:layout_below="@id/family_settings_editName"
+        android:layout_below="@id/settings_editName"
         android:layout_marginTop="15dp"
         android:background="@drawable/radio_button_unselected"
         android:drawableStart="@drawable/ic_round_notification_48"
@@ -96,7 +96,7 @@
         app:track="@drawable/switch_track" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/family_settings_logout"
+        android:id="@+id/settings_logout"
         android:layout_width="match_parent"
         android:layout_height="85dp"
         android:layout_alignParentBottom="true"

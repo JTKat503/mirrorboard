@@ -17,8 +17,12 @@ import com.teamcreators.mirrorboard.models.Hobby;
 
 import java.util.List;
 
+/**
+ * A class for building adapters connecting hobbies and RecyclerViews
+ *
+ * @author Jianwei Li
+ */
 public class HobbiesAdapter extends RecyclerView.Adapter<HobbiesAdapter.HobbyViewHolder> {
-
     private List<Hobby> hobbies;
     private ItemsListener hobbiesListener;
 
@@ -73,18 +77,14 @@ public class HobbiesAdapter extends RecyclerView.Adapter<HobbiesAdapter.HobbyVie
         void setHobbyData(Hobby hobby) {
             textHobbyName.setText(hobby.name);
             Glide.with(itemView)
-                    .load(hobby.drawable)
+                    .load(hobby.icon)
                     .fitCenter()
                     .error(R.drawable.blank_hobby_image)
                     .into(imageHobbyIcon);
 
             // each tuple of hobbies
-            hobbyContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    hobbiesListener.displayHobbyInformation(hobby);
-                }
-            });
+            hobbyContainer.setOnClickListener(view ->
+                    hobbiesListener.displayHobbyInformation(hobby));
         }
     }
 }

@@ -21,7 +21,7 @@
         app:shapeAppearanceOverlay="@style/RoundedSquare"/>
 
     <androidx.constraintlayout.utils.widget.ImageFilterView
-        android:id="@+id/hobbyContainer_more_imageView"
+        android:id="@+id/hobbyContainer_more"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:src="@drawable/ic_round_arrow_right_48"
@@ -43,7 +43,7 @@
         android:textSize="27sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf = "@id/hobbyContainer_more_imageView"
+        app:layout_constraintEnd_toStartOf = "@id/hobbyContainer_more"
         app:layout_constraintStart_toEndOf = "@id/hobbyContainer_hobbyIcon"
         android:layout_marginStart="10dp"/>
 

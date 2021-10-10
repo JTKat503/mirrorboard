@@ -1,17 +1,11 @@
 package com.teamcreators.mirrorboard.activitiesforelderly;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.utilities.Constants;
@@ -19,10 +13,13 @@ import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 
+/**
+ * A class that contains adding and deleting hobbies for elderly
+ *
+ * @author Jianwei Li
+ */
 public class AddHobbyActivity extends AppCompatActivity {
-
     private HashSet<String> hobbies;
     private PreferenceManager preferenceManager;
     private CheckBox cooking, exercise, fishing, gardening, knitting, music, pets, tv;
@@ -34,143 +31,108 @@ public class AddHobbyActivity extends AppCompatActivity {
 
         preferenceManager = new PreferenceManager(getApplicationContext());
         hobbies = preferenceManager.getStringSet(Constants.KEY_HOBBIES);
-        cooking = findViewById(R.id.addHobby_cooking_checkbox);
-        exercise = findViewById(R.id.addHobby_exercise_checkbox);
-        fishing = findViewById(R.id.addHobby_fishing_checkbox);
-        gardening = findViewById(R.id.addHobby_gardening_checkbox);
-        knitting = findViewById(R.id.addHobby_knitting_checkbox);
-        music = findViewById(R.id.addHobby_music_checkbox);
-        pets = findViewById(R.id.addHobby_pets_checkbox);
-        tv = findViewById(R.id.addHobby_tv_checkbox);
+        cooking = findViewById(R.id.addHobby_cooking);
+        exercise = findViewById(R.id.addHobby_exercise);
+        fishing = findViewById(R.id.addHobby_fishing);
+        gardening = findViewById(R.id.addHobby_gardening);
+        knitting = findViewById(R.id.addHobby_knitting);
+        music = findViewById(R.id.addHobby_music);
+        pets = findViewById(R.id.addHobby_pets);
+        tv = findViewById(R.id.addHobby_tv);
 
+        // Initialize the hobbies that the user has selected
         if (hobbies != null && hobbies.size() > 0) {
             for (String s : hobbies) {
                 presetHobbiesSelection(s);
             }
         }
 
-        cooking.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (cooking.isChecked()) {
-                    hobbies.add(cooking.getText().toString());
-                } else {
-                    hobbies.remove(cooking.getText().toString());
-                }
+        cooking.setOnClickListener(view -> {
+            if (cooking.isChecked()) {
+                hobbies.add(cooking.getText().toString());
+            } else {
+                hobbies.remove(cooking.getText().toString());
             }
         });
 
-        exercise.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (exercise.isChecked()) {
-                    hobbies.add(exercise.getText().toString());
-                } else {
-                    hobbies.remove(exercise.getText().toString());
-                }
+        exercise.setOnClickListener(view -> {
+            if (exercise.isChecked()) {
+                hobbies.add(exercise.getText().toString());
+            } else {
+                hobbies.remove(exercise.getText().toString());
             }
         });
 
-        fishing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (fishing.isChecked()) {
-                    hobbies.add(fishing.getText().toString());
-                } else {
-                    hobbies.remove(fishing.getText().toString());
-                }
+        fishing.setOnClickListener(view -> {
+            if (fishing.isChecked()) {
+                hobbies.add(fishing.getText().toString());
+            } else {
+                hobbies.remove(fishing.getText().toString());
             }
         });
 
-        gardening.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (gardening.isChecked()) {
-                    hobbies.add(gardening.getText().toString());
-                } else {
-                    hobbies.remove(gardening.getText().toString());
-                }
+        gardening.setOnClickListener(view -> {
+            if (gardening.isChecked()) {
+                hobbies.add(gardening.getText().toString());
+            } else {
+                hobbies.remove(gardening.getText().toString());
             }
         });
 
-        knitting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (knitting.isChecked()) {
-                    hobbies.add(knitting.getText().toString());
-                } else {
-                    hobbies.remove(knitting.getText().toString());
-                }
+        knitting.setOnClickListener(view -> {
+            if (knitting.isChecked()) {
+                hobbies.add(knitting.getText().toString());
+            } else {
+                hobbies.remove(knitting.getText().toString());
             }
         });
 
-        music.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (music.isChecked()) {
-                    hobbies.add(music.getText().toString());
-                } else {
-                    hobbies.remove(music.getText().toString());
-                }
+        music.setOnClickListener(view -> {
+            if (music.isChecked()) {
+                hobbies.add(music.getText().toString());
+            } else {
+                hobbies.remove(music.getText().toString());
             }
         });
 
-        pets.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (pets.isChecked()) {
-                    hobbies.add(pets.getText().toString());
-                } else {
-                    hobbies.remove(pets.getText().toString());
-                }
+        pets.setOnClickListener(view -> {
+            if (pets.isChecked()) {
+                hobbies.add(pets.getText().toString());
+            } else {
+                hobbies.remove(pets.getText().toString());
             }
         });
 
-        tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (tv.isChecked()) {
-                    hobbies.add("Films/TV");
-                } else {
-                    hobbies.remove("Films/TV");
-                }
+        tv.setOnClickListener(view -> {
+            if (tv.isChecked()) {
+                hobbies.add("Films/TV");
+            } else {
+                hobbies.remove("Films/TV");
             }
         });
 
         // go back button
-        findViewById(R.id.addHobby_back_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hobbies.clear();
-                onBackPressed();
-                finish();
-            }
+        findViewById(R.id.addHobby_back).setOnClickListener(view -> {
+            hobbies.clear();
+            onBackPressed();
+            finish();
         });
 
         // done button
-        findViewById(R.id.addHobby_done_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseFirestore database = FirebaseFirestore.getInstance();
-                String myID = preferenceManager.getString(Constants.KEY_USER_ID);
-                database.collection(Constants.KEY_COLLECTION_USERS)
-                        .document(myID)
-                        .update(Constants.KEY_HOBBIES, new ArrayList<>(hobbies))
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                preferenceManager.putStringSet(Constants.KEY_HOBBIES, hobbies);
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getApplicationContext(), "Sync failed", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                onBackPressed();
-                finish();
-            }
+        findViewById(R.id.addHobby_done).setOnClickListener(view -> {
+            FirebaseFirestore database = FirebaseFirestore.getInstance();
+            String myID = preferenceManager.getString(Constants.KEY_USER_ID);
+            database.collection(Constants.KEY_COLLECTION_USERS)
+                    .document(myID)
+                    .update(Constants.KEY_HOBBIES, new ArrayList<>(hobbies))
+                    .addOnSuccessListener(unused ->
+                            preferenceManager.putStringSet(Constants.KEY_HOBBIES, hobbies))
+                    .addOnFailureListener(e -> Toast.makeText(
+                            getApplicationContext(),
+                            "Sync failed",
+                            Toast.LENGTH_SHORT).show());
+            onBackPressed();
+            finish();
         });
     }
 

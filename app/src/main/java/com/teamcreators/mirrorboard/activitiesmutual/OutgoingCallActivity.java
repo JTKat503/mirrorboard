@@ -17,8 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -48,7 +46,7 @@ import retrofit2.Response;
  *
  * @author Jianwei Li
  */
-public class CallOutgoingActivity extends AppCompatActivity {
+public class OutgoingCallActivity extends AppCompatActivity {
     private PreferenceManager preferenceManager;
     private String inviterToken = null;
     private String meetingRoomID = null;
@@ -63,11 +61,11 @@ public class CallOutgoingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call_outgoing);
 
-        contactAvatar = findViewById(R.id.outgoingCall_profileImage);
-        contactName = findViewById(R.id.outgoingCall_userName_textView);
-        contactPhoneNum = findViewById(R.id.outgoingCall_phoneNum_textView);
+        contactAvatar = findViewById(R.id.outgoingCall_avatar);
+        contactName = findViewById(R.id.outgoingCall_name);
+        contactPhoneNum = findViewById(R.id.outgoingCall_phoneNum);
         ImageView imageCallingType = findViewById(R.id.outgoingCall_imageCallingType);
-        LinearLayout hangUp = findViewById(R.id.outgoingCall_hangup_layout);
+        LinearLayout hangUp = findViewById(R.id.outgoingCall_cancel);
         preferenceManager = new PreferenceManager(getApplicationContext());
         callingType = getIntent().getStringExtra("type");
         User user = (User) getIntent().getSerializableExtra("user");
@@ -91,27 +89,24 @@ public class CallOutgoingActivity extends AppCompatActivity {
         }
 
         // gains token of logged-in user from server, then initiate a call invitation
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    inviterToken = task.getResult();
-                    if (callingType != null) {
-                        // Initiate a multi-party call invitation
-                        if (getIntent().getBooleanExtra("isMultiple", false)) {
-                            Type type = new TypeToken<ArrayList<User>>() {}.getType();
-                            ArrayList<User> receivers = new Gson().fromJson(
-                                    getIntent().getStringExtra("selectedUsers"), type);
-                            if (receivers != null) {
-                                totalReceivers = receivers.size();
-                            }
-                            initiateMeeting(callingType, null, receivers);
-                        } else {
-                            // Initiate a single call invitation
-                            if (user != null) {
-                                totalReceivers = 1;
-                                initiateMeeting(callingType, user.token, null);
-                            }
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                inviterToken = task.getResult();
+                if (callingType != null) {
+                    // Initiate a multi-party call invitation
+                    if (getIntent().getBooleanExtra("isMultiple", false)) {
+                        Type type = new TypeToken<ArrayList<User>>() {}.getType();
+                        ArrayList<User> receivers = new Gson().fromJson(
+                                getIntent().getStringExtra("selectedUsers"), type);
+                        if (receivers != null) {
+                            totalReceivers = receivers.size();
+                        }
+                        initiateMeeting(callingType, null, receivers);
+                    } else {
+                        // Initiate a single call invitation
+                        if (user != null) {
+                            totalReceivers = 1;
+                            initiateMeeting(callingType, user.token, null);
                         }
                     }
                 }
@@ -119,18 +114,15 @@ public class CallOutgoingActivity extends AppCompatActivity {
         });
 
         // hangup button
-        hangUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (getIntent().getBooleanExtra("isMultiple", false)) {
-                    Type type = new TypeToken<ArrayList<User>>() {}.getType();
-                    ArrayList<User> receivers = new Gson().fromJson(
-                            getIntent().getStringExtra("selectedUsers"), type);
-                    cancelInvitation(null, receivers);
-                } else {
-                    if (user != null) {
-                        cancelInvitation(user.token, null);
-                    }
+        hangUp.setOnClickListener(view -> {
+            if (getIntent().getBooleanExtra("isMultiple", false)) {
+                Type type = new TypeToken<ArrayList<User>>() {}.getType();
+                ArrayList<User> receivers = new Gson().fromJson(
+                        getIntent().getStringExtra("selectedUsers"), type);
+                cancelInvitation(null, receivers);
+            } else {
+                if (user != null) {
+                    cancelInvitation(user.token, null);
                 }
             }
         });
@@ -168,20 +160,21 @@ public class CallOutgoingActivity extends AppCompatActivity {
             data.put(Constants.KEY_AVATAR_URI,preferenceManager.getString(Constants.KEY_AVATAR_URI));
             data.put(Constants.REMOTE_MSG_INVITER_TOKEN, inviterToken);
             // set meeting room ID
-            meetingRoomID = preferenceManager.getString(Constants.KEY_USER_ID) + "_" +
-                            UUID.randomUUID().toString().substring(0, 5);
+            meetingRoomID = preferenceManager.getString(Constants.KEY_USER_ID) + "_"
+                    + UUID.randomUUID().toString().substring(0, 5);
             data.put(Constants.REMOTE_MSG_MEETING_ROOM, meetingRoomID);
             body.put(Constants.REMOTE_MSG_DATA, data);
             body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
             sendRemoteMessage(body.toString(), Constants.REMOTE_MSG_INVITATION);
         } catch (Exception e) {
-            Toast.makeText(CallOutgoingActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(OutgoingCallActivity.this,
+                    e.getMessage(), Toast.LENGTH_SHORT).show();
             finish();
         }
     }
 
     /**
-     * Send the token, profile and calling information of inviter to receiver
+     * Send the token, profile and calling information of inviter to recipient
      * @param remoteMessageBody the token, inviter's profile and calling information
      * @param type the calling type (video/audio)
      */
@@ -199,7 +192,7 @@ public class CallOutgoingActivity extends AppCompatActivity {
                         finish();
                     }
                 } else {
-                    Toast.makeText(CallOutgoingActivity.this,
+                    Toast.makeText(OutgoingCallActivity.this,
                             response.message(), Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -207,7 +200,7 @@ public class CallOutgoingActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<String> call,@NonNull Throwable t) {
-                Toast.makeText(CallOutgoingActivity.this,
+                Toast.makeText(OutgoingCallActivity.this,
                         t.getMessage(), Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -262,7 +255,7 @@ public class CallOutgoingActivity extends AppCompatActivity {
                         if (callingType.equals("audio")) {
                             builder.setAudioOnly(true);
                         }
-                        JitsiMeetActivity.launch(CallOutgoingActivity.this, builder.build());
+                        JitsiMeetActivity.launch(OutgoingCallActivity.this, builder.build());
                         finish();
                     } catch (Exception e) {
                         Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();

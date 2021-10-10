@@ -1,20 +1,17 @@
 package com.teamcreators.mirrorboard.activitiesforfamily;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,19 +20,13 @@ import android.widget.Toast;
 import com.canhub.cropper.CropImageContract;
 import com.canhub.cropper.CropImageContractOptions;
 import com.canhub.cropper.CropImageOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -67,11 +58,11 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         preferenceManager = new PreferenceManager(getApplicationContext());
-        notificationSwitch = findViewById(R.id.family_settings_notificationSwitch);
-        Button takePhoto = findViewById(R.id.family_settings_takePhoto);
-        Button editName = findViewById(R.id.family_settings_editName);
-        Button signOut = findViewById(R.id.family_settings_logout);
-        ImageView goBack = findViewById(R.id.family_settings_back);
+        notificationSwitch = findViewById(R.id.settings_notificationSwitch);
+        Button takePhoto = findViewById(R.id.settings_takePhoto);
+        Button editName = findViewById(R.id.settings_editName);
+        Button signOut = findViewById(R.id.settings_logout);
+        ImageView goBack = findViewById(R.id.settings_back);
 
         cropImageLauncher = registerForActivityResult(
                 new CropImageContract(), result -> {
@@ -84,77 +75,56 @@ public class SettingsActivity extends AppCompatActivity {
                 });
 
         // retaking picture and uploading avatar button
-        takePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                newAvatarUri = null;
-                Dexter.withContext(SettingsActivity.this)
-                        .withPermissions(
-                                Manifest.permission.READ_EXTERNAL_STORAGE,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.CAMERA
-                        )
-                        .withListener(new MultiplePermissionsListener() {
-                            @Override
-                            public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                                startCroppingFromCamera();
-                            }
+        takePhoto.setOnClickListener(view -> {
+            newAvatarUri = null;
+            Dexter.withContext(SettingsActivity.this)
+                    .withPermissions(
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.CAMERA
+                    )
+                    .withListener(new MultiplePermissionsListener() {
+                        @Override
+                        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                            startCroppingFromCamera();
+                        }
 
-                            @Override
-                            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-                                permissionToken.continuePermissionRequest();
-                            }
-                        }).check();
-            }
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+                            permissionToken.continuePermissionRequest();
+                        }
+                    }).check();
         });
 
         // editing nickname button
-        editName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
-                final EditText newName = new EditText(SettingsActivity.this);
-                newName.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setTitle("Enter a new name")
-                        .setView(newName)
-                        .setNegativeButton(android.R.string.no, null)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                String name = newName.getText().toString();
-                                if (!name.trim().isEmpty()) {
-                                    updateUserName(name);
-                                }
-                            }
-                        }).show();
-            }
+        editName.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
+            final EditText newName = new EditText(SettingsActivity.this);
+            newName.setInputType(InputType.TYPE_CLASS_TEXT);
+            builder.setTitle("Enter a new name")
+                    .setView(newName)
+                    .setNegativeButton(android.R.string.no, null)
+                    .setPositiveButton(android.R.string.yes, (dialogInterface, i) -> {
+                        String name = newName.getText().toString();
+                        if (!name.trim().isEmpty()) {
+                            updateUserName(name);
+                        }
+                    }).show();
         });
 
         // switch button for notification
         initiateNotificationStatus();
-        notificationSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setNotificationTo(notificationSwitch.isChecked());
-            }
-        });
+        notificationSwitch.setOnClickListener(view ->
+                setNotificationTo(notificationSwitch.isChecked()));
 
         // goBack button
-        goBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-                finish();
-            }
+        goBack.setOnClickListener(view -> {
+            onBackPressed();
+            finish();
         });
 
         // signing out button
-        signOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signOut();
-            }
-        });
+        signOut.setOnClickListener(view -> signOut());
     }
 
     /**
@@ -177,32 +147,25 @@ public class SettingsActivity extends AppCompatActivity {
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setTitle("Uploading image...");
         dialog.show();
-
         final String randomKey = UUID.randomUUID().toString();
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference uploader = storage.getReference().child("images/" + randomKey);
 
         uploader.putFile(newAvatarUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        dialog.dismiss();
-                        updateUserAvatar(uploader);
-                    }
+                .addOnSuccessListener(taskSnapshot -> {
+                    dialog.dismiss();
+                    updateUserAvatar(uploader);
                 })
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                        double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
-                        dialog.setMessage("Percentage: " + (int)progress + "%");
-                    }
+                .addOnProgressListener(snapshot -> {
+                    double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+                    dialog.setMessage("Percentage: " + (int)progress + "%");
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        dialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "Failed to upload", Toast.LENGTH_SHORT).show();
-                    }
+                .addOnFailureListener(e -> {
+                    dialog.dismiss();
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "Failed to upload",
+                            Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -212,38 +175,30 @@ public class SettingsActivity extends AppCompatActivity {
      */
     private void updateUserAvatar(StorageReference uploader) {
         uploader.getDownloadUrl()
-                .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        String userID = preferenceManager.getString(Constants.KEY_USER_ID);
-                        FirebaseFirestore database = FirebaseFirestore.getInstance();
-                        database.collection(Constants.KEY_COLLECTION_USERS)
-                                .document(userID)
-                                .update(Constants.KEY_AVATAR_URI, uri.toString())
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        preferenceManager.putString(Constants.KEY_AVATAR_URI, uri.toString());
-                                        Snackbar.make(findViewById(android.R.id.content),
-                                                "New avatar saved", Snackbar.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(SettingsActivity.this,
-                                                "Failed to save new avatar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                    }
+                .addOnSuccessListener(uri -> {
+                    String userID = preferenceManager.getString(Constants.KEY_USER_ID);
+                    FirebaseFirestore database = FirebaseFirestore.getInstance();
+                    database.collection(Constants.KEY_COLLECTION_USERS)
+                            .document(userID)
+                            .update(Constants.KEY_AVATAR_URI, uri.toString())
+                            .addOnSuccessListener(unused -> {
+                                preferenceManager.putString(Constants.KEY_AVATAR_URI, uri.toString());
+                                Snackbar.make(
+                                        findViewById(android.R.id.content),
+                                        "New avatar saved",
+                                        Snackbar.LENGTH_SHORT).show();
+                            })
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(
+                                            SettingsActivity.this,
+                                            "Failed to save new avatar: " + e.getMessage(),
+                                            Toast.LENGTH_SHORT).show());
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(SettingsActivity.this,
-                                "Failed to save new avatar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .addOnFailureListener(e ->
+                        Toast.makeText(
+                                SettingsActivity.this,
+                                "Failed to save new avatar: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show());
     }
 
     /**
@@ -256,21 +211,18 @@ public class SettingsActivity extends AppCompatActivity {
         database.collection(Constants.KEY_COLLECTION_USERS)
                 .document(userID)
                 .update(Constants.KEY_NAME, newName)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        preferenceManager.putString(Constants.KEY_NAME, newName);
-                        Snackbar.make(findViewById(android.R.id.content),
-                                "New name saved", Snackbar.LENGTH_SHORT).show();
-                    }
+                .addOnSuccessListener(unused -> {
+                    preferenceManager.putString(Constants.KEY_NAME, newName);
+                    Snackbar.make(
+                            findViewById(android.R.id.content),
+                            "New name saved",
+                            Snackbar.LENGTH_SHORT).show();
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(SettingsActivity.this,
-                                "Failed to save new name: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .addOnFailureListener(e ->
+                        Toast.makeText(
+                                SettingsActivity.this,
+                                "Failed to save new name: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show());
     }
 
     /**
@@ -284,19 +236,18 @@ public class SettingsActivity extends AppCompatActivity {
         database.collection(Constants.KEY_COLLECTION_USERS)
                 .document(myID)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                boolean noticeStatus = document.getBoolean(Constants.KEY_NOTICE_ON);
-                                notificationSwitch.setChecked(noticeStatus);
-                            }
-                        } else {
-                            Toast.makeText(getApplicationContext(),
-                                    "Failed to access database", Toast.LENGTH_SHORT).show();
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            boolean noticeStatus = document.getBoolean(Constants.KEY_NOTICE_ON);
+                            notificationSwitch.setChecked(noticeStatus);
                         }
+                    } else {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "Failed to access database",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -314,43 +265,38 @@ public class SettingsActivity extends AppCompatActivity {
         HashMap<String, Object> updates = new HashMap<>();
         updates.put(Constants.KEY_NOTICE_ON, value);
         documentReference.update(updates)
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(SettingsActivity.this,
-                                "Failed with: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .addOnFailureListener(e ->
+                        Toast.makeText(
+                                SettingsActivity.this,
+                                "Failed with: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show());
     }
 
     /**
      * Log the user out of the app
      */
     private void signOut() {
-        Snackbar.make(findViewById(android.R.id.content), "Logging Out...", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(findViewById(
+                android.R.id.content),
+                "Logging Out...",
+                Snackbar.LENGTH_SHORT).show();
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         DocumentReference documentReference = database
                 .collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID));
-
         // delete user's FCM token from database while signing out
         HashMap<String, Object> updates = new HashMap<>();
         updates.put(Constants.KEY_FCM_TOKEN, FieldValue.delete());
         documentReference.update(updates)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        preferenceManager.clearPreferences();
-                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                        finish();
-                    }
+                .addOnSuccessListener(unused -> {
+                    preferenceManager.clearPreferences();
+                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                    finish();
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(SettingsActivity.this,
-                                "Unable to log out: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .addOnFailureListener(e ->
+                        Toast.makeText(
+                                SettingsActivity.this,
+                                "Unable to log out: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show());
     }
 }

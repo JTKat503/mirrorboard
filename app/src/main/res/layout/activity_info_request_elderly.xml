@@ -52,7 +52,7 @@
         android:visibility="gone"/>
 
     <TextView
-        android:id="@+id/elderly_infoRequest_phone"
+        android:id="@+id/elderly_infoRequest_phoneNum"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@id/elderly_infoRequest_name"
@@ -65,7 +65,7 @@
         android:id="@+id/elderly_infoRequest_add"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_below="@+id/elderly_infoRequest_phone"
+        android:layout_below="@+id/elderly_infoRequest_phoneNum"
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/colorBlue"
         android:fontFamily="@font/rubik_medium"

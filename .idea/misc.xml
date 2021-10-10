@@ -46,6 +46,7 @@
         <entry key="..\:/3081V5/app/src/main/res/layout/activity_create_account.xml" value="0.20833333333333334" />
         <entry key="..\:/3081V5/app/src/main/res/layout/activity_create_profile.xml" value="0.264" />
         <entry key="..\:/3081V5/app/src/main/res/layout/activity_edit_profile.xml" value="0.264" />
+        <entry key="..\:/3081V5/app/src/main/res/layout/activity_incoming_call_family.xml" value="0.2" />
         <entry key="..\:/3081V5/app/src/main/res/layout/activity_info_contact.xml" value="0.264" />
         <entry key="..\:/3081V5/app/src/main/res/layout/activity_info_contact_elderly.xml" value="0.2" />
         <entry key="..\:/3081V5/app/src/main/res/layout/activity_info_contact_family.xml" value="0.2" />
@@ -63,6 +64,8 @@
         <entry key="..\:/3081V5/app/src/main/res/layout/item_container_hobby.xml" value="0.176" />
         <entry key="..\:/3081V5/app/src/main/res/layout/item_container_user.xml" value="0.2" />
         <entry key="..\:/3081V5/app/src/main/res/layout/z_deprecated_activity_call_activity.xml" value="0.264" />
+        <entry key="..\:/3081V5/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.4197916666666667" />
+        <entry key="..\:/3081V5/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.4197916666666667" />
       </map>
     </option>
   </component>

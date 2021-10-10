@@ -3,6 +3,11 @@ package com.teamcreators.mirrorboard.listeners;
 import com.teamcreators.mirrorboard.models.Hobby;
 import com.teamcreators.mirrorboard.models.User;
 
+/**
+ * An interface to monitor whether an item is selected
+ *
+ * @author Jianwei Li
+ */
 public interface ItemsListener {
 
     /**

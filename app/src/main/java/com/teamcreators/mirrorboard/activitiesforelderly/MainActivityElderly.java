@@ -170,7 +170,6 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      * @author Jianwei Li
      */
     private void getContacts(List<String> contactsIDs) {
-        contacts.clear();
         contactsLayout.setRefreshing(true);
         if (contactsIDs == null || contactsIDs.isEmpty()) {
             contactsLayout.setRefreshing(false);
@@ -184,6 +183,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
                     .addOnCompleteListener(task -> {
                         contactsLayout.setRefreshing(false);
                         if (task.isSuccessful()) {
+                            contacts.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 User contact = new User();
                                 contact.phone = document.getString(Constants.KEY_PHONE);

@@ -89,7 +89,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         contactsView.setAdapter(contactsAdapter);
         // setting the method of refreshing contact list
         contactsLayout.setOnRefreshListener(this::getContactsIDs);
-        listenNewAddingFriendRequests();
+        listenAddingFriendRequests();
         autoRefreshContactList();
 
         // gains token from Messaging server then send it to database
@@ -144,7 +144,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
                 .document(myID)
                 .get()
                 .addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+                    if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             List<String> myFriendsIDs = (List<String>) document.get(Constants.KEY_FRIENDS);
@@ -282,7 +282,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      * It will show on the main page with a red dot and a number
      * @author Xuannan Huang
      */
-    public void listenNewAddingFriendRequests(){
+    public void listenAddingFriendRequests(){
         // get the TextView of the red dot
         requestsNumber = findViewById(R.id.elderly_main_numOfRequests);
         // get the Firestore database

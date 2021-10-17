@@ -229,15 +229,4 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
                     }
                 });
     }
-
-//    /**
-//     * Check if the device is connected to the network
-//     * @return true if is connected, false if not
-//     */
-//    private boolean isNetworkConnected() {
-//        ConnectivityManager connectivityManager
-//                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-//        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-//        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-//    }
 }

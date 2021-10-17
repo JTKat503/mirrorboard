@@ -5,10 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -88,12 +85,10 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
         contacts = new ArrayList<>();
         contactsAdapter = new UsersAdapter(contacts, this);
         contactsView.setAdapter(contactsAdapter);
-        getContactsIDs();
-
-        // refreshing contacts list
+        // setting the method of refreshing contact list
         contactsLayout.setOnRefreshListener(this::getContactsIDs);
-        // show the real time of the number of requests
-        numberOfRequestsRealtime(); // ** @author this line added by Xuannan Huang*/
+        listenAddingFriendRequests();
+        autoRefreshContactList();
 
         // gains token from Messaging server then send it to database
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
@@ -134,15 +129,6 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
      * @author Jianwei Li
      */
     private void getContactsIDs() {
-        // check if internet connection is available
-        if (!isNetworkAvailable()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityFamily.this);
-            builder.setTitle("No Internet Connection")
-                    .setMessage("Please reconnect and try again.")
-                    .setPositiveButton(android.R.string.yes, null).show();
-            contactsLayout.setRefreshing(false);
-            return;
-        }
         String myID = preferenceManager.getString(Constants.KEY_USER_ID);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USERS)
@@ -175,7 +161,6 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
      * @author Jianwei Li
      */
     private void getContacts(List<String> contactsIDs) {
-        contacts.clear();
         contactsLayout.setRefreshing(true);
         if (contactsIDs == null || contactsIDs.isEmpty()) {
             contactsLayout.setRefreshing(false);
@@ -189,6 +174,7 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
                     .addOnCompleteListener(task -> {
                         contactsLayout.setRefreshing(false);
                         if (task.isSuccessful()) {
+                            contacts.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 User contact = new User();
                                 contact.phone = document.getString(Constants.KEY_PHONE);
@@ -289,7 +275,7 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
      * It will show on the main page with a red dot and a number
      * @author Xuannan Huang
      */
-    public void numberOfRequestsRealtime(){
+    public void listenAddingFriendRequests(){
         // get the TextView of the red dot
         requestsNumber = findViewById(R.id.family_main_numOfRequests);
         // get the Firestore database
@@ -337,14 +323,18 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
     }
 
     /**
-     * Check if the device is connected to the network
-     * @return true if is connected, false if not
-     * @author Jianwei Li
+     * If a new contact is successfully added or an existed contact is
+     * successfully removed, the contact list will be refreshed automatically.
+     * @author Xuannan Huang
      */
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    private void autoRefreshContactList() {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .addSnapshotListener((snapshot, e) -> {
+                    if (e == null && snapshot != null && snapshot.exists()) {
+                        getContactsIDs();
+                    }
+                });
     }
 }

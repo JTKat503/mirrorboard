@@ -184,10 +184,6 @@ public class AddContactActivityElderly extends AppCompatActivity {
                     if ((long)document.get(Constants.KEY_NUM_OF_REQUESTS) == 0) {
                         trueToAddRequestNum(false);
                     } else {
-                        Toast.makeText(
-                                AddContactActivityElderly.this,
-                                "count " + document.get(Constants.KEY_NUM_OF_REQUESTS),
-                                Toast.LENGTH_SHORT).show();
                         increaseRequests();
                     }
                 });
@@ -210,10 +206,6 @@ public class AddContactActivityElderly extends AppCompatActivity {
                                 flag = true;
                             }
                         }
-                        Toast.makeText(
-                                AddContactActivityElderly.this,
-                                "inside " + flag,
-                                Toast.LENGTH_SHORT).show();
                         trueToAddRequestNum(flag);
                     } else {
                         Toast.makeText(

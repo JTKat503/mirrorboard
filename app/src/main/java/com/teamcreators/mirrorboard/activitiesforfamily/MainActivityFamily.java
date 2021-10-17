@@ -69,9 +69,17 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
         networkConnection.observe(this, isConnected -> {
             if (isConnected) {
+                newContact.setVisibility(View.VISIBLE);
+                newRequests.setVisibility(View.VISIBLE);
+                contactsLayout.setVisibility(View.VISIBLE);
+                settings.setVisibility(View.VISIBLE);
                 offlineWarning.setVisibility(View.GONE);
             } else {
                 offlineWarning.setVisibility(View.VISIBLE);
+                newContact.setVisibility(View.GONE);
+                newRequests.setVisibility(View.GONE);
+                contactsLayout.setVisibility(View.GONE);
+                settings.setVisibility(View.GONE);
             }
         });
 

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -69,6 +70,19 @@ public class OutgoingCallActivity extends AppCompatActivity {
         preferenceManager = new PreferenceManager(getApplicationContext());
         callingType = getIntent().getStringExtra("type");
         User user = (User) getIntent().getSerializableExtra("user");
+
+        new CountDownTimer(5000, 1000) {
+
+            @Override
+            public void onTick(long l) {}
+
+            @Override
+            public void onFinish() {
+                if (user != null) {
+                    cancelInvitation(user.token, null);
+                }
+            }
+        };
 
         // determines the icon of the type of call
         if (callingType != null) {

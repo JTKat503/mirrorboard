@@ -48,9 +48,9 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_activity);
 
+        preferenceManager = new PreferenceManager(getApplicationContext());
         textErrorMessage = findViewById(R.id.startActivity_errorMessage);
         swipeRefreshLayout = findViewById(R.id.startActivity_hobbiesLayout);
-        preferenceManager = new PreferenceManager(getApplicationContext());
         Button editProfile = findViewById(R.id.startActivity_editProfile);
         Button addHobby = findViewById(R.id.startActivity_addHobby);
         Button exit = findViewById(R.id.startActivity_exit);
@@ -62,9 +62,19 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
         networkConnection.observe(this, isConnected -> {
             if (isConnected) {
+                editProfile.setVisibility(View.VISIBLE);
+                addHobby.setVisibility(View.VISIBLE);
+                swipeRefreshLayout.setVisibility(View.VISIBLE);
+                exit.setVisibility(View.VISIBLE);
+                family.setVisibility(View.VISIBLE);
                 offlineWarning.setVisibility(View.GONE);
             } else {
                 offlineWarning.setVisibility(View.VISIBLE);
+                editProfile.setVisibility(View.GONE);
+                addHobby.setVisibility(View.GONE);
+                swipeRefreshLayout.setVisibility(View.GONE);
+                exit.setVisibility(View.GONE);
+                family.setVisibility(View.GONE);
             }
         });
 
@@ -116,15 +126,15 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
      * and load the hobbies list
      */
     private void getHobbies() {
-        // check if internet connection is available
-        if (!isNetworkConnected()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(StartActivityActivity.this);
-            builder.setTitle("No Internet Connection")
-                    .setMessage("Please reconnect and try again.")
-                    .setPositiveButton(android.R.string.yes, null).show();
-            swipeRefreshLayout.setRefreshing(false);
-            return;
-        }
+//        // check if internet connection is available
+//        if (!isNetworkConnected()) {
+//            AlertDialog.Builder builder = new AlertDialog.Builder(StartActivityActivity.this);
+//            builder.setTitle("No Internet Connection")
+//                    .setMessage("Please reconnect and try again.")
+//                    .setPositiveButton(android.R.string.yes, null).show();
+//            swipeRefreshLayout.setRefreshing(false);
+//            return;
+//        }
         hobbies.clear();
         swipeRefreshLayout.setRefreshing(true);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -219,18 +229,14 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
     @Override
     public void onMultipleUsersAction(Boolean isMultipleUsersSelected) {}
 
-    /**
-     * Check if the device is connected to the network
-     * @return true if is connected, false if not
-     */
-    private boolean isNetworkConnected() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-    }
-
-//    public void updateHobbiesList() {
-//        hobbiesAdapter.notifyDataSetChanged();
+//    /**
+//     * Check if the device is connected to the network
+//     * @return true if is connected, false if not
+//     */
+//    private boolean isNetworkConnected() {
+//        ConnectivityManager connectivityManager
+//                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+//        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
 //    }
 }

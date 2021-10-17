@@ -47,6 +47,8 @@ public class AddContactActivityElderly extends AppCompatActivity {
         goBack = findViewById(R.id.elderly_addContact_goBack);
         sendRequest = findViewById(R.id.elderly_addContact_sendRequest);
         sendRequest.setSelected(false);
+        EditText getPhone = findViewById(R.id.elderly_addContact_phoneNum);
+        EditText getName = findViewById(R.id.elderly_addContact_name);
         // save the current user information
         preferenceManager = new PreferenceManager(getApplicationContext());
         // current user's phone
@@ -58,16 +60,23 @@ public class AddContactActivityElderly extends AppCompatActivity {
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
         networkConnection.observe(this, isConnected -> {
             if (isConnected) {
+                getPhone.setVisibility(View.VISIBLE);
+                getName.setVisibility(View.VISIBLE);
+                sendRequest.setVisibility(View.VISIBLE);
+                goBack.setVisibility(View.VISIBLE);
                 offlineWarning.setVisibility(View.GONE);
             } else {
                 offlineWarning.setVisibility(View.VISIBLE);
+                getPhone.setVisibility(View.GONE);
+                getName.setVisibility(View.GONE);
+                sendRequest.setVisibility(View.GONE);
+                goBack.setVisibility(View.GONE);
             }
         });
 
         // Click the send request button
         sendRequest.setOnClickListener(view -> {
             // get the receiver's Phone
-            EditText getPhone = findViewById(R.id.elderly_addContact_phoneNum);
             receiverUserPhone = getPhone.getText().toString();
             // get the friend list and Check if you are friends
             // if not, then send the request

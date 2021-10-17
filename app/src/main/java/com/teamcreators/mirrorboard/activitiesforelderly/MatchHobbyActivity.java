@@ -61,9 +61,15 @@ public class MatchHobbyActivity extends AppCompatActivity {
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
         networkConnection.observe(this, isConnected -> {
             if (isConnected) {
+                matchFriend.setVisibility(View.VISIBLE);
+                removeHobby.setVisibility(View.VISIBLE);
+                goBack.setVisibility(View.VISIBLE);
                 offlineWarning.setVisibility(View.GONE);
             } else {
                 offlineWarning.setVisibility(View.VISIBLE);
+                matchFriend.setVisibility(View.GONE);
+                removeHobby.setVisibility(View.GONE);
+                goBack.setVisibility(View.GONE);
             }
         });
 

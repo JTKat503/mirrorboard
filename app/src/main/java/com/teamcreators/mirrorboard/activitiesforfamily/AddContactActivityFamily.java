@@ -45,6 +45,10 @@ public class AddContactActivityFamily extends AppCompatActivity {
         // get the database instance
         db = FirebaseFirestore.getInstance();
         // get the button by ID
+        EditText getPhone = findViewById(R.id.family_addContact_phoneNum);
+        EditText getName = findViewById(R.id.family_addContact_name);
+        Button exitApp = findViewById(R.id.family_addContact_exitApp);
+        LinearLayout offlineWarning = findViewById(R.id.family_addContact_offlineWarning);
         ImageView goBack = findViewById(R.id.family_addContact_back);
         sendRequest = findViewById(R.id.family_addContact_sendRequest);
         sendRequest.setSelected(false);
@@ -54,21 +58,24 @@ public class AddContactActivityFamily extends AppCompatActivity {
         senderUserPhone = preferenceManager.getString(Constants.KEY_PHONE);
 
         // Monitor network connection changes. @author Jianwei Li
-        Button exitApp = findViewById(R.id.family_addContact_exitApp);
-        LinearLayout offlineWarning = findViewById(R.id.family_addContact_offlineWarning);
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
         networkConnection.observe(this, isConnected -> {
             if (isConnected) {
+                getPhone.setVisibility(View.VISIBLE);
+                getName.setVisibility(View.VISIBLE);
+                sendRequest.setVisibility(View.VISIBLE);
                 offlineWarning.setVisibility(View.GONE);
             } else {
                 offlineWarning.setVisibility(View.VISIBLE);
+                getPhone.setVisibility(View.GONE);
+                getName.setVisibility(View.GONE);
+                sendRequest.setVisibility(View.GONE);
             }
         });
 
         // Click the send request button
         sendRequest.setOnClickListener(view -> {
             // get the receiver's Phone
-            EditText getPhone = findViewById(R.id.family_addContact_phoneNum);
             receiverUserPhone = getPhone.getText().toString();
             // get the friend list and Check if you are friends
             // if not, then send the request

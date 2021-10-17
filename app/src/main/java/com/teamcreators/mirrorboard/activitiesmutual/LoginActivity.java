@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // stay in login
+        // stay in logged in
         preferenceManager = new PreferenceManager(getApplicationContext());
         if (preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN)) {
             stayInUserMode();
@@ -51,6 +51,8 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.login_password);
         logIn = findViewById(R.id.login_logInButton);
         loginProgressBar = findViewById(R.id.login_progressbar);
+        Button newAccount = findViewById(R.id.login_newAccount);
+        Button exit = findViewById(R.id.login_exit);
         Button exitApp = findViewById(R.id.login_exitApp);
         LinearLayout offlineWarning = findViewById(R.id.login_offlineWarning);
 
@@ -58,9 +60,19 @@ public class LoginActivity extends AppCompatActivity {
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
         networkConnection.observe(this, isConnected -> {
             if (isConnected) {
+                phoneNumber.setVisibility(View.VISIBLE);
+                password.setVisibility(View.VISIBLE);
+                logIn.setVisibility(View.VISIBLE);
+                newAccount.setVisibility(View.VISIBLE);
+                exit.setVisibility(View.VISIBLE);
                 offlineWarning.setVisibility(View.GONE);
             } else {
                 offlineWarning.setVisibility(View.VISIBLE);
+                phoneNumber.setVisibility(View.GONE);
+                password.setVisibility(View.GONE);
+                logIn.setVisibility(View.GONE);
+                newAccount.setVisibility(View.GONE);
+                exit.setVisibility(View.GONE);
             }
         });
 
@@ -81,13 +93,13 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // new account button (create an Account)
-        findViewById(R.id.login_newAccount).setOnClickListener(view -> {
+        newAccount.setOnClickListener(view -> {
             Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
             startActivity(intent);
         });
 
         // exit button
-        findViewById(R.id.login_exit).setOnClickListener(view -> {
+        exit.setOnClickListener(view -> {
             moveTaskToBack(true);
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);

@@ -73,9 +73,19 @@ public class SettingsActivity extends AppCompatActivity {
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
         networkConnection.observe(this, isConnected -> {
             if (isConnected) {
+                goBack.setVisibility(View.VISIBLE);
+                takePhoto.setVisibility(View.VISIBLE);
+                editName.setVisibility(View.VISIBLE);
+                notificationSwitch.setVisibility(View.VISIBLE);
+                signOut.setVisibility(View.VISIBLE);
                 offlineWarning.setVisibility(View.GONE);
             } else {
                 offlineWarning.setVisibility(View.VISIBLE);
+                goBack.setVisibility(View.GONE);
+                takePhoto.setVisibility(View.GONE);
+                editName.setVisibility(View.GONE);
+                notificationSwitch.setVisibility(View.GONE);
+                signOut.setVisibility(View.GONE);
             }
         });
 
@@ -311,7 +321,8 @@ public class SettingsActivity extends AppCompatActivity {
         updates.put(Constants.KEY_FCM_TOKEN, FieldValue.delete());
         documentReference.update(updates)
                 .addOnSuccessListener(unused -> {
-                    preferenceManager.clearPreferences();
+//                    preferenceManager.clearPreferences(); // At request of design team
+                    preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, false);
                     startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                     finish();
                 })

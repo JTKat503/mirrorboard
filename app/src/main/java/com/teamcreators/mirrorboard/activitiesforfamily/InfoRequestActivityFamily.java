@@ -52,6 +52,8 @@ public class InfoRequestActivityFamily extends AppCompatActivity {
         contactNumber = findViewById(R.id.family_infoRequest_phoneNum);
         profileImage = findViewById(R.id.family_infoRequest_avatar);
         goBack = findViewById(R.id.family_infoRequest_back);
+        Button exitApp = findViewById(R.id.family_infoRequest_exitApp);
+        LinearLayout offlineWarning = findViewById(R.id.family_infoRequest_offlineWarning);
         // save current user info
         preferenceManager = new PreferenceManager(getApplicationContext());
         // show the request user
@@ -61,14 +63,14 @@ public class InfoRequestActivityFamily extends AppCompatActivity {
         contactName.setSelected(true);
 
         // Monitor network connection changes. @author Jianwei Li
-        Button exitApp = findViewById(R.id.family_infoRequest_exitApp);
-        LinearLayout offlineWarning = findViewById(R.id.family_infoRequest_offlineWarning);
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
         networkConnection.observe(this, isConnected -> {
             if (isConnected) {
+                goBack.setVisibility(View.VISIBLE);
                 offlineWarning.setVisibility(View.GONE);
             } else {
                 offlineWarning.setVisibility(View.VISIBLE);
+                goBack.setVisibility(View.GONE);
             }
         });
 
@@ -100,8 +102,7 @@ public class InfoRequestActivityFamily extends AppCompatActivity {
             builder.setMessage("Are you sure you want to delete this request?")
                     .setNegativeButton(android.R.string.no, null)
                     .setPositiveButton(android.R.string.yes, (dialogInterface, i) -> {
-                        TextView tempPhone = findViewById(R.id.elderly_infoRequest_phoneNum);
-                        String senderPhone = tempPhone.getText().toString();
+                        String senderPhone = contactNumber.getText().toString();
                         deleteRequestAndUpdateRequestNumber(senderPhone);
                         showUserProfile();
                     }).show();
@@ -144,7 +145,7 @@ public class InfoRequestActivityFamily extends AppCompatActivity {
                                 .load(documentSnapshot.getString(Constants.KEY_AVATAR_URI))
                                 .error(R.drawable.blank_profile)
                                 .into(profileImage);
-                        // ** @author  below added by Jianwei Li */
+                        // @author  below added by Jianwei Li
                         profileImage.setVisibility(View.VISIBLE);
                         contactName.setVisibility(View.VISIBLE);
                         contactNumber.setVisibility(View.VISIBLE);
@@ -158,7 +159,7 @@ public class InfoRequestActivityFamily extends AppCompatActivity {
                         removeRequest.setVisibility(View.INVISIBLE);
                         noRequest.setText(R.string.no_new_requests);
                         noRequest.setVisibility(View.VISIBLE);
-                        // ** @author  above added by Jianwei Li */
+                        // @author  above added by Jianwei Li
                     }
                 });
     }

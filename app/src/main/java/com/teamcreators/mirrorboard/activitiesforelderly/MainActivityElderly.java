@@ -66,9 +66,19 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
         networkConnection.observe(this, isConnected -> {
             if (isConnected) {
+                newContact.setVisibility(View.VISIBLE);
+                newRequests.setVisibility(View.VISIBLE);
+                hobbies.setVisibility(View.VISIBLE);
+                contactsLayout.setVisibility(View.VISIBLE);
+                exit.setVisibility(View.VISIBLE);
                 offlineWarning.setVisibility(View.GONE);
             } else {
                 offlineWarning.setVisibility(View.VISIBLE);
+                newContact.setVisibility(View.GONE);
+                newRequests.setVisibility(View.GONE);
+                hobbies.setVisibility(View.GONE);
+                contactsLayout.setVisibility(View.GONE);
+                exit.setVisibility(View.GONE);
             }
         });
 

@@ -57,9 +57,19 @@ public class InfoContactActivityFamily extends AppCompatActivity {
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
         networkConnection.observe(this, isConnected -> {
             if (isConnected) {
+                makeVideoCall.setVisibility(View.VISIBLE);
+                makeAudioCall.setVisibility(View.VISIBLE);
+                removeContact.setVisibility(View.VISIBLE);
+                editContactName.setVisibility(View.VISIBLE);
+                goBack.setVisibility(View.VISIBLE);
                 offlineWarning.setVisibility(View.GONE);
             } else {
                 offlineWarning.setVisibility(View.VISIBLE);
+                makeVideoCall.setVisibility(View.GONE);
+                makeAudioCall.setVisibility(View.GONE);
+                removeContact.setVisibility(View.GONE);
+                editContactName.setVisibility(View.GONE);
+                goBack.setVisibility(View.GONE);
             }
         });
 

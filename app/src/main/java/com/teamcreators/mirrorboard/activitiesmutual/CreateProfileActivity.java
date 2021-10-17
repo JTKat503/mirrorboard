@@ -75,6 +75,9 @@ public class CreateProfileActivity extends AppCompatActivity {
         nickName = findViewById(R.id.createProfile_name);
         avatar = findViewById(R.id.createProfile_avatar);
         preferenceManager = new PreferenceManager(getApplicationContext());
+        Button takePhoto = findViewById(R.id.createProfile_takePhoto);
+        Button createAccount = findViewById(R.id.createProfile_create);
+        Button back = findViewById(R.id.createProfile_back);
         Button exitApp = findViewById(R.id.createProfile_exitApp);
         LinearLayout offlineWarning = findViewById(R.id.createProfile_offlineWarning);
 
@@ -82,9 +85,19 @@ public class CreateProfileActivity extends AppCompatActivity {
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
         networkConnection.observe(this, isConnected -> {
             if (isConnected) {
+                nickName.setVisibility(View.VISIBLE);
+                avatar.setVisibility(View.VISIBLE);
+                takePhoto.setVisibility(View.VISIBLE);
+                back.setVisibility(View.VISIBLE);
+                createAccount.setVisibility(View.VISIBLE);
                 offlineWarning.setVisibility(View.GONE);
             } else {
                 offlineWarning.setVisibility(View.VISIBLE);
+                nickName.setVisibility(View.GONE);
+                avatar.setVisibility(View.GONE);
+                takePhoto.setVisibility(View.GONE);
+                back.setVisibility(View.GONE);
+                createAccount.setVisibility(View.GONE);
             }
         });
 
@@ -133,7 +146,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         });
 
         // takePicture button
-        findViewById(R.id.createProfile_takePhoto).setOnClickListener(view -> {
+        takePhoto.setOnClickListener(view -> {
             Dexter.withContext(CreateProfileActivity.this)
                     .withPermissions(
                             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -154,14 +167,14 @@ public class CreateProfileActivity extends AppCompatActivity {
         });
 
         // back button, back to CreateAccount interface
-        findViewById(R.id.createProfile_back).setOnClickListener(view -> {
+        back.setOnClickListener(view -> {
             // After backing, save the information filled in the CreateAccount interface
             onBackPressed();
             finish();
         });
 
         // creating account button
-        findViewById(R.id.createProfile_create).setOnClickListener(view -> {
+        createAccount.setOnClickListener(view -> {
             if (nickName.getText().toString().trim().isEmpty()) {
                 Toast.makeText(
                         getApplicationContext(),

@@ -11,7 +11,8 @@ import androidx.lifecycle.LiveData
 
 class NetworkConnection(private val context: Context): LiveData<Boolean>() {
 
-    private var connectivityManager: ConnectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    private var connectivityManager: ConnectivityManager
+    = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     private lateinit var networkCallback: ConnectivityManager.NetworkCallback
 
@@ -34,26 +35,51 @@ class NetworkConnection(private val context: Context): LiveData<Boolean>() {
         }
     }
 
+//    override fun onInactive() {
+//        super.onInactive()
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            connectivityManager.unregisterNetworkCallback(connectivityManagerCallback())
+//        } else {
+//            context.unregisterReceiver(networkReceiver)
+//        }
+//    }
     override fun onInactive() {
         super.onInactive()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            connectivityManager.unregisterNetworkCallback(connectivityManagerCallback())
-        } else {
-            context.unregisterReceiver(networkReceiver)
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                connectivityManager.unregisterNetworkCallback(connectivityManagerCallback())
+            } else {
+                context.unregisterReceiver(networkReceiver)
+            }
+        } catch (e: Exception) {
         }
     }
 
 
+//    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+//    private fun lollipopNetworkRequest() {
+//        val requestBuilder = NetworkRequest.Builder()
+//                .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+//                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+//                .addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET)
+//        connectivityManager.registerNetworkCallback(
+//                requestBuilder.build(),
+//                connectivityManagerCallback()
+//        )
+//    }
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun lollipopNetworkRequest() {
-        val requestBuilder = NetworkRequest.Builder()
-                .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                .addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET)
-        connectivityManager.registerNetworkCallback(
-                requestBuilder.build(),
-                connectivityManagerCallback()
-        )
+        try {
+            val requestBuilder = NetworkRequest.Builder()
+                    .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+                    .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                    .addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET)
+            connectivityManager.registerNetworkCallback(
+                    requestBuilder.build(),
+                    connectivityManagerCallback()
+            )
+        } catch (e: Exception) {
+        }
     }
 
 
@@ -73,7 +99,7 @@ class NetworkConnection(private val context: Context): LiveData<Boolean>() {
             }
             return networkCallback
         } else {
-            throw IllegalAccessError("Error")
+            throw IllegalAccessError("Access Error")
         }
     }
 

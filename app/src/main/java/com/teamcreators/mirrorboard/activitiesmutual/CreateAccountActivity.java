@@ -35,6 +35,9 @@ public class CreateAccountActivity extends AppCompatActivity {
         phoneNumber = findViewById(R.id.createAccount_phoneNum);
         inputPassword = findViewById(R.id.createAccount_password);
         reenteredPassword = findViewById(R.id.createAccount_reenteredPassword);
+        RadioGroup appMode = findViewById(R.id.createAccount_radioGroup);
+        Button back = findViewById(R.id.createAccount_back);
+        Button next = findViewById(R.id.createAccount_next);
         Button exitApp = findViewById(R.id.createAccount_exitApp);
         LinearLayout offlineWarning = findViewById(R.id.createAccount_offlineWarning);
 
@@ -42,27 +45,39 @@ public class CreateAccountActivity extends AppCompatActivity {
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
         networkConnection.observe(this, isConnected -> {
             if (isConnected) {
+                appMode.setVisibility(View.VISIBLE);
+                phoneNumber.setVisibility(View.VISIBLE);
+                inputPassword.setVisibility(View.VISIBLE);
+                reenteredPassword.setVisibility(View.VISIBLE);
+                back.setVisibility(View.VISIBLE);
+                next.setVisibility(View.VISIBLE);
                 offlineWarning.setVisibility(View.GONE);
             } else {
                 offlineWarning.setVisibility(View.VISIBLE);
+                appMode.setVisibility(View.GONE);
+                phoneNumber.setVisibility(View.GONE);
+                inputPassword.setVisibility(View.GONE);
+                reenteredPassword.setVisibility(View.GONE);
+                back.setVisibility(View.GONE);
+                next.setVisibility(View.GONE);
             }
         });
 
         // selecting app mode, radioGroup button
-        RadioGroup appMode = findViewById(R.id.createAccount_radioGroup);
+
         appMode.setOnCheckedChangeListener((radioGroup, i) -> {
             selectedMode = findViewById(i);
         });
 
         // back button, back to Login page
-        findViewById(R.id.createAccount_back).setOnClickListener(view -> {
+        back.setOnClickListener(view -> {
             // After going back, save the information filled in the Login interface
             onBackPressed();
             finish();
         });
 
         // next button, go to CreateProfile interface
-        findViewById(R.id.createAccount_next).setOnClickListener(view -> {
+        next.setOnClickListener(view -> {
             String phone = phoneNumber.getText().toString().trim();
             String PW = inputPassword.getText().toString().trim();
             String RPW = reenteredPassword.getText().toString().trim();

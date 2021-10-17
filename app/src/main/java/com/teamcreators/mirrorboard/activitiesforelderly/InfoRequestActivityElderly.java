@@ -62,7 +62,7 @@ public class InfoRequestActivityElderly extends AppCompatActivity {
         contactName.setMarqueeRepeatLimit(1);
         contactName.setSelected(true);
 
-        // Monitor network connection changes
+        // Monitor network connection changes. @author Jianwei Li
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
         networkConnection.observe(this, isConnected -> {
             if (isConnected) {
@@ -101,8 +101,7 @@ public class InfoRequestActivityElderly extends AppCompatActivity {
             builder.setMessage("Are you sure you want to delete this request?")
                     .setNegativeButton(android.R.string.no, null)
                     .setPositiveButton(android.R.string.yes, (dialogInterface, i) -> {
-                        TextView tempPhone = findViewById(R.id.elderly_infoRequest_phoneNum);
-                        String senderPhone = tempPhone.getText().toString();
+                        String senderPhone = contactNumber.getText().toString();
                         deleteRequestAndUpdateRequestNumber(senderPhone);
                         showUserProfile();
                     }).show();

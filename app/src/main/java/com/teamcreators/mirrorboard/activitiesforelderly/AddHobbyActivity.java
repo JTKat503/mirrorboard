@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -43,6 +44,8 @@ public class AddHobbyActivity extends AppCompatActivity {
         music = findViewById(R.id.addHobby_music);
         pets = findViewById(R.id.addHobby_pets);
         tv = findViewById(R.id.addHobby_tv);
+        ScrollView hobbiesList = findViewById(R.id.addHobby_hobbiesList);
+        LinearLayout footer = findViewById(R.id.addHobby_footerLayout);
         Button exitApp = findViewById(R.id.addHobby_exitApp);
         LinearLayout offlineWarning = findViewById(R.id.addHobby_offlineWarning);
 
@@ -50,9 +53,13 @@ public class AddHobbyActivity extends AppCompatActivity {
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
         networkConnection.observe(this, isConnected -> {
             if (isConnected) {
+                hobbiesList.setVisibility(View.VISIBLE);
+                footer.setVisibility(View.VISIBLE);
                 offlineWarning.setVisibility(View.GONE);
             } else {
                 offlineWarning.setVisibility(View.VISIBLE);
+                hobbiesList.setVisibility(View.GONE);
+                footer.setVisibility(View.GONE);
             }
         });
 

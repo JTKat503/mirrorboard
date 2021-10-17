@@ -139,7 +139,7 @@
             android:layout_height="wrap_content"
             android:text="@string/warning_title"
             android:fontFamily="@font/rubik_medium"
-            android:textSize="20sp"
+            android:textSize="22sp"
             android:textColor="@color/colorAccent"
             android:textAllCaps="false"
             android:gravity="center"
@@ -153,7 +153,7 @@
             android:layout_marginTop="10dp"
             android:text="@string/warning_details"
             android:fontFamily="@font/rubik_medium"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:textColor="@color/colorTextDark"
             android:textAllCaps="false"/>
 

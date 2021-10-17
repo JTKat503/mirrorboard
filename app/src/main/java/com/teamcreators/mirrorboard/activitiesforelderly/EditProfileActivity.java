@@ -77,9 +77,21 @@ public class EditProfileActivity extends AppCompatActivity {
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
         networkConnection.observe(this, isConnected -> {
             if (isConnected) {
+                newName.setVisibility(View.VISIBLE);
+                avatar.setVisibility(View.VISIBLE);
+                takePicture.setVisibility(View.VISIBLE);
+                saveChanges.setVisibility(View.VISIBLE);
+                goBack.setVisibility(View.VISIBLE);
+                signOut.setVisibility(View.VISIBLE);
                 offlineWarning.setVisibility(View.GONE);
             } else {
                 offlineWarning.setVisibility(View.VISIBLE);
+                newName.setVisibility(View.GONE);
+                avatar.setVisibility(View.GONE);
+                takePicture.setVisibility(View.GONE);
+                saveChanges.setVisibility(View.GONE);
+                goBack.setVisibility(View.GONE);
+                signOut.setVisibility(View.GONE);
             }
         });
 
@@ -237,13 +249,13 @@ public class EditProfileActivity extends AppCompatActivity {
         DocumentReference documentReference = database
                 .collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID));
-
         // delete user's FCM token from database while signing out
         HashMap<String, Object> updates = new HashMap<>();
         updates.put(Constants.KEY_FCM_TOKEN, FieldValue.delete());
         documentReference.update(updates)
                 .addOnSuccessListener(unused -> {
-                    preferenceManager.clearPreferences();
+//                    preferenceManager.clearPreferences(); // At request of design team
+                    preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, false);
                     startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                     finish();
                 })

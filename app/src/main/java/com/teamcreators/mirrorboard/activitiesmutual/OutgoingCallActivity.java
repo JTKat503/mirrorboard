@@ -71,7 +71,9 @@ public class OutgoingCallActivity extends AppCompatActivity {
         callingType = getIntent().getStringExtra("type");
         User user = (User) getIntent().getSerializableExtra("user");
 
-        new CountDownTimer(5000, 1000) {
+        // Call Timer, If no one answers the call after 50 seconds,
+        // the call will be cancelled automatically
+        new CountDownTimer(50000, 50000) {
 
             @Override
             public void onTick(long l) {}
@@ -82,7 +84,7 @@ public class OutgoingCallActivity extends AppCompatActivity {
                     cancelInvitation(user.token, null);
                 }
             }
-        };
+        }.start();
 
         // determines the icon of the type of call
         if (callingType != null) {

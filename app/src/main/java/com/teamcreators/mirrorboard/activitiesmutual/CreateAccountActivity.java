@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.utilities.Constants;
+import com.teamcreators.mirrorboard.utilities.NetworkConnection;
 
 /**
  * A class that contains the function of creating user accounts
@@ -31,6 +35,18 @@ public class CreateAccountActivity extends AppCompatActivity {
         phoneNumber = findViewById(R.id.createAccount_phoneNum);
         inputPassword = findViewById(R.id.createAccount_password);
         reenteredPassword = findViewById(R.id.createAccount_reenteredPassword);
+        Button exitApp = findViewById(R.id.createAccount_exitApp);
+        LinearLayout offlineWarning = findViewById(R.id.createAccount_offlineWarning);
+
+        // Monitor network connection changes
+        NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
+        networkConnection.observe(this, isConnected -> {
+            if (isConnected) {
+                offlineWarning.setVisibility(View.GONE);
+            } else {
+                offlineWarning.setVisibility(View.VISIBLE);
+            }
+        });
 
         // selecting app mode, radioGroup button
         RadioGroup appMode = findViewById(R.id.createAccount_radioGroup);
@@ -72,6 +88,13 @@ public class CreateAccountActivity extends AppCompatActivity {
             } else {
                 checkIfPhoneNumberExists(phone, PW);
             }
+        });
+
+        // exit app button on the offline warning page
+        exitApp.setOnClickListener(view -> {
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
         });
     }
 

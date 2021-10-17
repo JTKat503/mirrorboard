@@ -8,9 +8,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.activitiesmutual.OutgoingCallActivity;
 import com.teamcreators.mirrorboard.models.User;
 import com.teamcreators.mirrorboard.utilities.Constants;
+import com.teamcreators.mirrorboard.utilities.NetworkConnection;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 import java.util.List;
@@ -46,6 +49,18 @@ public class InfoContactActivityElderly extends AppCompatActivity {
         Button editContactName = findViewById(R.id.elderly_contactInfo_editName);
         Button removeContact = findViewById(R.id.elderly_contactInfo_removeContact);
         Button goBack = findViewById(R.id.elderly_contactInfo_back);
+        Button exitApp = findViewById(R.id.elderly_contactInfo_exitApp);
+        LinearLayout offlineWarning = findViewById(R.id.elderly_contactInfo_offlineWarning);
+
+        // Monitor network connection changes
+        NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
+        networkConnection.observe(this, isConnected -> {
+            if (isConnected) {
+                offlineWarning.setVisibility(View.GONE);
+            } else {
+                offlineWarning.setVisibility(View.VISIBLE);
+            }
+        });
 
         TextView contactName = findViewById(R.id.elderly_contactInfo_name);
         contactName.setText(user.name);
@@ -96,6 +111,13 @@ public class InfoContactActivityElderly extends AppCompatActivity {
         goBack.setOnClickListener(view -> {
             onBackPressed();
             finish();
+        });
+
+        // exit app button on the offline warning page
+        exitApp.setOnClickListener(view -> {
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
         });
     }
 

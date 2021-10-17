@@ -10,9 +10,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -36,6 +38,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.activitiesmutual.LoginActivity;
 import com.teamcreators.mirrorboard.utilities.Constants;
+import com.teamcreators.mirrorboard.utilities.NetworkConnection;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 import java.util.HashMap;
@@ -60,13 +63,25 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
+        avatar = findViewById(R.id.editProfile_newAvatar);
+        newName = findViewById(R.id.editProfile_newName);
+        preferenceManager = new PreferenceManager(getApplicationContext());
         Button takePicture = findViewById(R.id.editProfile_takePhoto);
         Button saveChanges = findViewById(R.id.editProfile_save);
         Button goBack = findViewById(R.id.editProfile_back);
         Button signOut = findViewById(R.id.editProfile_logOut);
-        avatar = findViewById(R.id.editProfile_newAvatar);
-        newName = findViewById(R.id.editProfile_newName);
-        preferenceManager = new PreferenceManager(getApplicationContext());
+        Button exitApp = findViewById(R.id.editProfile_exitApp);
+        LinearLayout offlineWarning = findViewById(R.id.editProfile_offlineWarning);
+
+        // Monitor network connection changes
+        NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
+        networkConnection.observe(this, isConnected -> {
+            if (isConnected) {
+                offlineWarning.setVisibility(View.GONE);
+            } else {
+                offlineWarning.setVisibility(View.VISIBLE);
+            }
+        });
 
         // pre-setting user's avatar, loading avatar from Firebase storage
         Uri avatarUri = Uri.parse(preferenceManager.getString(Constants.KEY_AVATAR_URI));
@@ -176,6 +191,13 @@ public class EditProfileActivity extends AppCompatActivity {
 
         // sign out
         signOut.setOnClickListener(view -> signOut());
+
+        // exit app button on the offline warning page
+        exitApp.setOnClickListener(view -> {
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
+        });
     }
 
     /**

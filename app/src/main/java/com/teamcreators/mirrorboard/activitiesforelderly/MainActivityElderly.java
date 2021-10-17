@@ -51,7 +51,6 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_elderly);
 
-
         preferenceManager = new PreferenceManager(getApplicationContext());
         errorMessage = findViewById(R.id.elderly_main_errorMessage);
         conference = findViewById(R.id.elderly_main_conference);
@@ -60,10 +59,10 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         Button newContact = findViewById(R.id.elderly_main_addContact);
         Button hobbies = findViewById(R.id.elderly_main_hobbies);
         Button exit = findViewById(R.id.elderly_main_exit);
-        Button exitApp = findViewById(R.id.elderly_main__exitApp);
+        Button exitApp = findViewById(R.id.elderly_main_exitApp);
         LinearLayout offlineWarning = findViewById(R.id.elderly_main_offlineWarning);
 
-        // // Monitor network connection changes
+        // Monitor network connection changes
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
         networkConnection.observe(this, isConnected -> {
             if (isConnected) {
@@ -83,7 +82,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         // refreshing contacts list
         contactsLayout.setOnRefreshListener(this::getContactsIDs);
         // show the real time of the number of requests
-        numberOfRequestsRealtime(); // ** @author this line added by Xuannan Huang*/
+        numberOfRequestsRealtime(); // @author this line added by Xuannan Huang
 
         // gains token from Messaging server then send it to database
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {

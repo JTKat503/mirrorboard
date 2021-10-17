@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.utilities.Constants;
+import com.teamcreators.mirrorboard.utilities.NetworkConnection;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 import java.util.ArrayList;
@@ -50,6 +52,8 @@ public class InfoRequestActivityElderly extends AppCompatActivity {
         contactNumber = findViewById(R.id.elderly_infoRequest_phoneNum);
         profileImage = findViewById(R.id.elderly_infoRequest_avatar);
         goBack = findViewById(R.id.elderly_infoRequest_back);
+        Button exitApp = findViewById(R.id.elderly_infoRequest_exitApp);
+        LinearLayout offlineWarning = findViewById(R.id.elderly_infoRequest_offlineWarning);
         // save current user info
         preferenceManager = new PreferenceManager(getApplicationContext());
         // show the request user
@@ -57,6 +61,16 @@ public class InfoRequestActivityElderly extends AppCompatActivity {
         contactName.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         contactName.setMarqueeRepeatLimit(1);
         contactName.setSelected(true);
+
+        // Monitor network connection changes
+        NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
+        networkConnection.observe(this, isConnected -> {
+            if (isConnected) {
+                offlineWarning.setVisibility(View.GONE);
+            } else {
+                offlineWarning.setVisibility(View.VISIBLE);
+            }
+        });
 
         // adding contact button
         addContact.setOnClickListener(view -> {
@@ -98,6 +112,13 @@ public class InfoRequestActivityElderly extends AppCompatActivity {
         goBack.setOnClickListener(view -> {
             onBackPressed();
             finish();
+        });
+
+        // exit app button on the offline warning page
+        exitApp.setOnClickListener(view -> {
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
         });
     }
 

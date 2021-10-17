@@ -8,8 +8,11 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -35,6 +38,7 @@ import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.activitiesforelderly.MainActivityElderly;
 import com.teamcreators.mirrorboard.activitiesforfamily.MainActivityFamily;
 import com.teamcreators.mirrorboard.utilities.Constants;
+import com.teamcreators.mirrorboard.utilities.NetworkConnection;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 import java.util.ArrayList;
@@ -68,10 +72,21 @@ public class CreateProfileActivity extends AppCompatActivity {
         mode = bundle.getString("mode");
         phone = bundle.getString("phone");
         password = bundle.getString("password");
-
         nickName = findViewById(R.id.createProfile_name);
         avatar = findViewById(R.id.createProfile_avatar);
         preferenceManager = new PreferenceManager(getApplicationContext());
+        Button exitApp = findViewById(R.id.createProfile_exitApp);
+        LinearLayout offlineWarning = findViewById(R.id.createProfile_offlineWarning);
+
+        // Monitor network connection changes
+        NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
+        networkConnection.observe(this, isConnected -> {
+            if (isConnected) {
+                offlineWarning.setVisibility(View.GONE);
+            } else {
+                offlineWarning.setVisibility(View.VISIBLE);
+            }
+        });
 
 
         // an alternative method for startActivityForResult() & onActivityResult()
@@ -167,6 +182,12 @@ public class CreateProfileActivity extends AppCompatActivity {
             uploadImageToFirebaseStorage();
         });
 
+        // exit app button on the offline warning page
+        exitApp.setOnClickListener(view -> {
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
+        });
     }
 
     /**

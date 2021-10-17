@@ -8,6 +8,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.activitiesforelderly.MainActivityElderly;
 import com.teamcreators.mirrorboard.activitiesforfamily.MainActivityFamily;
 import com.teamcreators.mirrorboard.utilities.Constants;
+import com.teamcreators.mirrorboard.utilities.NetworkConnection;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 import java.util.HashSet;
@@ -49,6 +51,18 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.login_password);
         logIn = findViewById(R.id.login_logInButton);
         loginProgressBar = findViewById(R.id.login_progressbar);
+        Button exitApp = findViewById(R.id.login_exitApp);
+        LinearLayout offlineWarning = findViewById(R.id.login_offlineWarning);
+
+        // Monitor network connection changes
+        NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
+        networkConnection.observe(this, isConnected -> {
+            if (isConnected) {
+                offlineWarning.setVisibility(View.GONE);
+            } else {
+                offlineWarning.setVisibility(View.VISIBLE);
+            }
+        });
 
         // log in button
         logIn.setOnClickListener(view -> {
@@ -74,6 +88,13 @@ public class LoginActivity extends AppCompatActivity {
 
         // exit button
         findViewById(R.id.login_exit).setOnClickListener(view -> {
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
+        });
+
+        // exit app button on the offline warning page
+        exitApp.setOnClickListener(view -> {
             moveTaskToBack(true);
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);

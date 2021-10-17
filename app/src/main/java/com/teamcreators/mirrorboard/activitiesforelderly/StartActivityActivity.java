@@ -12,6 +12,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import com.teamcreators.mirrorboard.listeners.ItemsListener;
 import com.teamcreators.mirrorboard.models.Hobby;
 import com.teamcreators.mirrorboard.models.User;
 import com.teamcreators.mirrorboard.utilities.Constants;
+import com.teamcreators.mirrorboard.utilities.NetworkConnection;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 import java.util.ArrayList;
@@ -46,13 +48,25 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_activity);
 
+        textErrorMessage = findViewById(R.id.startActivity_errorMessage);
+        swipeRefreshLayout = findViewById(R.id.startActivity_hobbiesLayout);
+        preferenceManager = new PreferenceManager(getApplicationContext());
         Button editProfile = findViewById(R.id.startActivity_editProfile);
         Button addHobby = findViewById(R.id.startActivity_addHobby);
         Button exit = findViewById(R.id.startActivity_exit);
         Button family = findViewById(R.id.startActivity_family);
-        textErrorMessage = findViewById(R.id.startActivity_errorMessage);
-        swipeRefreshLayout = findViewById(R.id.startActivity_hobbiesLayout);
-        preferenceManager = new PreferenceManager(getApplicationContext());
+        Button exitApp = findViewById(R.id.startActivity_exitApp);
+        LinearLayout offlineWarning = findViewById(R.id.startActivity_offlineWarning);
+
+        // Monitor network connection changes
+        NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
+        networkConnection.observe(this, isConnected -> {
+            if (isConnected) {
+                offlineWarning.setVisibility(View.GONE);
+            } else {
+                offlineWarning.setVisibility(View.VISIBLE);
+            }
+        });
 
         // building and loading hobbies list
         RecyclerView hobbiesRecyclerView = findViewById(R.id.startActivity_hobbiesView);
@@ -84,6 +98,13 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
 
         // exit app button
         exit.setOnClickListener(view -> {
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
+        });
+
+        // exit app button on the offline warning page
+        exitApp.setOnClickListener(view -> {
             moveTaskToBack(true);
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);

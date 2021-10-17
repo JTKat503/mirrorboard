@@ -46,8 +46,8 @@
         <entry key="..\:/3081V5/app/src/main/res/layout/activity_call_incoming.xml" value="0.2" />
         <entry key="..\:/3081V5/app/src/main/res/layout/activity_call_outgoing.xml" value="0.264" />
         <entry key="..\:/3081V5/app/src/main/res/layout/activity_create_account.xml" value="0.20833333333333334" />
-        <entry key="..\:/3081V5/app/src/main/res/layout/activity_create_profile.xml" value="0.264" />
-        <entry key="..\:/3081V5/app/src/main/res/layout/activity_edit_profile.xml" value="0.264" />
+        <entry key="..\:/3081V5/app/src/main/res/layout/activity_create_profile.xml" value="0.2" />
+        <entry key="..\:/3081V5/app/src/main/res/layout/activity_edit_profile.xml" value="0.2" />
         <entry key="..\:/3081V5/app/src/main/res/layout/activity_incoming_call_family.xml" value="0.2" />
         <entry key="..\:/3081V5/app/src/main/res/layout/activity_info_contact.xml" value="0.264" />
         <entry key="..\:/3081V5/app/src/main/res/layout/activity_info_contact_elderly.xml" value="0.2" />
@@ -60,8 +60,8 @@
         <entry key="..\:/3081V5/app/src/main/res/layout/activity_main_elderly.xml" value="0.176" />
         <entry key="..\:/3081V5/app/src/main/res/layout/activity_main_family.xml" value="0.2" />
         <entry key="..\:/3081V5/app/src/main/res/layout/activity_match_hobby.xml" value="0.264" />
-        <entry key="..\:/3081V5/app/src/main/res/layout/activity_settings.xml" value="0.264" />
-        <entry key="..\:/3081V5/app/src/main/res/layout/activity_start_activity.xml" value="0.264" />
+        <entry key="..\:/3081V5/app/src/main/res/layout/activity_settings.xml" value="0.2" />
+        <entry key="..\:/3081V5/app/src/main/res/layout/activity_start_activity.xml" value="0.176" />
         <entry key="..\:/3081V5/app/src/main/res/layout/activity_ztest_sign_up.xml" value="0.264" />
         <entry key="..\:/3081V5/app/src/main/res/layout/item_container_hobby.xml" value="0.176" />
         <entry key="..\:/3081V5/app/src/main/res/layout/item_container_user.xml" value="0.2" />

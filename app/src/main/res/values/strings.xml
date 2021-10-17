@@ -48,7 +48,6 @@
 
     <string name="logout">Log Out</string>
     <string name="contacts">Contacts</string>
-    <string name="done">Done</string>
     <string name="cooking">Cooking</string>
     <string name="exercise">Exercise</string>
     <string name="fishing">Fishing</string>
@@ -68,4 +67,5 @@
     <string name="or">OR</string>
     <string name="warning_details">The features in this area require Internet connectivity. Please connect your handset to the Internet and try again.</string>
     <string name="warning_title">No Internet Connection</string>
+    <string name="save">Save</string>
 </resources>

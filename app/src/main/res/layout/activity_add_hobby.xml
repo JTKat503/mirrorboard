@@ -195,25 +195,27 @@
                 android:id="@+id/addHobby_pets_layout"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:background="@drawable/shape_stroke_black"
                 android:layout_below="@id/addHobby_music_layout"
                 android:layout_marginTop="15dp"
-                android:padding="5dp" >
+                android:background="@drawable/shape_stroke_black"
+                android:padding="5dp">
+
                 <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginEnd="15dp"
                     android:src="@drawable/hobby_icon_pets"
                     app:shapeAppearanceOverlay="@style/RoundedSquare" />
+
                 <CheckBox
                     android:id="@+id/addHobby_pets"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="@string/pets"
-                    android:textSize="27sp"
                     android:fontFamily="@font/rubik_medium"
                     android:includeFontPadding="false"
                     android:paddingStart="10dp"
+                    android:text="@string/pets"
+                    android:textSize="27sp"
                     tools:ignore="RtlSymmetry" />
             </LinearLayout>
 
@@ -282,13 +284,76 @@
             android:backgroundTint="@color/colorBlue"
             android:padding="8dp"
             app:cornerRadius="12dp"
-            android:text="@string/done"
+            android:text="@string/save"
             android:textSize="27sp"
             android:textAllCaps="false"
             android:textColor="@color/colorTextLight"
             android:includeFontPadding="false"
             android:fontFamily="@font/rubik_medium"
             android:gravity="center" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/addHobby_offlineWarning"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:elevation="10dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/warning_title"
+            android:fontFamily="@font/rubik_medium"
+            android:textSize="20sp"
+            android:textColor="@color/colorAccent"
+            android:textAllCaps="false"
+            android:gravity="center"
+            android:drawablePadding="5dp"
+            app:drawableStartCompat="@drawable/ic_round_warning_48"
+            app:drawableTint="@color/colorAccent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/warning_details"
+            android:fontFamily="@font/rubik_medium"
+            android:textSize="15sp"
+            android:textColor="@color/colorTextDark"
+            android:textAllCaps="false"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="@string/or"
+            android:fontFamily="@font/rubik_medium"
+            android:textSize="20sp"
+            android:textColor="@color/colorTextDark"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/addHobby_exitApp"
+            android:layout_width="wrap_content"
+            android:layout_height="85dp"
+            android:layout_marginTop="40dp"
+            android:backgroundTint="@color/colorAccent"
+            android:fontFamily="@font/rubik_medium"
+            android:includeFontPadding="false"
+            android:padding="8dp"
+            android:text="@string/exit_app"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextLight"
+            android:textSize="25sp"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_round_exit_48"
+            app:iconGravity="start"
+            app:iconTint="@color/colorTextLight" />
 
     </LinearLayout>
 

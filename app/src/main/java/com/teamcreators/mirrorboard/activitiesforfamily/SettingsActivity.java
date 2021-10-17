@@ -12,9 +12,11 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.canhub.cropper.CropImageContract;
@@ -35,6 +37,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.activitiesmutual.LoginActivity;
 import com.teamcreators.mirrorboard.utilities.Constants;
+import com.teamcreators.mirrorboard.utilities.NetworkConnection;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 import java.util.HashMap;
@@ -63,6 +66,18 @@ public class SettingsActivity extends AppCompatActivity {
         Button editName = findViewById(R.id.settings_editName);
         Button signOut = findViewById(R.id.settings_logout);
         ImageView goBack = findViewById(R.id.settings_back);
+        Button exitApp = findViewById(R.id.settings_exitApp);
+        LinearLayout offlineWarning = findViewById(R.id.settings_offlineWarning);
+
+        // Monitor network connection changes
+        NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
+        networkConnection.observe(this, isConnected -> {
+            if (isConnected) {
+                offlineWarning.setVisibility(View.GONE);
+            } else {
+                offlineWarning.setVisibility(View.VISIBLE);
+            }
+        });
 
         cropImageLauncher = registerForActivityResult(
                 new CropImageContract(), result -> {
@@ -125,6 +140,13 @@ public class SettingsActivity extends AppCompatActivity {
 
         // signing out button
         signOut.setOnClickListener(view -> signOut());
+
+        // exit app button on the offline warning page
+        exitApp.setOnClickListener(view -> {
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
+        });
     }
 
     /**

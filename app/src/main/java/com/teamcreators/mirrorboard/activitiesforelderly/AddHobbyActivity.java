@@ -3,12 +3,16 @@ package com.teamcreators.mirrorboard.activitiesforelderly;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.utilities.Constants;
+import com.teamcreators.mirrorboard.utilities.NetworkConnection;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 import java.util.ArrayList;
@@ -39,6 +43,18 @@ public class AddHobbyActivity extends AppCompatActivity {
         music = findViewById(R.id.addHobby_music);
         pets = findViewById(R.id.addHobby_pets);
         tv = findViewById(R.id.addHobby_tv);
+        Button exitApp = findViewById(R.id.addHobby_exitApp);
+        LinearLayout offlineWarning = findViewById(R.id.addHobby_offlineWarning);
+
+        // Monitor network connection changes
+        NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
+        networkConnection.observe(this, isConnected -> {
+            if (isConnected) {
+                offlineWarning.setVisibility(View.GONE);
+            } else {
+                offlineWarning.setVisibility(View.VISIBLE);
+            }
+        });
 
         // Initialize the hobbies that the user has selected
         if (hobbies != null && hobbies.size() > 0) {
@@ -133,6 +149,13 @@ public class AddHobbyActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show());
             onBackPressed();
             finish();
+        });
+
+        // exit app button on the offline warning page
+        exitApp.setOnClickListener(view -> {
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
         });
     }
 

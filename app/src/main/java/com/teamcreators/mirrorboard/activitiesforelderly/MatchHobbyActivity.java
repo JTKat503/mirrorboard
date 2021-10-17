@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ import com.teamcreators.mirrorboard.activitiesmutual.OutgoingCallActivity;
 import com.teamcreators.mirrorboard.models.Hobby;
 import com.teamcreators.mirrorboard.models.User;
 import com.teamcreators.mirrorboard.utilities.Constants;
+import com.teamcreators.mirrorboard.utilities.NetworkConnection;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 import java.util.ArrayList;
@@ -52,6 +54,18 @@ public class MatchHobbyActivity extends AppCompatActivity {
         matchFriendProgressBar = findViewById(R.id.matchHobby_progressbar);
         Button removeHobby = findViewById(R.id.matchHobby_removeHobby);
         Button goBack = findViewById(R.id.matchHobby_back);
+        Button exitApp = findViewById(R.id.matchHobby_exitApp);
+        LinearLayout offlineWarning = findViewById(R.id.matchHobby_offlineWarning);
+
+        // Monitor network connection changes
+        NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
+        networkConnection.observe(this, isConnected -> {
+            if (isConnected) {
+                offlineWarning.setVisibility(View.GONE);
+            } else {
+                offlineWarning.setVisibility(View.VISIBLE);
+            }
+        });
 
         // setting selected hobby's name
         TextView hobbyName = findViewById(R.id.matchHobby_hobbyName);
@@ -98,6 +112,13 @@ public class MatchHobbyActivity extends AppCompatActivity {
         goBack.setOnClickListener(view -> {
             onBackPressed();
             finish();
+        });
+
+        // exit app button on the offline warning page
+        exitApp.setOnClickListener(view -> {
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
         });
     }
 

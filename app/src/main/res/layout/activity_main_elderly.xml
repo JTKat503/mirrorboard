@@ -205,7 +205,7 @@
             android:textColor="@color/colorTextDark"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/elderly_main__exitApp"
+            android:id="@+id/elderly_main_exitApp"
             android:layout_width="wrap_content"
             android:layout_height="85dp"
             android:layout_marginTop="40dp"

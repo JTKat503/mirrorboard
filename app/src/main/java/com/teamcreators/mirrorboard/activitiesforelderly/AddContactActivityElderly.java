@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -14,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.utilities.Constants;
+import com.teamcreators.mirrorboard.utilities.NetworkConnection;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 import java.util.HashMap;
@@ -49,6 +52,18 @@ public class AddContactActivityElderly extends AppCompatActivity {
         // current user's phone
         senderUserPhone = preferenceManager.getString(Constants.KEY_PHONE);
 
+        // Monitor network connection changes, @author Jianwei Li
+        Button exitApp = findViewById(R.id.elderly_addContact_exitApp);
+        LinearLayout offlineWarning = findViewById(R.id.elderly_addContact_offlineWarning);
+        NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
+        networkConnection.observe(this, isConnected -> {
+            if (isConnected) {
+                offlineWarning.setVisibility(View.GONE);
+            } else {
+                offlineWarning.setVisibility(View.VISIBLE);
+            }
+        });
+
         // Click the send request button
         sendRequest.setOnClickListener(view -> {
             // get the receiver's Phone
@@ -64,6 +79,13 @@ public class AddContactActivityElderly extends AppCompatActivity {
         goBack.setOnClickListener(view -> {
             onBackPressed();
             finish();
+        });
+
+        // exit app button on the offline warning page, @author Jianwei Li
+        exitApp.setOnClickListener(view -> {
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
         });
     }
 
@@ -227,6 +249,12 @@ public class AddContactActivityElderly extends AppCompatActivity {
                         sendRequest.setEnabled(true);
                         sendRequest.setText(R.string.request_sent);
                         sendRequest.setSelected(true);
+                        /*
+                         * At the request of design team, quit page after each adding.
+                         * @author Jianwei Li
+                         * */
+                        onBackPressed();
+                        finish();
                     }
                 });
     }

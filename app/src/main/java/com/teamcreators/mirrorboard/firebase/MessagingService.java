@@ -8,10 +8,12 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.teamcreators.mirrorboard.activitiesforelderly.IncomingCallActivityElderly;
+import com.teamcreators.mirrorboard.activitiesforfamily.IncomingCallActivityFamily;
 import com.teamcreators.mirrorboard.utilities.Constants;
+import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 /**
- * A class to monitor calls and build the call inviter information
+ * A class to monitor incoming calls and build the call inviter information
  * displayed on incoming call interface
  *
  * @author Jianwei Li
@@ -29,9 +31,20 @@ public class MessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
 
         String type = remoteMessage.getData().get(Constants.REMOTE_MSG_TYPE);
+        PreferenceManager preferenceManager = new PreferenceManager(getApplicationContext());
+        String mode = preferenceManager.getString(Constants.KEY_MODE);
         if (type != null) {
             if (type.equals(Constants.REMOTE_MSG_INVITATION)) {
-                Intent intent = new Intent(getApplicationContext(), IncomingCallActivityElderly.class);
+                Intent intent;
+                /*
+                * According to the requirements of the UX Design team, Elderly mode
+                * and Relatives mode start different interfaces when a call comes in
+                */
+                if (mode != null && mode.equals(Constants.MODE_ELDERLY)) {
+                    intent = new Intent(getApplicationContext(), IncomingCallActivityElderly.class);
+                } else {
+                    intent = new Intent(getApplicationContext(), IncomingCallActivityFamily.class);
+                }
                 intent.putExtra(
                         Constants.REMOTE_MSG_MEETING_TYPE,
                         remoteMessage.getData().get(Constants.REMOTE_MSG_MEETING_TYPE)

@@ -35,7 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * A class that contains information about the incoming call interface of elderly
+ * A class that contains information about the incoming call interface of relatives
  *
  * @author Jianwei Li
  */

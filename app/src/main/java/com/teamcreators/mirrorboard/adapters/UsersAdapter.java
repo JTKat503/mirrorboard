@@ -123,7 +123,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
 
             /*
             In accordance with the requirements of the UX Design team,
-            this function is disabled.
+            multi-party call function is disabled.
              */
             // Long press the user to add the user to the multi-party call invitation list
             // Enter multiple selection state

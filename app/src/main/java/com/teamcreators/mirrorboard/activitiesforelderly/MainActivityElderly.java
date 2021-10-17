@@ -1,18 +1,15 @@
 package com.teamcreators.mirrorboard.activitiesforelderly;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +26,7 @@ import com.teamcreators.mirrorboard.listeners.ItemsListener;
 import com.teamcreators.mirrorboard.models.Hobby;
 import com.teamcreators.mirrorboard.models.User;
 import com.teamcreators.mirrorboard.utilities.Constants;
+import com.teamcreators.mirrorboard.utilities.NetworkConnection;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 import java.util.ArrayList;
@@ -53,6 +51,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_elderly);
 
+
         preferenceManager = new PreferenceManager(getApplicationContext());
         errorMessage = findViewById(R.id.elderly_main_errorMessage);
         conference = findViewById(R.id.elderly_main_conference);
@@ -61,6 +60,18 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         Button newContact = findViewById(R.id.elderly_main_addContact);
         Button hobbies = findViewById(R.id.elderly_main_hobbies);
         Button exit = findViewById(R.id.elderly_main_exit);
+        Button exitApp = findViewById(R.id.elderly_main__exitApp);
+        LinearLayout offlineWarning = findViewById(R.id.elderly_main_offlineWarning);
+
+        // // Monitor network connection changes
+        NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
+        networkConnection.observe(this, isConnected -> {
+            if (isConnected) {
+                offlineWarning.setVisibility(View.GONE);
+            } else {
+                offlineWarning.setVisibility(View.VISIBLE);
+            }
+        });
 
         // building and loading contacts list
         RecyclerView contactsView = findViewById(R.id.elderly_main_contactsView);
@@ -99,8 +110,15 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
             startActivity(intent);
         });
 
-        // exit app button
+        // exit app button on the main page
         exit.setOnClickListener(view -> {
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
+        });
+
+        // exit app button on the offline warning page
+        exitApp.setOnClickListener(view -> {
             moveTaskToBack(true);
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);
@@ -113,15 +131,15 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      * @author Jianwei Li
      */
     private void getContactsIDs() {
-        // check if internet connection is available
-        if (!isNetworkAvailable()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityElderly.this);
-            builder.setTitle("No Internet Connection")
-                    .setMessage("Please reconnect and try again.")
-                    .setPositiveButton(android.R.string.yes, null).show();
-            contactsLayout.setRefreshing(false);
-            return;
-        }
+//        // check if internet connection is available
+//        if (!isNetworkAvailable()) {
+//            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityElderly.this);
+//            builder.setTitle("No Internet Connection")
+//                    .setMessage("Please reconnect and try again.")
+//                    .setPositiveButton(android.R.string.yes, null).show();
+//            contactsLayout.setRefreshing(false);
+//            return;
+//        }
         String myID = preferenceManager.getString(Constants.KEY_USER_ID);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USERS)
@@ -312,15 +330,15 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         }
     }
 
-    /**
-     * Check if the device is connected to the network
-     * @return true if is connected, false if not
-     * @author Jianwei Li
-     */
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
+//    /**
+//     * Check if the device is connected to the network
+//     * @return true if is connected, false if not
+//     * @author Jianwei Li
+//     */
+//    private boolean isNetworkAvailable() {
+//        ConnectivityManager connectivityManager
+//                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+//        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+//    }
 }

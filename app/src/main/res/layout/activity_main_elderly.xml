@@ -108,10 +108,12 @@
             android:layout_marginEnd="15dp"
             android:backgroundTint="@color/colorAccent"
             android:padding="8dp"
+            android:paddingStart="@dimen/_12sdp"
             app:cornerRadius="12dp"
-            app:icon="@drawable/ic_round_exit_48"
+            app:icon="@drawable/ic_round_exit_text_64"
             app:iconTint="@color/colorTextLight"
-            app:iconGravity="textStart"/>
+            app:iconGravity="textStart"
+            tools:ignore="RtlSymmetry" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/elderly_main_hobbies"
@@ -137,8 +139,8 @@
 
     <ImageView
         android:id="@+id/elderly_main_conference"
-        android:layout_width="@dimen/_50sdp"
-        android:layout_height="@dimen/_50sdp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:contentDescription="@string/app_name"
         android:src="@drawable/ic_round_conference_48"
         android:visibility="gone"
@@ -148,16 +150,79 @@
 
     <TextView
         android:id="@+id/elderly_main_numOfRequests"
-        android:layout_width="@dimen/_32sdp"
-        android:layout_height="@dimen/_32sdp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:layout_below="@id/elderly_main_addContact"
         android:layout_marginTop="5dp"
         android:background="@drawable/shape_circle_background"
-        android:elevation="@dimen/_10sdp"
+        android:elevation="10dp"
         android:fontFamily="@font/rubik_medium"
         android:gravity="center"
         android:textColor="@color/colorTextLight"
-        android:textSize="@dimen/_20sdp"
+        android:textSize="27sp"
         android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/elderly_main_offlineWarning"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:elevation="10dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/warning_title"
+            android:fontFamily="@font/rubik_medium"
+            android:textSize="20sp"
+            android:textColor="@color/colorAccent"
+            android:textAllCaps="false"
+            android:gravity="center"
+            android:drawablePadding="5dp"
+            app:drawableStartCompat="@drawable/ic_round_warning_48"
+            app:drawableTint="@color/colorAccent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/warning_details"
+            android:fontFamily="@font/rubik_medium"
+            android:textSize="15sp"
+            android:textColor="@color/colorTextDark"
+            android:textAllCaps="false"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="@string/or"
+            android:fontFamily="@font/rubik_medium"
+            android:textSize="20sp"
+            android:textColor="@color/colorTextDark"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/elderly_main__exitApp"
+            android:layout_width="wrap_content"
+            android:layout_height="85dp"
+            android:layout_marginTop="40dp"
+            android:backgroundTint="@color/colorAccent"
+            android:fontFamily="@font/rubik_medium"
+            android:includeFontPadding="false"
+            android:padding="8dp"
+            android:text="@string/exit_app"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextLight"
+            android:textSize="25sp"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_round_exit_48"
+            app:iconGravity="start"
+            app:iconTint="@color/colorTextLight" />
+
+    </LinearLayout>
 
 </RelativeLayout>

@@ -96,7 +96,7 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
      */
     private void getHobbies() {
         // check if internet connection is available
-        if (!isNetworkAvailable()) {
+        if (!isNetworkConnected()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(StartActivityActivity.this);
             builder.setTitle("No Internet Connection")
                     .setMessage("Please reconnect and try again.")
@@ -202,10 +202,14 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
      * Check if the device is connected to the network
      * @return true if is connected, false if not
      */
-    private boolean isNetworkAvailable() {
+    private boolean isNetworkConnected() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
+
+//    public void updateHobbiesList() {
+//        hobbiesAdapter.notifyDataSetChanged();
+//    }
 }

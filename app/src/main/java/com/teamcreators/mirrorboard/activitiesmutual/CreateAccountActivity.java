@@ -10,6 +10,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.teamcreators.mirrorboard.R;
 import com.teamcreators.mirrorboard.utilities.Constants;
 
@@ -39,7 +40,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         // back button, back to Login page
         findViewById(R.id.createAccount_back).setOnClickListener(view -> {
-            // After backing, save the information filled in the Login interface
+            // After going back, save the information filled in the Login interface
             onBackPressed();
             finish();
         });
@@ -69,15 +70,50 @@ public class CreateAccountActivity extends AppCompatActivity {
                 Toast.makeText(CreateAccountActivity.this,
                         "Passwords must be same", Toast.LENGTH_SHORT).show();
             } else {
-                String mode = selectedMode.getText().toString().trim();
-                Intent intent = new Intent(CreateAccountActivity.this, CreateProfileActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("mode", mode);
-                bundle.putString("phone", phone);
-                bundle.putString("password", PW);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                checkIfPhoneNumberExists(phone, PW);
             }
         });
+    }
+
+    /**
+     * Check whether the mobile phone number entered by the user
+     * has been registered in the database
+     * @param phoneNum the mobile phone number entered by the user
+     * @param password the password entered by the user
+     */
+    private void checkIfPhoneNumberExists(String phoneNum, String password) {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(Constants.KEY_COLLECTION_USERS)
+                .whereEqualTo(Constants.KEY_PHONE, phoneNum)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()
+                            && task.getResult() != null
+                            && task.getResult().getDocuments().size() > 0) {
+                        Toast.makeText(
+                                CreateAccountActivity.this,
+                                "Phone number has already been registered",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        startCreateProfileActivity(phoneNum, password);
+                    }
+                });
+    }
+
+    /**
+     * Start the CreateProfileActivity and pass the mode, phone number
+     * and password entered by the user to the CreateProfileActivity
+     * @param phoneNum the mobile phone number entered by the user
+     * @param password the password entered by the user
+     */
+    private void startCreateProfileActivity(String phoneNum, String password) {
+        String mode = selectedMode.getText().toString().trim();
+        Intent intent = new Intent(CreateAccountActivity.this, CreateProfileActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("mode", mode);
+        bundle.putString("phone", phoneNum);
+        bundle.putString("password", password);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

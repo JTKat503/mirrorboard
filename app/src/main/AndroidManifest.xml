@@ -21,30 +21,32 @@
         tools:targetApi="m">
         <activity
             android:name=".activitiesforfamily.IncomingCallActivityFamily"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".activitiesforfamily.SettingsActivity"
-            android:exported="true" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activitiesforfamily.InfoContactActivityFamily"
-            android:exported="true" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activitiesforfamily.InfoRequestActivityFamily"
-            android:exported="true" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activitiesforfamily.AddContactActivityFamily"
-            android:exported="true" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activitiesforfamily.MainActivityFamily"
-            android:exported="true" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activitiesforelderly.StartActivityActivity"
-            android:exported="true" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activitiesforelderly.MatchHobbyActivity"
-            android:exported="true" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activitiesmutual.LoginActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,34 +56,36 @@
         </activity>
         <activity
             android:name=".activitiesforelderly.InfoRequestActivityElderly"
-            android:exported="true" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activitiesforelderly.InfoContactActivityElderly"
-            android:exported="true" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activitiesforelderly.EditProfileActivity"
-            android:exported="true" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activitiesmutual.CreateProfileActivity"
-            android:exported="true" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activitiesmutual.CreateAccountActivity"
-            android:exported="true" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activitiesmutual.OutgoingCallActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".activitiesforelderly.IncomingCallActivityElderly"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".activitiesforelderly.AddHobbyActivity"
-            android:exported="true" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activitiesforelderly.AddContactActivityElderly"
-            android:exported="true" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activitiesforelderly.MainActivityElderly"
-            android:exported="true" />
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".firebase.MessagingService"
@@ -93,7 +97,8 @@
 
         <activity
             android:name="com.canhub.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat" />
+            android:theme="@style/Base.Theme.AppCompat"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

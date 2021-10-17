@@ -52,7 +52,6 @@
             android:inputType="phone"
             android:padding="15dp"
             android:textColor="@color/colorTextDark"
-            android:textColorHint="@color/colorHintText"
             android:textSize="30sp" />
 
         <TextView
@@ -88,7 +87,6 @@
                 android:inputType="textPassword"
                 android:padding="15dp"
                 android:textColor="@color/colorTextDark"
-                android:textColorHint="@color/colorHintText"
                 android:textSize="30sp" />
 
         </com.google.android.material.textfield.TextInputLayout>

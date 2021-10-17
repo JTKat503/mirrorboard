@@ -49,7 +49,7 @@
         android:inputType="textPersonName"
         android:padding="15dp"
         android:textColor="@color/colorTextDark"
-        android:textColorHint="@color/colorHintText"
+        android:textColorHint="@color/colorLightGrey"
         android:textSize="30sp"
         tools:ignore="TextFields" />
 

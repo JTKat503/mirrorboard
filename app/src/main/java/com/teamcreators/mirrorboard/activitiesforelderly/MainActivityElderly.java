@@ -87,11 +87,9 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         contacts = new ArrayList<>();
         contactsAdapter = new UsersAdapter(contacts, this);
         contactsView.setAdapter(contactsAdapter);
-
         // setting the method of refreshing contact list
         contactsLayout.setOnRefreshListener(this::getContactsIDs);
-        // show the real time of the number of adding requests
-        listenNewRequests();
+        listenNewAddingFriendRequests();
         autoRefreshContactList();
 
         // gains token from Messaging server then send it to database
@@ -284,7 +282,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      * It will show on the main page with a red dot and a number
      * @author Xuannan Huang
      */
-    public void listenNewRequests(){
+    public void listenNewAddingFriendRequests(){
         // get the TextView of the red dot
         requestsNumber = findViewById(R.id.elderly_main_numOfRequests);
         // get the Firestore database
@@ -331,8 +329,8 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
     }
 
     /**
-     * If a new contact is successfully added,
-     * the contact list will be refreshed automatically.
+     * If a new contact is successfully added or an existed contact is
+     * successfully removed, the contact list will be refreshed automatically.
      * @author Xuannan Huang
      */
     private void autoRefreshContactList() {

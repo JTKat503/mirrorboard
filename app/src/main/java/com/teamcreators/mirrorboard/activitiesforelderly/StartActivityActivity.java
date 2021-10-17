@@ -83,10 +83,9 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
         hobbies = new ArrayList<>();
         hobbiesAdapter = new HobbiesAdapter(hobbies, this);
         hobbiesRecyclerView.setAdapter(hobbiesAdapter);
-        getHobbies();
-
-        // refreshing hobbies list
+        // setting the method of refreshing hobbies list
         swipeRefreshLayout.setOnRefreshListener(this::getHobbies);
+        autoRefreshHobbyList();
 
         // editing Profile button
         editProfile.setOnClickListener(view -> {
@@ -126,15 +125,6 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
      * and load the hobbies list
      */
     private void getHobbies() {
-//        // check if internet connection is available
-//        if (!isNetworkConnected()) {
-//            AlertDialog.Builder builder = new AlertDialog.Builder(StartActivityActivity.this);
-//            builder.setTitle("No Internet Connection")
-//                    .setMessage("Please reconnect and try again.")
-//                    .setPositiveButton(android.R.string.yes, null).show();
-//            swipeRefreshLayout.setRefreshing(false);
-//            return;
-//        }
         hobbies.clear();
         swipeRefreshLayout.setRefreshing(true);
         String myID = preferenceManager.getString(Constants.KEY_USER_ID);
@@ -148,33 +138,32 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             List<String> myHobbiesNames = (List<String>) document.get(Constants.KEY_HOBBIES);
-                            HashSet<String> myHobbiesSet = new HashSet<>(myHobbiesNames);
-                            preferenceManager.putStringSet(Constants.KEY_HOBBIES, myHobbiesSet);
+                            HashSet<String> myHobbies = new HashSet<>(myHobbiesNames);
+                            preferenceManager.putStringSet(Constants.KEY_HOBBIES, myHobbies);
+                            if (!myHobbies.isEmpty()) {
+                                for (String hobbyName : myHobbies) {
+                                    Hobby hobby = new Hobby();
+                                    hobby.name = hobbyName;
+                                    hobby.icon = getHobbyIcon(hobbyName);
+                                    hobbies.add(hobby);
+                                }
+                                if (hobbies.size() > 0) {
+                                    hobbiesAdapter.notifyDataSetChanged();
+                                    textErrorMessage.setVisibility(View.GONE);
+                                } else {
+                                    textErrorMessage.setText(String.format("%s", "No Hobbies"));
+                                    textErrorMessage.setVisibility(View.VISIBLE);
+                                }
+                            } else {
+                                textErrorMessage.setText(String.format("%s", "No Hobbies"));
+                                textErrorMessage.setVisibility(View.VISIBLE);
+                            }
                         }
                     } else {
                         Toast.makeText(getApplicationContext(),
                                 "Sync failed", Toast.LENGTH_SHORT).show();
                     }
                 });
-        HashSet<String> myHobbies = preferenceManager.getStringSet(Constants.KEY_HOBBIES);
-        if (!myHobbies.isEmpty()) {
-            for (String hobbyName : myHobbies) {
-                Hobby hobby = new Hobby();
-                hobby.name = hobbyName;
-                hobby.icon = getHobbyIcon(hobbyName);
-                hobbies.add(hobby);
-            }
-            if (hobbies.size() > 0) {
-                hobbiesAdapter.notifyDataSetChanged();
-                textErrorMessage.setVisibility(View.GONE);
-            } else {
-                textErrorMessage.setText(String.format("%s", "No Hobbies"));
-                textErrorMessage.setVisibility(View.VISIBLE);
-            }
-        } else {
-            textErrorMessage.setText(String.format("%s", "No Hobbies"));
-            textErrorMessage.setVisibility(View.VISIBLE);
-        }
     }
 
     /**
@@ -228,6 +217,22 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
      */
     @Override
     public void onMultipleUsersAction(Boolean isMultipleUsersSelected) {}
+
+    /**
+     * If a new hobby is successfully added or an existed hobby is
+     * successfully removed, the hobbies list will be refreshed automatically.
+     * @author Xuannan Huang
+     */
+    private void autoRefreshHobbyList() {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .addSnapshotListener((snapshot, e) -> {
+                    if (e == null && snapshot != null && snapshot.exists()) {
+                        getHobbies();
+                    }
+                });
+    }
 
 //    /**
 //     * Check if the device is connected to the network

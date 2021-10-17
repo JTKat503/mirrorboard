@@ -98,8 +98,8 @@ public class MatchHobbyActivity extends AppCompatActivity {
         // removing current hobby button
         removeHobby.setOnClickListener(view -> {
             hobbies.remove(hobby.name);
-            FirebaseFirestore database = FirebaseFirestore.getInstance();
             String myID = preferenceManager.getString(Constants.KEY_USER_ID);
+            FirebaseFirestore database = FirebaseFirestore.getInstance();
             database.collection(Constants.KEY_COLLECTION_USERS)
                     .document(myID)
                     .update(Constants.KEY_HOBBIES, new ArrayList<>(hobbies))

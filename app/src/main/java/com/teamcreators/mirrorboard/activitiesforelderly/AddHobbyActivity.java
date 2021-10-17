@@ -141,10 +141,10 @@ public class AddHobbyActivity extends AppCompatActivity {
             finish();
         });
 
-        // done button
+        // save button
         findViewById(R.id.addHobby_done).setOnClickListener(view -> {
-            FirebaseFirestore database = FirebaseFirestore.getInstance();
             String myID = preferenceManager.getString(Constants.KEY_USER_ID);
+            FirebaseFirestore database = FirebaseFirestore.getInstance();
             database.collection(Constants.KEY_COLLECTION_USERS)
                     .document(myID)
                     .update(Constants.KEY_HOBBIES, new ArrayList<>(hobbies))

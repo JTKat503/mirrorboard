@@ -137,8 +137,8 @@ public class StartActivityActivity extends AppCompatActivity implements ItemsLis
 //        }
         hobbies.clear();
         swipeRefreshLayout.setRefreshing(true);
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
         String myID = preferenceManager.getString(Constants.KEY_USER_ID);
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USERS)
                 .document(myID)
                 .get()

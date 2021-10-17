@@ -87,12 +87,12 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         contacts = new ArrayList<>();
         contactsAdapter = new UsersAdapter(contacts, this);
         contactsView.setAdapter(contactsAdapter);
-        getContactsIDs();
 
-        // refreshing contacts list
+        // setting the method of refreshing contact list
         contactsLayout.setOnRefreshListener(this::getContactsIDs);
-        // show the real time of the number of requests
-        numberOfRequestsRealtime(); // @author this line added by Xuannan Huang
+        // show the real time of the number of adding requests
+        listenNewRequests();
+        autoRefreshContactList();
 
         // gains token from Messaging server then send it to database
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
@@ -140,15 +140,6 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      * @author Jianwei Li
      */
     private void getContactsIDs() {
-//        // check if internet connection is available
-//        if (!isNetworkAvailable()) {
-//            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivityElderly.this);
-//            builder.setTitle("No Internet Connection")
-//                    .setMessage("Please reconnect and try again.")
-//                    .setPositiveButton(android.R.string.yes, null).show();
-//            contactsLayout.setRefreshing(false);
-//            return;
-//        }
         String myID = preferenceManager.getString(Constants.KEY_USER_ID);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USERS)
@@ -293,7 +284,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      * It will show on the main page with a red dot and a number
      * @author Xuannan Huang
      */
-    public void numberOfRequestsRealtime(){
+    public void listenNewRequests(){
         // get the TextView of the red dot
         requestsNumber = findViewById(R.id.elderly_main_numOfRequests);
         // get the Firestore database
@@ -337,6 +328,22 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         } else {
             return "99+";
         }
+    }
+
+    /**
+     * If a new contact is successfully added,
+     * the contact list will be refreshed automatically.
+     * @author Xuannan Huang
+     */
+    private void autoRefreshContactList() {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .addSnapshotListener((snapshot, e) -> {
+                    if (e == null && snapshot != null && snapshot.exists()) {
+                        getContactsIDs();
+                    }
+                });
     }
 
 //    /**

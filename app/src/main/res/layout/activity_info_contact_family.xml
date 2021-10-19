@@ -120,26 +120,6 @@
         app:iconGravity="start"
         app:iconTint="@color/colorTextLight" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/family_infoContact_history"
-        android:layout_width="match_parent"
-        android:layout_height="85dp"
-        android:layout_above="@id/family_infoContact_remove"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="@color/colorGrey"
-        android:fontFamily="@font/rubik_medium"
-        android:includeFontPadding="false"
-        android:padding="8dp"
-        android:text="@string/call_history"
-        android:textAlignment="textStart"
-        android:textAllCaps="false"
-        android:textColor="@color/colorTextLight"
-        android:textSize="30sp"
-        app:cornerRadius="12dp"
-        app:icon="@drawable/ic_round_history_48"
-        app:iconGravity="start"
-        app:iconTint="@color/colorTextLight" />
-
     <LinearLayout
         android:id="@+id/family_infoContact_offlineWarning"
         android:layout_width="match_parent"

@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +31,8 @@ import com.teamcreators.mirrorboard.utilities.NetworkConnection;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -41,6 +44,7 @@ import java.util.List;
 public class MainActivityElderly extends AppCompatActivity implements ItemsListener {
     private PreferenceManager preferenceManager;
     private List<User> contacts;
+    private HashSet<User> contactsSet;
     private UsersAdapter contactsAdapter;
     private TextView errorMessage, requestsNumber;
     private SwipeRefreshLayout contactsLayout;
@@ -61,6 +65,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         Button exit = findViewById(R.id.elderly_main_exit);
         Button exitApp = findViewById(R.id.elderly_main_exitApp);
         LinearLayout offlineWarning = findViewById(R.id.elderly_main_offlineWarning);
+        RecyclerView contactsView = findViewById(R.id.elderly_main_contactsView);
 
         // Monitor network connection changes
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
@@ -83,14 +88,14 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         });
 
         // building and loading contacts list
-        RecyclerView contactsView = findViewById(R.id.elderly_main_contactsView);
         contacts = new ArrayList<>();
+        contactsSet = new HashSet<>();
         contactsAdapter = new UsersAdapter(contacts, this);
         contactsView.setAdapter(contactsAdapter);
         // setting the method of refreshing contact list
         contactsLayout.setOnRefreshListener(this::getContactsIDs);
-        listenAddingFriendRequests();
         autoRefreshContactList();
+        autoCheckAddingFriendRequests();
 
         // gains token from Messaging server then send it to database
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
@@ -147,17 +152,16 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            List<String> myFriendsIDs = (List<String>) document.get(Constants.KEY_FRIENDS);
-                            spliceContactsIDs(myFriendsIDs);
+                            List<String> contactsIDs
+                                    = (List<String>) document.get(Constants.KEY_FRIENDS);
+                            loadContactsToContactList(contactsIDs);
                         } else {
-                            Toast.makeText(
-                                    getApplicationContext(),
+                            Toast.makeText(getApplicationContext(),
                                     "Failed to get contacts list",
                                     Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(
-                                getApplicationContext(),
+                        Toast.makeText(getApplicationContext(),
                                 "Get failed with " + task.getException(),
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -165,13 +169,14 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
     }
 
     /**
-     * Get all this user's contacts information from the database
-     * and load the contacts list
+     * Load the contacts obtained from the database into the contact list
+     * @param contactsIDs IDs of the user's contacts
      * @author Jianwei Li
      */
-    private void spliceContactsIDs(List<String> contactsIDs) {
+    private void loadContactsToContactList(List<String> contactsIDs) {
         contactsLayout.setRefreshing(true);
         if (contactsIDs == null || contactsIDs.isEmpty()) {
+            contactsAdapter.notifyDataSetChanged();
             contactsLayout.setRefreshing(false);
             errorMessage.setText(String.format("%s", "No Contacts"));
             errorMessage.setVisibility(View.VISIBLE);
@@ -184,19 +189,23 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
                 fromIndex += 10;
             }
             for (List<String> subList : subLists) {
-                contacts.clear();
-                loadContactsToContactList(subList);
+                getContacts(subList);
             }
         }
     }
 
-    private void loadContactsToContactList(List<String> contactsIDs) {
+    /**
+     * According to the given contacts IDs, get the
+     * information of these contacts from the database
+     * @param contactsIDs IDs of the user's contacts
+     * @author Jianwei Li
+     */
+    private void getContacts(List<String> contactsIDs) {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USERS)
                 .whereIn(Constants.KEY_PHONE, contactsIDs)
                 .get()
                 .addOnCompleteListener(task -> {
-                    contactsLayout.setRefreshing(false);
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             User contact = new User();
@@ -209,19 +218,17 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
                             } else {
                                 contact.name = nickName;
                             }
-                            contacts.add(contact);
+                            contactsSet.add(contact);
                         }
-                        if (contacts.size() > 0) {
-                            contactsAdapter.notifyDataSetChanged();
-                            errorMessage.setVisibility(View.GONE);
-                        } else {
-                            errorMessage.setText(String.format("%s", "No contacts"));
-                            errorMessage.setVisibility(View.VISIBLE);
+                        contacts.clear();
+                        contacts.addAll(contactsSet);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            contacts.sort(Comparator.comparing(User::getName));
                         }
-                    } else {
-                        errorMessage.setText(String.format("%s", "No contacts"));
-                        errorMessage.setVisibility(View.VISIBLE);
+                        errorMessage.setVisibility(View.GONE);
+                        contactsAdapter.notifyDataSetChanged();
                     }
+                    contactsLayout.setRefreshing(false);
                 });
     }
 
@@ -233,13 +240,13 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      */
     private void sendFCMTokenToDatabase(String token) {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        DocumentReference documentReference = database
-                .collection(Constants.KEY_COLLECTION_USERS)
+        DocumentReference documentReference
+                = database.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID));
         // update token to database
-        documentReference.update(Constants.KEY_FCM_TOKEN, token).addOnFailureListener(e ->
-                        Toast.makeText(
-                                MainActivityElderly.this,
+        documentReference.update(Constants.KEY_FCM_TOKEN, token)
+                .addOnFailureListener(e ->
+                        Toast.makeText(MainActivityElderly.this,
                                 "Unable to send token: " + e.getMessage(),
                                 Toast.LENGTH_SHORT).show());
     }
@@ -295,7 +302,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      * It will show on the main page with a red dot and a number
      * @author Xuannan Huang
      */
-    public void listenAddingFriendRequests(){
+    public void autoCheckAddingFriendRequests(){
         // get the TextView of the red dot
         requestsNumber = findViewById(R.id.elderly_main_numOfRequests);
         // get the Firestore database
@@ -303,25 +310,13 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
                 .addSnapshotListener((snapshot, e) -> {
-                    if (e != null) {
-                        Toast.makeText(
-                                MainActivityElderly.this,
-                                "Listen failed.",
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (snapshot != null && snapshot.exists()) {
-                            long numberOfRequests = (long) snapshot.get(Constants.KEY_NUM_OF_REQUESTS);
-                            if (numberOfRequests == 0) {
-                                requestsNumber.setVisibility(View.GONE);
-                            } else {
-                                requestsNumber.setVisibility(View.VISIBLE);
-                                requestsNumber.setText(numberToString(numberOfRequests));
-                            }
+                    if (e == null && snapshot != null && snapshot.exists()) {
+                        long numberOfRequests = (long) snapshot.get(Constants.KEY_NUM_OF_REQUESTS);
+                        if (numberOfRequests == 0) {
+                            requestsNumber.setVisibility(View.GONE);
                         } else {
-                            Toast.makeText(
-                                    MainActivityElderly.this,
-                                    "Cannot get data.",
-                                    Toast.LENGTH_SHORT).show();
+                            requestsNumber.setVisibility(View.VISIBLE);
+                            requestsNumber.setText(numberToString(numberOfRequests));
                         }
                     }
                 });
@@ -353,6 +348,8 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
                 .addSnapshotListener((snapshot, e) -> {
                     if (e == null && snapshot != null && snapshot.exists()) {
                         getContactsIDs();
+                        contacts.clear();
+                        contactsSet.clear();
                     }
                 });
     }

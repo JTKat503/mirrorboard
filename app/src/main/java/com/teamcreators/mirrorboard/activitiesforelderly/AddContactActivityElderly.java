@@ -110,18 +110,15 @@ public class AddContactActivityElderly extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            List<String> myFriendsIDs = (List<String>) document.get(Constants.KEY_FRIENDS);
-                            manageRequest(myFriendsIDs);
+                            List<String> contactsIDs = (List<String>) document.get(Constants.KEY_FRIENDS);
+                            manageRequest(contactsIDs);
                         } else {
-                            Toast.makeText(
-                                    getApplicationContext(),
+                            Toast.makeText(getApplicationContext(),
                                     "Failed to get contacts list",
                                     Toast.LENGTH_SHORT).show();
                         }
-
                     } else {
-                        Toast.makeText(
-                                getApplicationContext(),
+                        Toast.makeText(getApplicationContext(),
                                 "Get failed with " + task.getException(),
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -138,13 +135,16 @@ public class AddContactActivityElderly extends AppCompatActivity {
      */
     private void manageRequest(List<String> myFriendsIDs) {
         // search user from the data base
-        if (TextUtils.isEmpty(receiverUserPhone)) {         // check the input number
+        if (TextUtils.isEmpty(receiverUserPhone)) {
+            // check the input number
             Toast.makeText(AddContactActivityElderly.this,
                     "Please enter a phone number.", Toast.LENGTH_SHORT).show();
-        } else if (receiverUserPhone.equals(senderUserPhone)) {     // check the input number == own number
+        } else if (receiverUserPhone.equals(senderUserPhone)) {
+            // check the input number == own number
             Toast.makeText(AddContactActivityElderly.this,
                     "You cannot add yourself.", Toast.LENGTH_SHORT).show();
-        } else if (myFriendsIDs.contains(receiverUserPhone)) {      // Check if the number is your friend
+        } else if (myFriendsIDs.contains(receiverUserPhone)) {
+            // Check if the number is your friend
             Toast.makeText(AddContactActivityElderly.this,
                     "You are already friends.", Toast.LENGTH_SHORT).show();
         } else {
@@ -162,11 +162,8 @@ public class AddContactActivityElderly extends AppCompatActivity {
                             // user exist, send the request
                         }
                     })
-                    .addOnFailureListener(e ->
-                            Toast.makeText(
-                                    getApplicationContext(),
-                                    "onFailure: " + e.toString(),
-                                    Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> Toast.makeText(getApplicationContext(),
+                            "onFailure: " + e.toString(), Toast.LENGTH_SHORT).show());
         }
     }
 
@@ -208,9 +205,8 @@ public class AddContactActivityElderly extends AppCompatActivity {
                         }
                         trueToAddRequestNum(flag);
                     } else {
-                        Toast.makeText(
-                                getApplicationContext(),
-                                "Error getting documents: " + task.getException(),
+                        Toast.makeText(getApplicationContext(),
+                                "Error: " + task.getException(),
                                 Toast.LENGTH_SHORT).show();
                     }
                 });

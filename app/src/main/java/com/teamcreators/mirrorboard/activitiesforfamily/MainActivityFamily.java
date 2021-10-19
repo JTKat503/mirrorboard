@@ -1,11 +1,11 @@
 package com.teamcreators.mirrorboard.activitiesforfamily;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -31,6 +31,8 @@ import com.teamcreators.mirrorboard.utilities.NetworkConnection;
 import com.teamcreators.mirrorboard.utilities.PreferenceManager;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -42,6 +44,7 @@ import java.util.List;
 public class MainActivityFamily extends AppCompatActivity implements ItemsListener {
     private PreferenceManager preferenceManager;
     private List<User> contacts;
+    private HashSet<User> contactsSet;
     private UsersAdapter contactsAdapter;
     private TextView errorMessage, requestsNumber;
     private SwipeRefreshLayout contactsLayout;
@@ -61,6 +64,7 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
         Button newRequests = findViewById(R.id.family_main_newRequests);
         Button exitApp = findViewById(R.id.family_main_exitApp);
         LinearLayout offlineWarning = findViewById(R.id.family_main_offlineWarning);
+        RecyclerView contactsView = findViewById(R.id.family_main_contactsView);
 
         // Monitor network connection changes
         NetworkConnection networkConnection = new NetworkConnection(getApplicationContext());
@@ -81,14 +85,14 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
         });
 
         // building and loading contacts list
-        RecyclerView contactsView = findViewById(R.id.family_main_contactsView);
         contacts = new ArrayList<>();
+        contactsSet = new HashSet<>();
         contactsAdapter = new UsersAdapter(contacts, this);
         contactsView.setAdapter(contactsAdapter);
         // setting the method of refreshing contact list
         contactsLayout.setOnRefreshListener(this::getContactsIDs);
-        listenAddingFriendRequests();
         autoRefreshContactList();
+        autoCheckAddingFriendRequests();
 
         // gains token from Messaging server then send it to database
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
@@ -138,17 +142,16 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            List<String> myFriendsIDs = (List<String>) document.get(Constants.KEY_FRIENDS);
-                            getContacts(myFriendsIDs);
+                            List<String> contactsIDs
+                                    = (List<String>) document.get(Constants.KEY_FRIENDS);
+                            loadContactsToContactList(contactsIDs);
                         } else {
-                            Toast.makeText(
-                                    getApplicationContext(),
+                            Toast.makeText(getApplicationContext(),
                                     "Failed to get contacts list",
                                     Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(
-                                getApplicationContext(),
+                        Toast.makeText(getApplicationContext(),
                                 "Get failed with " + task.getException(),
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -156,51 +159,67 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
     }
 
     /**
-     * Get all this user's contacts information from the database
-     * and load the contacts list
+     * Load the contacts obtained from the database into the contact list
+     * @param contactsIDs IDs of the user's contacts
      * @author Jianwei Li
      */
-    private void getContacts(List<String> contactsIDs) {
+    private void loadContactsToContactList(List<String> contactsIDs) {
         contactsLayout.setRefreshing(true);
         if (contactsIDs == null || contactsIDs.isEmpty()) {
+            contactsAdapter.notifyDataSetChanged();
             contactsLayout.setRefreshing(false);
             errorMessage.setText(String.format("%s", "No Contacts"));
             errorMessage.setVisibility(View.VISIBLE);
         } else {
-            FirebaseFirestore database = FirebaseFirestore.getInstance();
-            database.collection(Constants.KEY_COLLECTION_USERS)
-                    .whereIn(Constants.KEY_PHONE, contactsIDs)
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        contactsLayout.setRefreshing(false);
-                        if (task.isSuccessful()) {
-                            contacts.clear();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                User contact = new User();
-                                contact.phone = document.getString(Constants.KEY_PHONE);
-                                contact.token = document.getString(Constants.KEY_FCM_TOKEN);
-                                contact.avatarUri = document.getString(Constants.KEY_AVATAR_URI);
-                                String nickName = preferenceManager.getString(contact.phone);
-                                if (nickName == null) {
-                                    contact.name = document.getString(Constants.KEY_NAME);
-                                } else {
-                                    contact.name = nickName;
-                                }
-                                contacts.add(contact);
-                            }
-                            if (contacts.size() > 0) {
-                                contactsAdapter.notifyDataSetChanged();
-                                errorMessage.setVisibility(View.GONE);
-                            } else {
-                                errorMessage.setText(String.format("%s", "No contacts"));
-                                errorMessage.setVisibility(View.VISIBLE);
-                            }
-                        } else {
-                            errorMessage.setText(String.format("%s", "No contacts"));
-                            errorMessage.setVisibility(View.VISIBLE);
-                        }
-                    });
+            List<List<String>> subLists = new ArrayList<>();
+            int fromIndex = 0;
+            while (fromIndex < contactsIDs.size()) {
+                int toIndex = Math.min((fromIndex + 10), contactsIDs.size());
+                subLists.add(contactsIDs.subList(fromIndex, toIndex));
+                fromIndex += 10;
+            }
+            for (List<String> subList : subLists) {
+                getContacts(subList);
+            }
         }
+    }
+
+    /**
+     * According to the given contacts IDs, get the
+     * information of these contacts from the database
+     * @param contactsIDs IDs of the user's contacts
+     * @author Jianwei Li
+     */
+    private void getContacts(List<String> contactsIDs) {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(Constants.KEY_COLLECTION_USERS)
+                .whereIn(Constants.KEY_PHONE, contactsIDs)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            User contact = new User();
+                            contact.phone = document.getString(Constants.KEY_PHONE);
+                            contact.token = document.getString(Constants.KEY_FCM_TOKEN);
+                            contact.avatarUri = document.getString(Constants.KEY_AVATAR_URI);
+                            String nickName = preferenceManager.getString(contact.phone);
+                            if (nickName == null) {
+                                contact.name = document.getString(Constants.KEY_NAME);
+                            } else {
+                                contact.name = nickName;
+                            }
+                            contactsSet.add(contact);
+                        }
+                        contacts.clear();
+                        contacts.addAll(contactsSet);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            contacts.sort(Comparator.comparing(User::getName));
+                        }
+                        errorMessage.setVisibility(View.GONE);
+                        contactsAdapter.notifyDataSetChanged();
+                    }
+                    contactsLayout.setRefreshing(false);
+                });
     }
 
     /**
@@ -211,15 +230,15 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
      */
     private void sendFCMTokenToDatabase(String token) {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        DocumentReference documentReference = database
-                .collection(Constants.KEY_COLLECTION_USERS)
+        DocumentReference documentReference
+                = database.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID));
         // update toke to database
-        documentReference.update(Constants.KEY_FCM_TOKEN, token).addOnFailureListener(e ->
-                Toast.makeText(
-                        MainActivityFamily.this,
-                        "Unable to send token: " + e.getMessage(),
-                        Toast.LENGTH_SHORT).show());
+        documentReference.update(Constants.KEY_FCM_TOKEN, token)
+                .addOnFailureListener(e ->
+                        Toast.makeText(MainActivityFamily.this,
+                                "Unable to send token: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show());
     }
 
     /**
@@ -253,17 +272,14 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
     public void onMultipleUsersAction(Boolean isMultipleUsersSelected) {
         if (isMultipleUsersSelected) {
             conference.setVisibility(View.VISIBLE);
-            conference.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getApplicationContext(), OutgoingCallActivity.class);
-                    intent.putExtra(
-                            "selectedUsers",
-                            new Gson().toJson(contactsAdapter.getSelectedUsers()));
-                    intent.putExtra("type", "video");
-                    intent.putExtra("isMultiple", true);
-                    startActivity(intent);
-                }
+            conference.setOnClickListener(view -> {
+                Intent intent = new Intent(getApplicationContext(), OutgoingCallActivity.class);
+                intent.putExtra(
+                        "selectedUsers",
+                        new Gson().toJson(contactsAdapter.getSelectedUsers()));
+                intent.putExtra("type", "video");
+                intent.putExtra("isMultiple", true);
+                startActivity(intent);
             });
         } else {
             conference.setVisibility(View.GONE);
@@ -275,7 +291,7 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
      * It will show on the main page with a red dot and a number
      * @author Xuannan Huang
      */
-    public void listenAddingFriendRequests(){
+    public void autoCheckAddingFriendRequests(){
         // get the TextView of the red dot
         requestsNumber = findViewById(R.id.family_main_numOfRequests);
         // get the Firestore database
@@ -283,26 +299,13 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
                 .addSnapshotListener((snapshot, e) -> {
-                    if (e != null) {
-                        Toast.makeText(
-                                MainActivityFamily.this,
-                                "Listen failed.",
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (snapshot != null && snapshot.exists()) {
-                            long numberOfRequests = (long) snapshot.get(Constants.KEY_NUM_OF_REQUESTS);
-
-                            if (numberOfRequests == 0) {
-                                requestsNumber.setVisibility(View.GONE);
-                            } else {
-                                requestsNumber.setVisibility(View.VISIBLE);
-                                requestsNumber.setText(numberToString(numberOfRequests));
-                            }
+                    if (e == null && snapshot != null && snapshot.exists()) {
+                        long numberOfRequests = (long) snapshot.get(Constants.KEY_NUM_OF_REQUESTS);
+                        if (numberOfRequests == 0) {
+                            requestsNumber.setVisibility(View.GONE);
                         } else {
-                            Toast.makeText(
-                                    MainActivityFamily.this,
-                                    "Cannot get data.",
-                                    Toast.LENGTH_SHORT).show();
+                            requestsNumber.setVisibility(View.VISIBLE);
+                            requestsNumber.setText(numberToString(numberOfRequests));
                         }
                     }
                 });
@@ -334,6 +337,8 @@ public class MainActivityFamily extends AppCompatActivity implements ItemsListen
                 .addSnapshotListener((snapshot, e) -> {
                     if (e == null && snapshot != null && snapshot.exists()) {
                         getContactsIDs();
+                        contacts.clear();
+                        contactsSet.clear();
                     }
                 });
     }

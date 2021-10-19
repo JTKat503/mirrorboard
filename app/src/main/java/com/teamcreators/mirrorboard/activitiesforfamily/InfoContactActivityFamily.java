@@ -50,6 +50,7 @@ public class InfoContactActivityFamily extends AppCompatActivity {
         ImageView editContactName = findViewById(R.id.family_infoContact_editName);
         ImageView goBack = findViewById(R.id.family_infoContact_back);
         TextView contactName = findViewById(R.id.family_infoContact_name);
+        ImageView contactAvatar = findViewById(R.id.family_infoContact_avatar);
         Button exitApp = findViewById(R.id.family_infoContact_exitApp);
         LinearLayout offlineWarning = findViewById(R.id.family_infoContact_offlineWarning);
 
@@ -74,7 +75,6 @@ public class InfoContactActivityFamily extends AppCompatActivity {
         });
 
         contactName.setText(user.name);
-        ImageView contactAvatar = findViewById(R.id.family_infoContact_avatar);
         Glide.with(this)
                 .load(Uri.parse(user.avatarUri))
                 .fitCenter()
@@ -148,20 +148,17 @@ public class InfoContactActivityFamily extends AppCompatActivity {
                             if (document.getBoolean(Constants.KEY_NOTICE_ON)) {
                                 initiateVideoCall(user);
                             } else {
-                                Toast.makeText(
-                                        InfoContactActivityFamily.this,
+                                Toast.makeText(InfoContactActivityFamily.this,
                                         user.name + " is not available",
                                         Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(
-                                    InfoContactActivityFamily.this,
+                            Toast.makeText(InfoContactActivityFamily.this,
                                     user.name + " is not available",
                                     Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(
-                                InfoContactActivityFamily.this,
+                        Toast.makeText(InfoContactActivityFamily.this,
                                 user.name + " is not available",
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -186,20 +183,17 @@ public class InfoContactActivityFamily extends AppCompatActivity {
                             if (document.getBoolean(Constants.KEY_NOTICE_ON)) {
                                 initiateAudioCall(user);
                             } else {
-                                Toast.makeText(
-                                        InfoContactActivityFamily.this,
+                                Toast.makeText(InfoContactActivityFamily.this,
                                         user.name + " is not available",
                                         Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(
-                                    InfoContactActivityFamily.this,
+                            Toast.makeText(InfoContactActivityFamily.this,
                                     user.name + " is not available",
                                     Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(
-                                InfoContactActivityFamily.this,
+                        Toast.makeText(InfoContactActivityFamily.this,
                                 user.name + " is not available",
                                 Toast.LENGTH_SHORT).show();
                     }

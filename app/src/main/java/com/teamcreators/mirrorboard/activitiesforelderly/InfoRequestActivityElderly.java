@@ -144,13 +144,12 @@ public class InfoRequestActivityElderly extends AppCompatActivity {
                                 .load(documentSnapshot.getString(Constants.KEY_AVATAR_URI))
                                 .error(R.drawable.blank_profile)
                                 .into(profileImage);
-                        // ** @author  below added by Jianwei Li */
+                        // @author  below added by Jianwei Li
                         profileImage.setVisibility(View.VISIBLE);
                         contactName.setVisibility(View.VISIBLE);
                         contactNumber.setVisibility(View.VISIBLE);
                         addContact.setVisibility(View.VISIBLE);
                         removeRequest.setVisibility(View.VISIBLE);
-                        goBack.setVisibility(View.VISIBLE);
                     } else {
                         profileImage.setVisibility(View.INVISIBLE);
                         contactName.setVisibility(View.INVISIBLE);
@@ -160,10 +159,10 @@ public class InfoRequestActivityElderly extends AppCompatActivity {
                         goBack.setVisibility(View.INVISIBLE);
                         noRequest.setText(R.string.no_new_requests);
                         noRequest.setVisibility(View.VISIBLE);
-                        goBack.setVisibility(View.VISIBLE);
-                        // ** @author  above added by Jianwei Li */
                     }
-                });
+            goBack.setVisibility(View.VISIBLE);
+            // @author  above added by Jianwei Li
+        });
     }
 
     /**
@@ -180,16 +179,17 @@ public class InfoRequestActivityElderly extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         DocumentSnapshot document = task.getResult();
-                        List<String> UserFriendsList = new ArrayList<>();
+                        List<String> userFriendsList = new ArrayList<>();
                         if (document.exists()) {
-                            UserFriendsList = (List<String>) document.get(Constants.KEY_FRIENDS);
+                            userFriendsList = (List<String>) document.get(Constants.KEY_FRIENDS);
                         }
-                        UserFriendsList.add(phoneNumber);
-                        // update the friends list
-                        addFriendToList(userPhone, UserFriendsList);
+                        if (userFriendsList != null && !userFriendsList.contains(phoneNumber)) {
+                            userFriendsList.add(phoneNumber);
+                            // update the friends list
+                            addFriendToList(userPhone, userFriendsList);
+                        }
                     } else {
-                        Toast.makeText(
-                                getApplicationContext(),
+                        Toast.makeText(getApplicationContext(),
                                 "Get failed with " + task.getException(),
                                 Toast.LENGTH_SHORT).show();
                         finish();

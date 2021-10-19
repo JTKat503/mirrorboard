@@ -97,13 +97,13 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
                     .into(imageUserAvatar);
 
             /*
-            In multi-selected state:
-                click unselected user -> selected
-                click selected user   -> deselected
-                click the last selected user -> quit multi-selected state
-            Not in multi-selected state:
-                click user -> display user information
-             */
+            * In multi-selected state:
+            *       click unselected user -> selected
+            *       click selected user   -> deselected
+            *       click the last selected user -> quit multi-selected state
+            * Not in multi-selected state:
+            *       click user -> display user information
+            * */
             userContainer.setOnClickListener(view -> {
                 if (imageSelected.getVisibility() != View.VISIBLE) {
                     if (selectedUsers.size() == 0) {
@@ -122,9 +122,9 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
             });
 
             /*
-            In accordance with the requirements of the UX Design team,
-            multi-party call function is disabled.
-             */
+            * In accordance with the requirements of the UX Design team,
+            * multi-party call function is disabled.
+            * */
             // Long press the user to add the user to the multi-party call invitation list
             // Enter multiple selection state
 //            userContainer.setOnLongClickListener(view -> {

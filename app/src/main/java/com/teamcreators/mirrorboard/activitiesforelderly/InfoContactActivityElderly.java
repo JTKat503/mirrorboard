@@ -49,6 +49,8 @@ public class InfoContactActivityElderly extends AppCompatActivity {
         Button editContactName = findViewById(R.id.elderly_contactInfo_editName);
         Button removeContact = findViewById(R.id.elderly_contactInfo_removeContact);
         Button goBack = findViewById(R.id.elderly_contactInfo_back);
+        TextView contactName = findViewById(R.id.elderly_contactInfo_name);
+        ImageView contactAvatar = findViewById(R.id.elderly_contactInfo_avatar);
         Button exitApp = findViewById(R.id.elderly_contactInfo_exitApp);
         LinearLayout offlineWarning = findViewById(R.id.elderly_contactInfo_offlineWarning);
 
@@ -70,13 +72,10 @@ public class InfoContactActivityElderly extends AppCompatActivity {
             }
         });
 
-        TextView contactName = findViewById(R.id.elderly_contactInfo_name);
         contactName.setText(user.name);
         contactName.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         contactName.setMarqueeRepeatLimit(1);
         contactName.setSelected(true);
-
-        ImageView contactAvatar = findViewById(R.id.elderly_contactInfo_avatar);
         Glide.with(this)
                 .load(Uri.parse(user.avatarUri))
                 .fitCenter()
@@ -172,20 +171,17 @@ public class InfoContactActivityElderly extends AppCompatActivity {
                             if (document.getBoolean(Constants.KEY_NOTICE_ON)) {
                                 initiateVideoCall(user);
                             } else {
-                                Toast.makeText(
-                                        InfoContactActivityElderly.this,
+                                Toast.makeText(InfoContactActivityElderly.this,
                                         user.name + " is not available",
                                         Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(
-                                    InfoContactActivityElderly.this,
+                            Toast.makeText(InfoContactActivityElderly.this,
                                     user.name + " is not available",
                                     Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(
-                                InfoContactActivityElderly.this,
+                        Toast.makeText(InfoContactActivityElderly.this,
                                 user.name + " is not available",
                                 Toast.LENGTH_SHORT).show();
                     }

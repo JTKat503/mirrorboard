@@ -178,13 +178,15 @@ public class InfoRequestActivityFamily extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         DocumentSnapshot document = task.getResult();
-                        List<String> UserFriendsList = new ArrayList<>();
+                        List<String> userFriendsList = new ArrayList<>();
                         if (document.exists()) {
-                            UserFriendsList = (List<String>) document.get(Constants.KEY_FRIENDS);
+                            userFriendsList = (List<String>) document.get(Constants.KEY_FRIENDS);
                         }
-                        UserFriendsList.add(phoneNumber);
-                        // update the friends list
-                        addFriendToList(userPhone, UserFriendsList);
+                        if (userFriendsList != null && !userFriendsList.contains(phoneNumber)) {
+                            userFriendsList.add(phoneNumber);
+                            // update the friends list
+                            addFriendToList(userPhone, userFriendsList);
+                        }
                     } else {
                         Toast.makeText(getApplicationContext(),
                                 "Get failed with " + task.getException(),

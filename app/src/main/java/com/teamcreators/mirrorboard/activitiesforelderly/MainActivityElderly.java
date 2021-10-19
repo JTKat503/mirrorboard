@@ -148,7 +148,7 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             List<String> myFriendsIDs = (List<String>) document.get(Constants.KEY_FRIENDS);
-                            getContacts(myFriendsIDs);
+                            spliceContactsIDs(myFriendsIDs);
                         } else {
                             Toast.makeText(
                                     getApplicationContext(),
@@ -169,47 +169,60 @@ public class MainActivityElderly extends AppCompatActivity implements ItemsListe
      * and load the contacts list
      * @author Jianwei Li
      */
-    private void getContacts(List<String> contactsIDs) {
+    private void spliceContactsIDs(List<String> contactsIDs) {
         contactsLayout.setRefreshing(true);
         if (contactsIDs == null || contactsIDs.isEmpty()) {
             contactsLayout.setRefreshing(false);
             errorMessage.setText(String.format("%s", "No Contacts"));
             errorMessage.setVisibility(View.VISIBLE);
         } else {
-            FirebaseFirestore database = FirebaseFirestore.getInstance();
-            database.collection(Constants.KEY_COLLECTION_USERS)
-                    .whereIn(Constants.KEY_PHONE, contactsIDs)
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        contactsLayout.setRefreshing(false);
-                        if (task.isSuccessful()) {
-                            contacts.clear();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                User contact = new User();
-                                contact.phone = document.getString(Constants.KEY_PHONE);
-                                contact.token = document.getString(Constants.KEY_FCM_TOKEN);
-                                contact.avatarUri = document.getString(Constants.KEY_AVATAR_URI);
-                                String nickName = preferenceManager.getString(contact.phone);
-                                if (nickName == null) {
-                                    contact.name = document.getString(Constants.KEY_NAME);
-                                } else {
-                                    contact.name = nickName;
-                                }
-                                contacts.add(contact);
+            List<List<String>> subLists = new ArrayList<>();
+            int fromIndex = 0;
+            while (fromIndex < contactsIDs.size()) {
+                int toIndex = Math.min((fromIndex + 10), contactsIDs.size());
+                subLists.add(contactsIDs.subList(fromIndex, toIndex));
+                fromIndex += 10;
+            }
+            for (List<String> subList : subLists) {
+                contacts.clear();
+                loadContactsToContactList(subList);
+            }
+        }
+    }
+
+    private void loadContactsToContactList(List<String> contactsIDs) {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(Constants.KEY_COLLECTION_USERS)
+                .whereIn(Constants.KEY_PHONE, contactsIDs)
+                .get()
+                .addOnCompleteListener(task -> {
+                    contactsLayout.setRefreshing(false);
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            User contact = new User();
+                            contact.phone = document.getString(Constants.KEY_PHONE);
+                            contact.token = document.getString(Constants.KEY_FCM_TOKEN);
+                            contact.avatarUri = document.getString(Constants.KEY_AVATAR_URI);
+                            String nickName = preferenceManager.getString(contact.phone);
+                            if (nickName == null) {
+                                contact.name = document.getString(Constants.KEY_NAME);
+                            } else {
+                                contact.name = nickName;
                             }
-                            if (contacts.size() > 0) {
+                            contacts.add(contact);
+                        }
+                        if (contacts.size() > 0) {
                             contactsAdapter.notifyDataSetChanged();
                             errorMessage.setVisibility(View.GONE);
-                            } else {
-                            errorMessage.setText(String.format("%s", "No contacts"));
-                            errorMessage.setVisibility(View.VISIBLE);
-                            }
                         } else {
                             errorMessage.setText(String.format("%s", "No contacts"));
                             errorMessage.setVisibility(View.VISIBLE);
                         }
-                    });
-        }
+                    } else {
+                        errorMessage.setText(String.format("%s", "No contacts"));
+                        errorMessage.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
     /**
